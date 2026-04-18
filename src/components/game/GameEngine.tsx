@@ -4,6 +4,7 @@ import { EventCard } from './EventCard';
 import { PhaseIntro } from './PhaseIntro';
 import { GameOver } from './GameOver';
 import { TravelAnimation } from './TravelAnimation';
+import { EscapingVietnamCinematic } from './scenes/EscapingVietnamCinematic';
 import { useGameState } from '@/hooks/useGameState';
 import { useGameEvents, type EventChoice } from '@/hooks/useGameEvents';
 import { useGameSave } from '@/hooks/useGameSave';
@@ -37,6 +38,7 @@ export function GameEngine({ userId, onMainMenu, loadExistingSave }: GameEngineP
   const [currentEvent, setCurrentEvent] = useState<GameEvent | null>(null);
   const [initialized, setInitialized] = useState(false);
   const [lastPhase, setLastPhase] = useState(1);
+  const [showCinematic, setShowCinematic] = useState(false);
 
   // Initialize game
   useEffect(() => {
@@ -61,6 +63,7 @@ export function GameEngine({ userId, onMainMenu, loadExistingSave }: GameEngineP
         }
       } else {
         startNewGame();
+        setShowCinematic(true);
       }
       setInitialized(true);
     };
@@ -139,6 +142,7 @@ export function GameEngine({ userId, onMainMenu, loadExistingSave }: GameEngineP
     setDayState('idle');
     setCurrentEvent(null);
     setInitialized(true);
+    setShowCinematic(true);
   }, [startNewGame]);
 
   if (loading || !initialized) {
@@ -147,6 +151,10 @@ export function GameEngine({ userId, onMainMenu, loadExistingSave }: GameEngineP
         <p className="font-pixel text-sm text-primary crt-glow flicker">Loading...</p>
       </div>
     );
+  }
+
+  if (showCinematic) {
+    return <EscapingVietnamCinematic onComplete={() => setShowCinematic(false)} />;
   }
 
   if (gameState.isGameOver) {
