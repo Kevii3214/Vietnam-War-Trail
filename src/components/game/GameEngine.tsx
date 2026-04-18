@@ -6,6 +6,8 @@ import { GameOver } from './GameOver';
 import { GameHUD } from './GameHUD';
 import { GameMenuBar } from './GameMenuBar';
 import { EscapingVietnamCinematic } from './scenes/EscapingVietnamCinematic';
+import { CityFallsScene } from './scenes/CityFallsScene';
+import { EVENT_SCENE_MAP } from './scenes/eventSceneMap';
 import { useGameState } from '@/hooks/useGameState';
 import { useGameEvents, type EventChoice, type EventOutcome, pickRandomOutcome } from '@/hooks/useGameEvents';
 import { useGameSave } from '@/hooks/useGameSave';
@@ -250,6 +252,15 @@ export function GameEngine({ userId, onMainMenu, loadExistingSave }: GameEngineP
 
   const currentPhase = getPhaseByOrder(gameState.currentPhaseOrder);
 
+  // Check if current event has an animated scene
+  const eventSceneKey = currentEvent ? EVENT_SCENE_MAP[currentEvent.title] : null;
+  const renderEventScene = () => {
+    switch (eventSceneKey) {
+      case 'city-falls': return <CityFallsScene />;
+      default: return null;
+    }
+  };
+
   if (showPhaseIntro && currentPhase) {
     return <PhaseIntro phase={currentPhase} onContinue={setPhaseIntroSeen} />;
   }
@@ -380,15 +391,24 @@ export function GameEngine({ userId, onMainMenu, loadExistingSave }: GameEngineP
 
   return (
     <div className="h-full flex flex-col bg-background relative scanlines">
+      {/* Animated scene background for supported events */}
+      {(dayState === 'event' || dayState === 'event_result') && eventSceneKey && (
+        <div className="absolute inset-0 z-0">
+          {renderEventScene()}
+          {/* Gradient overlay so HUD text is readable */}
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
+        </div>
+      )}
+
       {/* Stats bar at top */}
-      <div className="p-3">
+      <div className="p-3 relative z-10">
         <StatsBar stats={gameState.stats} phase={gameState.currentPhaseOrder} day={gameState.dayInPhase} />
       </div>
 
       {/* Main area fills remaining space and pushes HUD to bottom */}
-      <div className="flex-1 flex flex-col justify-end pb-4 md:pb-6">
-        {/* Event image above HUD if present */}
-        {dayState === 'event' && currentEvent?.image_url && (
+      <div className="flex-1 flex flex-col justify-end pb-4 md:pb-6 relative z-10">
+        {/* Event image above HUD if present and no animated scene */}
+        {dayState === 'event' && currentEvent?.image_url && !eventSceneKey && (
           <div className="mx-4 md:mx-16 lg:mx-28 mb-3 animate-fade-in-up">
             <div className="rounded-lg overflow-hidden border border-primary/10 max-h-[35vh]">
               <img src={currentEvent.image_url} alt={currentEvent.title} className="w-full h-full object-cover pixel-art" />
