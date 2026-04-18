@@ -19,6 +19,10 @@ export default {
 			}
 		},
 		extend: {
+			fontFamily: {
+				pixel: ['"Press Start 2P"', 'monospace'],
+				retro: ['"VT323"', 'monospace'],
+			},
 			colors: {
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
@@ -62,6 +66,16 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				game: {
+					phase1: 'hsl(var(--game-phase-1))',
+					phase2: 'hsl(var(--game-phase-2))',
+					phase3: 'hsl(var(--game-phase-3))',
+					phase4: 'hsl(var(--game-phase-4))',
+					health: 'hsl(var(--game-health))',
+					food: 'hsl(var(--game-food))',
+					morale: 'hsl(var(--game-morale))',
+					money: 'hsl(var(--game-money))',
 				}
 			},
 			borderRadius: {
@@ -71,20 +85,12 @@ export default {
 			},
 			keyframes: {
 				'accordion-down': {
-					from: {
-						height: '0'
-					},
-					to: {
-						height: 'var(--radix-accordion-content-height)'
-					}
+					from: { height: '0' },
+					to: { height: 'var(--radix-accordion-content-height)' }
 				},
 				'accordion-up': {
-					from: {
-						height: 'var(--radix-accordion-content-height)'
-					},
-					to: {
-						height: '0'
-					}
+					from: { height: 'var(--radix-accordion-content-height)' },
+					to: { height: '0' }
 				}
 			},
 			animation: {

@@ -1,0 +1,113 @@
+
+-- Profiles table
+CREATE TABLE profiles (
+  id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+  username TEXT,
+  is_admin BOOLEAN DEFAULT false,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can read own profile" ON profiles FOR SELECT USING (auth.uid() = id);
+CREATE POLICY "Users can update own profile" ON profiles FOR UPDATE USING (auth.uid() = id);
+CREATE POLICY "Admins can read all profiles" ON profiles FOR SELECT USING (
+  EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND is_admin = true)
+);
+
+-- Auto-create profile on signup
+CREATE OR REPLACE FUNCTION public.handle_new_user()
+RETURNS TRIGGER AS $$
+BEGIN
+  INSERT INTO public.profiles (id, username)
+  VALUES (NEW.id, COALESCE(NEW.raw_user_meta_data->>'username', NEW.email));
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+CREATE TRIGGER on_auth_user_created
+  AFTER INSERT ON auth.users
+  FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
+
+-- Game phases table
+CREATE TABLE game_phases (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name TEXT NOT NULL,
+  description TEXT,
+  phase_order INTEGER NOT NULL CHECK (phase_order >= 1 AND phase_order <= 4),
+  image_url TEXT,
+  days_in_phase INTEGER DEFAULT 12,
+  created_at TIMESTAMPTZ DEFAULT now(),
+  UNIQUE(phase_order)
+);
+ALTER TABLE game_phases ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Authenticated users can read phases" ON game_phases FOR SELECT TO authenticated USING (true);
+CREATE POLICY "Admins can insert phases" ON game_phases FOR INSERT TO authenticated WITH CHECK (
+  EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND is_admin = true)
+);
+CREATE POLICY "Admins can update phases" ON game_phases FOR UPDATE TO authenticated USING (
+  EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND is_admin = true)
+);
+CREATE POLICY "Admins can delete phases" ON game_phases FOR DELETE TO authenticated USING (
+  EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND is_admin = true)
+);
+
+-- Game events table
+CREATE TABLE game_events (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  phase_id UUID NOT NULL REFERENCES game_phases(id) ON DELETE CASCADE,
+  title TEXT NOT NULL,
+  description TEXT NOT NULL,
+  image_url TEXT,
+  choices JSONB NOT NULL DEFAULT '[]'::jsonb,
+  is_active BOOLEAN DEFAULT true,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+ALTER TABLE game_events ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Authenticated users can read active events" ON game_events FOR SELECT TO authenticated USING (true);
+CREATE POLICY "Admins can insert events" ON game_events FOR INSERT TO authenticated WITH CHECK (
+  EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND is_admin = true)
+);
+CREATE POLICY "Admins can update events" ON game_events FOR UPDATE TO authenticated USING (
+  EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND is_admin = true)
+);
+CREATE POLICY "Admins can delete events" ON game_events FOR DELETE TO authenticated USING (
+  EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND is_admin = true)
+);
+
+-- Game saves table
+CREATE TABLE game_saves (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  current_phase_order INTEGER NOT NULL DEFAULT 1,
+  day_in_phase INTEGER NOT NULL DEFAULT 1,
+  health INTEGER NOT NULL DEFAULT 100,
+  food INTEGER NOT NULL DEFAULT 80,
+  morale INTEGER NOT NULL DEFAULT 70,
+  money INTEGER NOT NULL DEFAULT 50,
+  events_seen JSONB DEFAULT '[]'::jsonb,
+  updated_at TIMESTAMPTZ DEFAULT now(),
+  UNIQUE(user_id)
+);
+ALTER TABLE game_saves ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can read own saves" ON game_saves FOR SELECT USING (auth.uid() = user_id);
+CREATE POLICY "Users can insert own saves" ON game_saves FOR INSERT WITH CHECK (auth.uid() = user_id);
+CREATE POLICY "Users can update own saves" ON game_saves FOR UPDATE USING (auth.uid() = user_id);
+CREATE POLICY "Users can delete own saves" ON game_saves FOR DELETE USING (auth.uid() = user_id);
+
+-- Game runs history table
+CREATE TABLE game_runs (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  outcome TEXT NOT NULL CHECK (outcome IN ('completed', 'died', 'gave_up')),
+  final_phase INTEGER NOT NULL,
+  final_day INTEGER NOT NULL,
+  final_stats JSONB NOT NULL DEFAULT '{}'::jsonb,
+  completed_at TIMESTAMPTZ DEFAULT now()
+);
+ALTER TABLE game_runs ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can read own runs" ON game_runs FOR SELECT USING (auth.uid() = user_id);
+CREATE POLICY "Users can insert own runs" ON game_runs FOR INSERT WITH CHECK (auth.uid() = user_id);

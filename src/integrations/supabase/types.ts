@@ -3109,7 +3109,166 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      game_events: {
+        Row: {
+          choices: Json
+          created_at: string | null
+          description: string
+          id: string
+          image_url: string | null
+          is_active: boolean | null
+          phase_id: string
+          title: string
+        }
+        Insert: {
+          choices?: Json
+          created_at?: string | null
+          description: string
+          id?: string
+          image_url?: string | null
+          is_active?: boolean | null
+          phase_id: string
+          title: string
+        }
+        Update: {
+          choices?: Json
+          created_at?: string | null
+          description?: string
+          id?: string
+          image_url?: string | null
+          is_active?: boolean | null
+          phase_id?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "game_events_phase_id_fkey"
+            columns: ["phase_id"]
+            referencedRelation: "game_phases"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      game_phases: {
+        Row: {
+          created_at: string | null
+          days_in_phase: number | null
+          description: string | null
+          id: string
+          image_url: string | null
+          name: string
+          phase_order: number
+        }
+        Insert: {
+          created_at?: string | null
+          days_in_phase?: number | null
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          name: string
+          phase_order: number
+        }
+        Update: {
+          created_at?: string | null
+          days_in_phase?: number | null
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          name?: string
+          phase_order?: number
+        }
+        Relationships: []
+      }
+      game_runs: {
+        Row: {
+          completed_at: string | null
+          final_day: number
+          final_phase: number
+          final_stats: Json
+          id: string
+          outcome: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          final_day: number
+          final_phase: number
+          final_stats?: Json
+          id?: string
+          outcome: string
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          final_day?: number
+          final_phase?: number
+          final_stats?: Json
+          id?: string
+          outcome?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      game_saves: {
+        Row: {
+          current_phase_order: number
+          day_in_phase: number
+          events_seen: Json | null
+          food: number
+          health: number
+          id: string
+          money: number
+          morale: number
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          current_phase_order?: number
+          day_in_phase?: number
+          events_seen?: Json | null
+          food?: number
+          health?: number
+          id?: string
+          money?: number
+          morale?: number
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          current_phase_order?: number
+          day_in_phase?: number
+          events_seen?: Json | null
+          food?: number
+          health?: number
+          id?: string
+          money?: number
+          morale?: number
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string | null
+          id: string
+          is_admin: boolean | null
+          username: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id: string
+          is_admin?: boolean | null
+          username?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          is_admin?: boolean | null
+          username?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
