@@ -120,9 +120,6 @@ export function useGameState() {
       if (newStats.health <= 0) {
         isGameOver = true;
         gameOverReason = 'Your health has failed. The journey ends here.';
-      } else if (newStats.food <= 0) {
-        isGameOver = true;
-        gameOverReason = 'You have run out of food. Starvation claims you.';
       } else if (newStats.morale <= 0) {
         isGameOver = true;
         gameOverReason = 'Your spirit is broken. You can go no further.';
@@ -145,18 +142,27 @@ export function useGameState() {
       const foodDrain = Math.floor(Math.random() * 3) + 2;
       const newFood = Math.max(0, prev.stats.food - foodDrain);
 
+      // If no food, health drops by 10 per day
+      const starvationDamage = newFood <= 0 ? 10 : 0;
+      const newHealth = Math.max(0, prev.stats.health - starvationDamage);
+
       let isGameOver = prev.isGameOver;
       let gameOverReason = prev.gameOverReason;
-      if (newFood <= 0 && !isGameOver) {
+
+      if (newHealth <= 0 && !isGameOver) {
         isGameOver = true;
-        gameOverReason = 'You have run out of food. Starvation claims you.';
+        gameOverReason = 'Starvation has taken its toll. Your body gives out.';
+      }
+      if (prev.stats.morale <= 0 && !isGameOver) {
+        isGameOver = true;
+        gameOverReason = 'Your spirit is broken. You can go no further.';
       }
 
       if (prev.dayInPhase >= daysInPhase) {
         if (prev.currentPhaseOrder >= 4) {
           return {
             ...prev,
-            stats: { ...prev.stats, food: newFood },
+            stats: { ...prev.stats, food: newFood, health: newHealth },
             isGameOver: true,
             gameOverReason: null,
             isVictory: true,
@@ -166,7 +172,7 @@ export function useGameState() {
           ...prev,
           currentPhaseOrder: prev.currentPhaseOrder + 1,
           dayInPhase: 1,
-          stats: { ...prev.stats, food: newFood },
+          stats: { ...prev.stats, food: newFood, health: newHealth },
           isGameOver,
           gameOverReason,
         };
@@ -175,7 +181,7 @@ export function useGameState() {
       return {
         ...prev,
         dayInPhase: prev.dayInPhase + 1,
-        stats: { ...prev.stats, food: newFood },
+        stats: { ...prev.stats, food: newFood, health: newHealth },
         isGameOver,
         gameOverReason,
       };
