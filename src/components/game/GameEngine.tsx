@@ -169,6 +169,10 @@ export function GameEngine({ userId, onMainMenu, loadExistingSave }: GameEngineP
 
   const handleChoiceMade = useCallback((choice: EventChoice) => {
     const outcome = pickRandomOutcome(choice.outcomes);
+    if (!outcome) {
+      setDayState('traveling');
+      return;
+    }
     setSelectedChoice(choice);
     setResolvedOutcome(outcome);
     setTypingDone(false);

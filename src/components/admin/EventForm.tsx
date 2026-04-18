@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Plus, Trash2 } from 'lucide-react';
 import { ImageUpload } from './ImageUpload';
+import { useToast } from '@/hooks/use-toast';
 import type { EventChoice, EventOutcome, GamePhase } from '@/hooks/useGameEvents';
 
 interface DayWeight {
@@ -47,6 +48,7 @@ const EMPTY_CHOICE: EventChoice = {
 export type { EventFormData };
 
 export function EventForm({ initialData, phases, onSubmit, onCancel, loading }: EventFormProps) {
+  const { toast } = useToast();
   const [formData, setFormData] = useState<EventFormData>(
     initialData ?? {
       title: '',
@@ -114,6 +116,17 @@ export function EventForm({ initialData, phases, onSubmit, onCancel, loading }: 
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const invalidChoice = formData.choices.findIndex(
+      c => c.outcomes.reduce((sum, o) => sum + o.probability, 0) !== 100
+    );
+    if (invalidChoice !== -1) {
+      toast({
+        title: 'Invalid probabilities',
+        description: `Choice ${invalidChoice + 1} outcomes must sum to 100%.`,
+        variant: 'destructive',
+      });
+      return;
+    }
     onSubmit(formData);
   };
 

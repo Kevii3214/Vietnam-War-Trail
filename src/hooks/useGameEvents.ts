@@ -37,7 +37,7 @@ export interface GamePhase {
   days_in_phase: number;
 }
 
-function normalizeChoice(raw: unknown): EventChoice {
+export function normalizeChoice(raw: unknown): EventChoice {
   if (raw && typeof raw === 'object' && 'outcomes' in raw) {
     const choice = raw as EventChoice;
     if (Array.isArray(choice.outcomes) && choice.outcomes.length > 0) {

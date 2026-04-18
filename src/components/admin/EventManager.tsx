@@ -4,7 +4,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { EventForm } from './EventForm';
 import type { EventFormData } from './EventForm';
-import type { GamePhase, GameEvent, EventChoice } from '@/hooks/useGameEvents';
+import { normalizeChoice } from '@/hooks/useGameEvents';
+import type { GamePhase, GameEvent } from '@/hooks/useGameEvents';
 import { Plus, Edit2, Trash2, Eye, EyeOff } from 'lucide-react';
 
 interface EventManagerProps {
@@ -22,35 +23,6 @@ function deserializeDayWeights(raw: unknown): { day: number; probability: number
     day: parseInt(day),
     probability,
   }));
-}
-
-function normalizeChoiceForForm(raw: unknown): EventChoice {
-  if (raw && typeof raw === 'object' && 'outcomes' in raw) {
-    const choice = raw as EventChoice;
-    if (Array.isArray(choice.outcomes) && choice.outcomes.length > 0) {
-      return choice;
-    }
-  }
-  const old = raw as {
-    text?: string;
-    result_text?: string;
-    health_delta?: number;
-    food_delta?: number;
-    morale_delta?: number;
-    money_delta?: number;
-  };
-  return {
-    text: old.text ?? '',
-    outcomes: [{
-      probability: 100,
-      health_delta: old.health_delta ?? 0,
-      food_delta: old.food_delta ?? 0,
-      morale_delta: old.morale_delta ?? 0,
-      money_delta: old.money_delta ?? 0,
-      result_text: old.result_text ?? '',
-      force_phase_order: null,
-    }],
-  };
 }
 
 export function EventManager({ phases }: EventManagerProps) {
@@ -78,7 +50,7 @@ export function EventManager({ phases }: EventManagerProps) {
         ...e,
         probability_weight: (e.probability_weight as number | undefined) ?? 50,
         day_weights: (e.day_weights as Record<string, number> | null) ?? null,
-        choices: ((typeof e.choices === 'string' ? JSON.parse(e.choices) : e.choices) as unknown[]).map(normalizeChoiceForForm),
+        choices: ((typeof e.choices === 'string' ? JSON.parse(e.choices) : e.choices) as unknown[]).map(normalizeChoice),
       })) as GameEvent[]);
     }
   };
