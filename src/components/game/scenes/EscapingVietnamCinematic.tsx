@@ -319,7 +319,7 @@ export function EscapingVietnamCinematic({ onComplete }: CinematicProps) {
       </div>
 
       {/* Overlay UI on top of scene */}
-      <div className="absolute inset-0 z-10 flex flex-col justify-end pb-8 md:pb-16">
+      <div className="absolute inset-0 z-10 flex flex-col justify-end">
         {/* Scene counter */}
         <div className="flex justify-center gap-2 mb-4">
           {SCENES.map((_, i) => (
@@ -332,9 +332,8 @@ export function EscapingVietnamCinematic({ onComplete }: CinematicProps) {
           ))}
         </div>
 
-        {/* Text area with dark backdrop */}
-        <div className="mx-4 md:mx-auto md:max-w-2xl bg-background/80 backdrop-blur-sm border border-border/50 rounded-sm p-6">
-          {/* Typewriter text */}
+        {/* Typewriter text - no background box, wider */}
+        <div className="px-6 md:px-16 lg:px-24 pb-4">
           <div className="min-h-[60px] flex items-center justify-center">
             <Typewriter
               key={sceneIndex}
@@ -342,19 +341,19 @@ export function EscapingVietnamCinematic({ onComplete }: CinematicProps) {
               onComplete={handleTextDone}
             />
           </div>
+        </div>
 
-          {/* Next arrow */}
-          <div className="flex justify-center h-10 mt-3">
-            {arrowVisible && (
-              <button
-                onClick={handleNext}
-                className="flex items-center gap-2 font-pixel text-[10px] text-primary hover:text-primary/80 transition-colors animate-fade-in-up cursor-pointer group"
-              >
-                {sceneIndex < SCENES.length - 1 ? 'Continue' : 'Begin Your Journey'}
-                <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </button>
-            )}
-          </div>
+        {/* Continue button - bottom right */}
+        <div className="flex justify-end px-6 md:px-12 pb-6 h-12">
+          {arrowVisible && (
+            <button
+              onClick={handleNext}
+              className="flex items-center gap-2 font-pixel text-[10px] text-primary hover:text-primary/80 transition-colors animate-fade-in-up cursor-pointer group"
+            >
+              {sceneIndex < SCENES.length - 1 ? 'Continue' : 'Begin Your Journey'}
+              <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </button>
+          )}
         </div>
       </div>
 
