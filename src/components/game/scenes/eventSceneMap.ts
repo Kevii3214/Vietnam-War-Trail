@@ -6,4 +6,5 @@ export const EVENT_SCENE_MAP: Record<string, string> = {
   // Phase 1 events
   'The City Falls': 'city-falls',
   'Reeducation Registration': 'reeducation-camp',
+  'Acquiring a Boat Directly': 'acquiring-boat',
 };

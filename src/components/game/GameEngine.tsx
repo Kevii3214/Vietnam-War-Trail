@@ -8,6 +8,7 @@ import { GameMenuBar } from './GameMenuBar';
 import { EscapingVietnamCinematic } from './scenes/EscapingVietnamCinematic';
 import { CityFallsScene } from './scenes/CityFallsScene';
 import { ReeducationCampScene } from './scenes/ReeducationCampScene';
+import { AcquiringBoatScene } from './scenes/AcquiringBoatScene';
 import { EVENT_SCENE_MAP } from './scenes/eventSceneMap';
 import { useGameState } from '@/hooks/useGameState';
 import { useGameEvents, type EventChoice, type EventOutcome, pickRandomOutcome } from '@/hooks/useGameEvents';
@@ -259,6 +260,7 @@ export function GameEngine({ userId, onMainMenu, loadExistingSave }: GameEngineP
     switch (eventSceneKey) {
       case 'city-falls': return <CityFallsScene />;
       case 'reeducation-camp': return <ReeducationCampScene />;
+      case 'acquiring-boat': return <AcquiringBoatScene />;
       default: return null;
     }
   };
