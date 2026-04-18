@@ -44,45 +44,6 @@ function Typewriter({ text, onComplete, speed = 45 }: TypewriterProps) {
   );
 }
 
-/* Unified game HUD panel - dialog text + menu icons in one frame */
-function GameHUD({ children, menuBar }: { children: React.ReactNode; menuBar: React.ReactNode }) {
-  return (
-    <div className="relative mx-6 md:mx-20 lg:mx-36">
-      {/* Outer glow */}
-      <div className="absolute -inset-1 rounded-sm bg-primary/10 blur-md" />
-      {/* Unified frame */}
-      <div className="relative border border-primary/30 rounded-sm overflow-hidden flex">
-        {/* Top gradient bar spans entire width */}
-        <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-primary/60 via-primary/30 to-primary/60 z-10" />
-        {/* Bottom gradient bar */}
-        <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-primary/30 to-transparent z-10" />
-
-        {/* Text area */}
-        <div className="flex-1 bg-gradient-to-b from-background/95 to-background/85 backdrop-blur-md px-5 py-3 md:px-6 md:py-3 relative">
-          {/* Corner accents - only left corners */}
-          <div className="absolute top-0 left-0 w-4 h-4">
-            <div className="absolute top-0 left-0 w-full h-[2px] bg-primary/50" />
-            <div className="absolute top-0 left-0 h-full w-[2px] bg-primary/50" />
-          </div>
-          <div className="absolute bottom-0 left-0 w-4 h-4">
-            <div className="absolute bottom-0 left-0 w-full h-[2px] bg-primary/50" />
-            <div className="absolute bottom-0 left-0 h-full w-[2px] bg-primary/50" />
-          </div>
-          {children}
-        </div>
-
-        {/* Divider line */}
-        <div className="w-[1px] bg-primary/20 self-stretch" />
-
-        {/* Menu strip - embedded right side */}
-        <div className="flex flex-col bg-gradient-to-b from-background/90 to-background/80 backdrop-blur-md">
-          {menuBar}
-        </div>
-      </div>
-    </div>
-  );
-}
-
 // --- Scene 1: Helicopter Evacuation ---
 function Scene1() {
   return (
