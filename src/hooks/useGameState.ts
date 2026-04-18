@@ -1,4 +1,5 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
+import { supabase } from '@/integrations/supabase/client';
 
 export interface GameStats {
   health: number;
@@ -17,31 +18,58 @@ export interface GameState {
   isVictory: boolean;
 }
 
-const INITIAL_STATS: GameStats = {
+const DEFAULT_STATS: GameStats = {
   health: 100,
   food: 80,
   morale: 70,
   money: 50,
 };
 
-const INITIAL_STATE: GameState = {
-  currentPhaseOrder: 1,
-  dayInPhase: 1,
-  stats: { ...INITIAL_STATS },
-  eventsSeen: [],
-  isGameOver: false,
-  gameOverReason: null,
-  isVictory: false,
-};
-
 export function useGameState() {
-  const [gameState, setGameState] = useState<GameState>({ ...INITIAL_STATE });
+  const [initialStats, setInitialStats] = useState<GameStats>(DEFAULT_STATS);
+  const [gameState, setGameState] = useState<GameState>({
+    currentPhaseOrder: 1,
+    dayInPhase: 1,
+    stats: { ...DEFAULT_STATS },
+    eventsSeen: [],
+    isGameOver: false,
+    gameOverReason: null,
+    isVictory: false,
+  });
   const [showPhaseIntro, setShowPhaseIntro] = useState(true);
 
-  const startNewGame = useCallback(() => {
-    setGameState({ ...INITIAL_STATE, eventsSeen: [] });
-    setShowPhaseIntro(true);
+  // Fetch starting stats from DB
+  useEffect(() => {
+    const fetchSettings = async () => {
+      const { data } = await supabase
+        .from('game_settings')
+        .select('key, value');
+      if (data) {
+        const stats = { ...DEFAULT_STATS };
+        for (const row of data) {
+          if (row.key === 'starting_health') stats.health = row.value;
+          if (row.key === 'starting_food') stats.food = row.value;
+          if (row.key === 'starting_morale') stats.morale = row.value;
+          if (row.key === 'starting_money') stats.money = row.value;
+        }
+        setInitialStats(stats);
+      }
+    };
+    fetchSettings();
   }, []);
+
+  const startNewGame = useCallback(() => {
+    setGameState({
+      currentPhaseOrder: 1,
+      dayInPhase: 1,
+      stats: { ...initialStats },
+      eventsSeen: [],
+      isGameOver: false,
+      gameOverReason: null,
+      isVictory: false,
+    });
+    setShowPhaseIntro(true);
+  }, [initialStats]);
 
   const loadGameState = useCallback((saved: {
     current_phase_order: number;

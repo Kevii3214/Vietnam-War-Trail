@@ -4,6 +4,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useGameEvents } from '@/hooks/useGameEvents';
 import { PhaseManager } from '@/components/admin/PhaseManager';
 import { EventManager } from '@/components/admin/EventManager';
+import { SettingsManager } from '@/components/admin/SettingsManager';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ArrowLeft } from 'lucide-react';
@@ -52,6 +53,9 @@ export default function AdminPage() {
             <TabsTrigger value="events" className="font-pixel text-[8px] flex-1 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
               Events
             </TabsTrigger>
+            <TabsTrigger value="settings" className="font-pixel text-[8px] flex-1 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+              Settings
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="phases" className="mt-4">
@@ -60,6 +64,10 @@ export default function AdminPage() {
 
           <TabsContent value="events" className="mt-4">
             <EventManager phases={phases} />
+          </TabsContent>
+
+          <TabsContent value="settings" className="mt-4">
+            <SettingsManager />
           </TabsContent>
         </Tabs>
       </div>

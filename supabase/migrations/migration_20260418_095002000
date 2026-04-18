@@ -1,0 +1,23 @@
+
+CREATE TABLE game_settings (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  key TEXT NOT NULL UNIQUE,
+  value INTEGER NOT NULL,
+  label TEXT NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+ALTER TABLE game_settings ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Anyone can read settings" ON game_settings FOR SELECT USING (true);
+CREATE POLICY "Admins can update settings" ON game_settings FOR UPDATE TO authenticated USING (
+  public.is_admin(auth.uid())
+);
+CREATE POLICY "Admins can insert settings" ON game_settings FOR INSERT TO authenticated WITH CHECK (
+  public.is_admin(auth.uid())
+);
+
+INSERT INTO game_settings (key, value, label) VALUES
+  ('starting_health', 100, 'Starting Health'),
+  ('starting_food', 80, 'Starting Food'),
+  ('starting_morale', 70, 'Starting Morale'),
+  ('starting_money', 50, 'Starting Money');
