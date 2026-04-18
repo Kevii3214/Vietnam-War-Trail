@@ -43,26 +43,41 @@ function Typewriter({ text, onComplete, speed = 45 }: TypewriterProps) {
   );
 }
 
-/* Pixel-art styled dialog box with decorative corners */
+/* Game-style dialog panel with beveled edges and glow */
 function PixelDialogBox({ children }: { children: React.ReactNode }) {
   return (
-    <div className="relative mx-8 md:mx-24 lg:mx-40">
-      {/* Outer pixel border */}
-      <div className="absolute -inset-[3px] bg-primary/50" style={{ clipPath: 'polygon(8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px), 0 8px)' }} />
-      {/* Inner background */}
-      <div
-        className="relative bg-background/90 backdrop-blur-sm px-5 py-3 md:px-8 md:py-4"
-        style={{ clipPath: 'polygon(8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px), 0 8px)' }}
-      >
-        {/* Corner decorations */}
-        <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-primary" />
-        <div className="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-primary" />
-        <div className="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-primary" />
-        <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-primary" />
-        {/* Horizontal accent lines */}
-        <div className="absolute top-1.5 left-6 right-6 h-px bg-primary/20" />
-        <div className="absolute bottom-1.5 left-6 right-6 h-px bg-primary/20" />
-        {children}
+    <div className="relative">
+      {/* Outer glow */}
+      <div className="absolute -inset-1 rounded-sm bg-primary/15 blur-md" />
+      {/* Bevel frame */}
+      <div className="relative border border-primary/40 rounded-sm overflow-hidden">
+        {/* Top gradient bar */}
+        <div className="h-[2px] bg-gradient-to-r from-transparent via-primary/70 to-transparent" />
+        {/* Inner background */}
+        <div className="bg-gradient-to-b from-background/95 to-background/85 backdrop-blur-md px-5 py-3 md:px-6 md:py-3">
+          {/* Subtle inner border glow */}
+          <div className="absolute inset-[1px] rounded-sm border border-primary/10 pointer-events-none" />
+          {/* Corner accents */}
+          <div className="absolute top-0 left-0 w-4 h-4">
+            <div className="absolute top-0 left-0 w-full h-[2px] bg-primary/60" />
+            <div className="absolute top-0 left-0 h-full w-[2px] bg-primary/60" />
+          </div>
+          <div className="absolute top-0 right-0 w-4 h-4">
+            <div className="absolute top-0 right-0 w-full h-[2px] bg-primary/60" />
+            <div className="absolute top-0 right-0 h-full w-[2px] bg-primary/60" />
+          </div>
+          <div className="absolute bottom-0 left-0 w-4 h-4">
+            <div className="absolute bottom-0 left-0 w-full h-[2px] bg-primary/60" />
+            <div className="absolute bottom-0 left-0 h-full w-[2px] bg-primary/60" />
+          </div>
+          <div className="absolute bottom-0 right-0 w-4 h-4">
+            <div className="absolute bottom-0 right-0 w-full h-[2px] bg-primary/60" />
+            <div className="absolute bottom-0 right-0 h-full w-[2px] bg-primary/60" />
+          </div>
+          {children}
+        </div>
+        {/* Bottom gradient bar */}
+        <div className="h-[2px] bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
       </div>
     </div>
   );
@@ -390,11 +405,11 @@ export function EscapingVietnamCinematic({ onComplete }: CinematicProps) {
         </div>
 
         {/* Dialog box + menu bar row */}
-        <div className="flex items-end gap-2 mx-8 md:mx-24 lg:mx-40">
+        <div className="flex items-end gap-0 mx-6 md:mx-20 lg:mx-36">
           {/* Pixel dialog box with text */}
           <div className="flex-1">
             <PixelDialogBox>
-              <div className="min-h-[40px] flex items-center justify-center">
+              <div className="min-h-[36px] flex items-center justify-center">
                 <Typewriter
                   key={sceneIndex}
                   text={scene.text}
@@ -402,7 +417,7 @@ export function EscapingVietnamCinematic({ onComplete }: CinematicProps) {
                 />
               </div>
               {/* Continue button inside box, bottom right */}
-              <div className="flex justify-end h-6 mt-1">
+              <div className="flex justify-end h-5 mt-0.5">
                 {arrowVisible && (
                   <button
                     onClick={handleNext}
@@ -416,8 +431,8 @@ export function EscapingVietnamCinematic({ onComplete }: CinematicProps) {
             </PixelDialogBox>
           </div>
 
-          {/* Menu bar on the right */}
-          <div className="flex-shrink-0 mb-1">
+          {/* Menu icons flush right of dialog */}
+          <div className="flex-shrink-0 pb-[2px]">
             <GameMenuBar onSaveAndExit={onComplete} />
           </div>
         </div>
