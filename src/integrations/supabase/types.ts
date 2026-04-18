@@ -3113,31 +3113,37 @@ export type Database = {
         Row: {
           choices: Json
           created_at: string | null
+          day_weights: Json | null
           description: string
           id: string
           image_url: string | null
           is_active: boolean | null
           phase_id: string
+          probability_weight: number
           title: string
         }
         Insert: {
           choices?: Json
           created_at?: string | null
+          day_weights?: Json | null
           description: string
           id?: string
           image_url?: string | null
           is_active?: boolean | null
           phase_id: string
+          probability_weight?: number
           title: string
         }
         Update: {
           choices?: Json
           created_at?: string | null
+          day_weights?: Json | null
           description?: string
           id?: string
           image_url?: string | null
           is_active?: boolean | null
           phase_id?: string
+          probability_weight?: number
           title?: string
         }
         Relationships: [

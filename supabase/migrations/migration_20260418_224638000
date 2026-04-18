@@ -1,0 +1,3 @@
+
+ALTER TABLE game_events ADD COLUMN probability_weight INTEGER NOT NULL DEFAULT 50;
+ALTER TABLE game_events ADD COLUMN day_weights JSONB DEFAULT NULL;
