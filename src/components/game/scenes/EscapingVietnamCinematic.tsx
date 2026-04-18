@@ -35,7 +35,7 @@ function Typewriter({ text, onComplete, speed = 45 }: TypewriterProps) {
   }, [text, speed, onComplete]);
 
   return (
-    <p className="font-retro text-xl md:text-2xl lg:text-3xl text-foreground leading-relaxed text-center">
+    <p className="font-retro text-base md:text-lg lg:text-xl text-foreground leading-relaxed text-center">
       {displayed}
       {!done && <span className="opacity-80 animate-pulse">_</span>}
     </p>
@@ -45,12 +45,12 @@ function Typewriter({ text, onComplete, speed = 45 }: TypewriterProps) {
 /* Pixel-art styled dialog box with decorative corners */
 function PixelDialogBox({ children }: { children: React.ReactNode }) {
   return (
-    <div className="relative mx-4 md:mx-12 lg:mx-20">
+    <div className="relative mx-8 md:mx-24 lg:mx-40">
       {/* Outer pixel border */}
       <div className="absolute -inset-[3px] bg-primary/50" style={{ clipPath: 'polygon(8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px), 0 8px)' }} />
       {/* Inner background */}
       <div
-        className="relative bg-background/90 backdrop-blur-sm px-6 py-5 md:px-10 md:py-6"
+        className="relative bg-background/90 backdrop-blur-sm px-5 py-3 md:px-8 md:py-4"
         style={{ clipPath: 'polygon(8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px), 0 8px)' }}
       >
         {/* Corner decorations */}
@@ -374,7 +374,7 @@ export function EscapingVietnamCinematic({ onComplete }: CinematicProps) {
       </div>
 
       {/* Overlay UI */}
-      <div className="absolute inset-0 z-10 flex flex-col justify-end pb-6 md:pb-10">
+      <div className="absolute inset-0 z-10 flex flex-col justify-end pb-3 md:pb-5">
         {/* Scene dots */}
         <div className="flex justify-center gap-2 mb-4">
           {SCENES.map((_, i) => (
@@ -390,7 +390,7 @@ export function EscapingVietnamCinematic({ onComplete }: CinematicProps) {
 
         {/* Pixel dialog box with text */}
         <PixelDialogBox>
-          <div className="min-h-[56px] flex items-center justify-center">
+          <div className="min-h-[40px] flex items-center justify-center">
             <Typewriter
               key={sceneIndex}
               text={scene.text}
@@ -398,7 +398,7 @@ export function EscapingVietnamCinematic({ onComplete }: CinematicProps) {
             />
           </div>
           {/* Continue button inside box, bottom right */}
-          <div className="flex justify-end h-8 mt-2">
+          <div className="flex justify-end h-6 mt-1">
             {arrowVisible && (
               <button
                 onClick={handleNext}
