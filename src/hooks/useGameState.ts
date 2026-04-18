@@ -199,6 +199,15 @@ export function useGameState() {
     setShowPhaseIntro(true);
   }, []);
 
+  const jumpToPhase = useCallback((phaseOrder: number) => {
+    setGameState(prev => ({
+      ...prev,
+      currentPhaseOrder: phaseOrder,
+      dayInPhase: 1,
+      eventsSeen: [],
+    }));
+  }, []);
+
   return {
     gameState,
     showPhaseIntro,
@@ -211,5 +220,6 @@ export function useGameState() {
     advanceDay,
     setPhaseIntroSeen,
     triggerPhaseIntro,
+    jumpToPhase,
   };
 }
