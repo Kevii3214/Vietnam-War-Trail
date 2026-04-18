@@ -6,6 +6,7 @@ import { GameOver } from './GameOver';
 import { GameHUD } from './GameHUD';
 import { GameMenuBar } from './GameMenuBar';
 import { EscapingVietnamCinematic } from './scenes/EscapingVietnamCinematic';
+import { TravelingByBoatCinematic } from './scenes/TravelingByBoatCinematic';
 import { CityFallsScene } from './scenes/CityFallsScene';
 import { ReeducationCampScene } from './scenes/ReeducationCampScene';
 import { AcquiringBoatScene } from './scenes/AcquiringBoatScene';
@@ -96,7 +97,7 @@ export function GameEngine({ userId, onMainMenu, loadExistingSave }: GameEngineP
   const [resolvedOutcome, setResolvedOutcome] = useState<EventOutcome | null>(null);
   const [initialized, setInitialized] = useState(false);
   const [lastPhase, setLastPhase] = useState(1);
-  const [showCinematic, setShowCinematic] = useState(false);
+  const [showCinematic, setShowCinematic] = useState<number | false>(false);
   const [typingDone, setTypingDone] = useState(false);
   const [travelText, setTravelText] = useState('');
 
@@ -122,7 +123,7 @@ export function GameEngine({ userId, onMainMenu, loadExistingSave }: GameEngineP
         }
       } else {
         startNewGame();
-        setShowCinematic(true);
+        setShowCinematic(1);
       }
       setInitialized(true);
     };
@@ -132,8 +133,14 @@ export function GameEngine({ userId, onMainMenu, loadExistingSave }: GameEngineP
   // Detect phase changes
   useEffect(() => {
     if (gameState.currentPhaseOrder !== lastPhase) {
-      setLastPhase(gameState.currentPhaseOrder);
-      triggerPhaseIntro();
+      const newPhase = gameState.currentPhaseOrder;
+      setLastPhase(newPhase);
+      // Show cinematic for phases that have one, otherwise show phase intro
+      if (newPhase === 2) {
+        setShowCinematic(2);
+      } else {
+        triggerPhaseIntro();
+      }
     }
   }, [gameState.currentPhaseOrder, lastPhase, triggerPhaseIntro]);
 
@@ -221,7 +228,7 @@ export function GameEngine({ userId, onMainMenu, loadExistingSave }: GameEngineP
     setSelectedChoice(null);
     setResolvedOutcome(null);
     setInitialized(true);
-    setShowCinematic(true);
+    setShowCinematic(1);
   }, [startNewGame]);
 
   if (loading || !initialized) {
@@ -234,8 +241,12 @@ export function GameEngine({ userId, onMainMenu, loadExistingSave }: GameEngineP
     );
   }
 
-  if (showCinematic) {
+  if (showCinematic === 1) {
     return <EscapingVietnamCinematic onComplete={() => setShowCinematic(false)} />;
+  }
+
+  if (showCinematic === 2) {
+    return <TravelingByBoatCinematic onComplete={() => setShowCinematic(false)} />;
   }
 
   if (gameState.isGameOver) {
