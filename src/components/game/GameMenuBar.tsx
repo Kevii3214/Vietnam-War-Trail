@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Save, Package, Settings, LogOut } from 'lucide-react';
+import { Save, Package, Settings, LogOut, X } from 'lucide-react';
 
 interface GameMenuBarProps {
   onSaveAndExit?: () => void;
@@ -9,7 +9,7 @@ function MenuButton({ icon, label, onClick }: { icon: React.ReactNode; label: st
   return (
     <button
       onClick={onClick}
-      className="w-full flex items-center gap-2 px-2 py-1.5 text-[10px] font-pixel text-foreground/80 hover:text-foreground hover:bg-primary/10 transition-colors cursor-pointer whitespace-nowrap"
+      className="w-full flex items-center gap-2 px-3 py-1.5 text-[10px] font-pixel text-foreground/70 hover:text-primary hover:bg-primary/10 transition-all cursor-pointer whitespace-nowrap rounded"
     >
       {icon}
       {label}
@@ -18,10 +18,10 @@ function MenuButton({ icon, label, onClick }: { icon: React.ReactNode; label: st
 }
 
 const ITEMS = [
-  { id: 'save', icon: <Save className="w-3.5 h-3.5" />, color: 'text-primary' },
-  { id: 'inventory', icon: <Package className="w-3.5 h-3.5" />, color: 'text-amber-400' },
-  { id: 'settings', icon: <Settings className="w-3.5 h-3.5" />, color: 'text-muted-foreground' },
-];
+  { id: 'save', icon: <Save className="w-3.5 h-3.5" />, label: 'Save' },
+  { id: 'inventory', icon: <Package className="w-3.5 h-3.5" />, label: 'Items' },
+  { id: 'settings', icon: <Settings className="w-3.5 h-3.5" />, label: 'Settings' },
+] as const;
 
 export function GameMenuBar({ onSaveAndExit }: GameMenuBarProps) {
   const [expanded, setExpanded] = useState<string | null>(null);
@@ -34,20 +34,24 @@ export function GameMenuBar({ onSaveAndExit }: GameMenuBarProps) {
           <div key={item.id} className="relative">
             <button
               onClick={() => setExpanded(isOpen ? null : item.id)}
-              className={`w-10 h-full flex items-center justify-center transition-all duration-150 cursor-pointer group
-                ${isOpen ? 'bg-primary/15' : 'hover:bg-primary/10'}
-                ${i < ITEMS.length - 1 ? 'border-b border-primary/10' : ''}`}
-              style={{ minHeight: 28 }}
-              title={item.id}
+              className={`w-10 flex items-center justify-center transition-all duration-200 cursor-pointer group
+                ${isOpen ? 'bg-primary/15 text-primary' : 'text-foreground/30 hover:text-foreground/70 hover:bg-primary/5'}
+                ${i < ITEMS.length - 1 ? 'border-b border-primary/5' : ''}`}
+              style={{ minHeight: 30 }}
+              title={item.label}
             >
-              <span className={`${item.color} transition-opacity ${isOpen ? 'opacity-100' : 'opacity-50 group-hover:opacity-90'}`}>
-                {item.icon}
-              </span>
+              {item.icon}
             </button>
 
             {/* Flyout panel */}
             {isOpen && (
-              <div className="absolute right-full top-0 bg-background/95 border border-primary/20 border-r-0 backdrop-blur-md animate-fade-in-up min-w-[120px] rounded-l-sm z-20">
+              <div className="absolute right-full top-0 bg-background/90 backdrop-blur-xl border border-primary/15 border-r-0 rounded-l-lg animate-fade-in-up min-w-[130px] z-30 shadow-lg shadow-background/50">
+                <div className="flex items-center justify-between px-3 pt-2 pb-1 border-b border-primary/10">
+                  <span className="text-[8px] font-pixel text-primary/60 uppercase tracking-widest">{item.label}</span>
+                  <button onClick={() => setExpanded(null)} className="text-foreground/30 hover:text-foreground/60 cursor-pointer">
+                    <X className="w-3 h-3" />
+                  </button>
+                </div>
                 <div className="p-1">
                   {item.id === 'save' && (
                     <>
@@ -56,10 +60,10 @@ export function GameMenuBar({ onSaveAndExit }: GameMenuBarProps) {
                     </>
                   )}
                   {item.id === 'inventory' && (
-                    <div className="px-2 py-1.5 text-[10px] font-pixel text-muted-foreground text-center">Empty</div>
+                    <div className="px-3 py-2 text-[10px] font-pixel text-muted-foreground/50 text-center">No items</div>
                   )}
                   {item.id === 'settings' && (
-                    <div className="px-2 py-1.5 text-[10px] font-pixel text-muted-foreground text-center">No settings</div>
+                    <div className="px-3 py-2 text-[10px] font-pixel text-muted-foreground/50 text-center">Coming soon</div>
                   )}
                 </div>
               </div>

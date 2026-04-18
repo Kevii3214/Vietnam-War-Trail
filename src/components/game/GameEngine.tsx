@@ -1,9 +1,10 @@
 import { useState, useEffect, useCallback } from 'react';
+import { ChevronRight } from 'lucide-react';
 import { StatsBar } from './StatsBar';
-import { EventCard } from './EventCard';
 import { PhaseIntro } from './PhaseIntro';
 import { GameOver } from './GameOver';
-import { TravelAnimation } from './TravelAnimation';
+import { GameHUD } from './GameHUD';
+import { GameMenuBar } from './GameMenuBar';
 import { EscapingVietnamCinematic } from './scenes/EscapingVietnamCinematic';
 import { useGameState } from '@/hooks/useGameState';
 import { useGameEvents, type EventChoice } from '@/hooks/useGameEvents';
@@ -16,7 +17,56 @@ interface GameEngineProps {
   loadExistingSave?: boolean;
 }
 
-type DayState = 'traveling' | 'event' | 'idle';
+type DayState = 'traveling' | 'event' | 'event_result' | 'idle';
+
+const PHASE_MESSAGES: Record<number, string[]> = {
+  1: [
+    'You move quietly through the streets...',
+    'The sound of distant gunfire echoes...',
+    'You travel through the countryside under cover of night...',
+    'The path ahead is uncertain but you press on...',
+    'A family joins your group, seeking safety...',
+    'You hide in a rice paddy until the patrol passes...',
+  ],
+  2: [
+    'The boat rocks gently on the waves...',
+    'Nothing but open sea in every direction...',
+    'A storm approaches on the horizon...',
+    'The engine sputters but keeps running...',
+    'Stars guide your path through the dark ocean...',
+  ],
+  3: [
+    'Another day in the refugee camp...',
+    'You wait in line for your ration card...',
+    'Children play between the tents...',
+    'News arrives about resettlement opportunities...',
+  ],
+  4: [
+    'Everything feels strange and new...',
+    'You search for work in this new land...',
+    'Learning English is harder than expected...',
+    'A kind stranger helps you navigate the bus system...',
+  ],
+};
+
+function Typewriter({ text, onComplete }: { text: string; onComplete?: () => void }) {
+  const [displayed, setDisplayed] = useState('');
+  useEffect(() => {
+    setDisplayed('');
+    let i = 0;
+    const interval = setInterval(() => {
+      if (i < text.length) {
+        setDisplayed(text.slice(0, i + 1));
+        i++;
+      } else {
+        clearInterval(interval);
+        onComplete?.();
+      }
+    }, 25);
+    return () => clearInterval(interval);
+  }, [text, onComplete]);
+  return <span>{displayed}</span>;
+}
 
 export function GameEngine({ userId, onMainMenu, loadExistingSave }: GameEngineProps) {
   const {
@@ -36,14 +86,16 @@ export function GameEngine({ userId, onMainMenu, loadExistingSave }: GameEngineP
 
   const [dayState, setDayState] = useState<DayState>('idle');
   const [currentEvent, setCurrentEvent] = useState<GameEvent | null>(null);
+  const [selectedChoice, setSelectedChoice] = useState<EventChoice | null>(null);
   const [initialized, setInitialized] = useState(false);
   const [lastPhase, setLastPhase] = useState(1);
   const [showCinematic, setShowCinematic] = useState(false);
+  const [typingDone, setTypingDone] = useState(false);
+  const [travelText, setTravelText] = useState('');
 
   // Initialize game
   useEffect(() => {
     if (initialized || loading) return;
-
     const init = async () => {
       if (loadExistingSave) {
         const save = await loadGame();
@@ -67,7 +119,6 @@ export function GameEngine({ userId, onMainMenu, loadExistingSave }: GameEngineP
       }
       setInitialized(true);
     };
-
     init();
   }, [loading, initialized, loadExistingSave, loadGame, loadGameState, startNewGame]);
 
@@ -90,57 +141,62 @@ export function GameEngine({ userId, onMainMenu, loadExistingSave }: GameEngineP
   useEffect(() => {
     if (gameState.isGameOver && initialized) {
       const outcome = gameState.isVictory ? 'completed' : 'died';
-      saveRun(
-        outcome,
-        gameState.currentPhaseOrder,
-        gameState.dayInPhase,
-        gameState.stats
-      );
+      saveRun(outcome, gameState.currentPhaseOrder, gameState.dayInPhase, gameState.stats);
     }
   }, [gameState.isGameOver, gameState.isVictory, initialized, saveRun, gameState.currentPhaseOrder, gameState.dayInPhase, gameState.stats]);
 
   const handleNextDay = useCallback(() => {
+    setTypingDone(false);
     const eventChance = Math.random();
     if (eventChance < 0.7) {
       const event = getRandomEvent(gameState.currentPhaseOrder, gameState.eventsSeen);
       if (event) {
         setCurrentEvent(event);
+        setSelectedChoice(null);
         setDayState('event');
         markEventSeen(event.id);
         return;
       }
     }
+    // Travel day
+    const msgs = PHASE_MESSAGES[gameState.currentPhaseOrder] || PHASE_MESSAGES[1];
+    setTravelText(msgs[Math.floor(Math.random() * msgs.length)]);
     setDayState('traveling');
   }, [gameState.currentPhaseOrder, gameState.eventsSeen, getRandomEvent, markEventSeen]);
 
   const handleChoiceMade = useCallback((choice: EventChoice) => {
-    applyStatChanges({
-      health: choice.health_delta,
-      food: choice.food_delta,
-      morale: choice.morale_delta,
-      money: choice.money_delta,
-    });
-    setCurrentEvent(null);
-    setDayState('idle');
+    setSelectedChoice(choice);
+    setTypingDone(false);
+    setDayState('event_result');
+  }, []);
 
-    const phase = getPhaseByOrder(gameState.currentPhaseOrder);
-    if (phase) {
-      advanceDay(phase.days_in_phase);
+  const handleContinueAfterResult = useCallback(() => {
+    if (selectedChoice) {
+      applyStatChanges({
+        health: selectedChoice.health_delta,
+        food: selectedChoice.food_delta,
+        morale: selectedChoice.morale_delta,
+        money: selectedChoice.money_delta,
+      });
     }
-  }, [applyStatChanges, advanceDay, getPhaseByOrder, gameState.currentPhaseOrder]);
+    setCurrentEvent(null);
+    setSelectedChoice(null);
+    setDayState('idle');
+    const phase = getPhaseByOrder(gameState.currentPhaseOrder);
+    if (phase) advanceDay(phase.days_in_phase);
+  }, [selectedChoice, applyStatChanges, advanceDay, getPhaseByOrder, gameState.currentPhaseOrder]);
 
   const handleTravelContinue = useCallback(() => {
     setDayState('idle');
     const phase = getPhaseByOrder(gameState.currentPhaseOrder);
-    if (phase) {
-      advanceDay(phase.days_in_phase);
-    }
+    if (phase) advanceDay(phase.days_in_phase);
   }, [advanceDay, getPhaseByOrder, gameState.currentPhaseOrder]);
 
   const handleNewGame = useCallback(() => {
     startNewGame();
     setDayState('idle');
     setCurrentEvent(null);
+    setSelectedChoice(null);
     setInitialized(true);
     setShowCinematic(true);
   }, [startNewGame]);
@@ -177,44 +233,149 @@ export function GameEngine({ userId, onMainMenu, loadExistingSave }: GameEngineP
     return <PhaseIntro phase={currentPhase} onContinue={setPhaseIntroSeen} />;
   }
 
-  return (
-    <div className="h-full flex flex-col bg-background relative scanlines">
-      <div className="p-3 border-b border-border">
-        <StatsBar
-          stats={gameState.stats}
-          phase={gameState.currentPhaseOrder}
-          day={gameState.dayInPhase}
-        />
-      </div>
+  // Build HUD content based on current dayState
+  const renderHUDContent = () => {
+    // Idle state - prompt next day
+    if (dayState === 'idle') {
+      return (
+        <div className="animate-fade-in-up">
+          <p className="font-retro text-base md:text-lg text-foreground/70 mb-2">
+            The journey continues. What will today bring?
+          </p>
+          <div className="flex justify-end">
+            <button
+              onClick={handleNextDay}
+              className="flex items-center gap-2 font-pixel text-[10px] text-primary hover:text-primary/80 transition-colors cursor-pointer group"
+            >
+              Next Day
+              <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </button>
+          </div>
+        </div>
+      );
+    }
 
-      <div className="flex-1 overflow-auto p-4">
-        <div className="max-w-lg mx-auto space-y-4">
-          {dayState === 'idle' && (
-            <div className="text-center py-8 animate-fade-in-up">
-              <p className="font-retro text-xl text-foreground/70 mb-6">
-                The journey continues. What will today bring?
-              </p>
+    // Traveling - typewriter text
+    if (dayState === 'traveling') {
+      return (
+        <div className="animate-fade-in-up">
+          <div className="flex items-center gap-2 mb-2">
+            <span className="font-pixel text-[8px] text-muted-foreground uppercase tracking-wider">Day {gameState.dayInPhase}</span>
+            <div className="flex-1 border-t border-primary/10" />
+          </div>
+          <p className="font-retro text-base md:text-lg text-foreground min-h-[1.5em]">
+            <Typewriter key={travelText} text={travelText} onComplete={() => setTypingDone(true)} />
+          </p>
+          <div className="flex justify-end h-5 mt-1">
+            {typingDone && (
               <button
-                onClick={handleNextDay}
-                className="font-pixel text-[10px] bg-primary text-primary-foreground hover:bg-primary/80 px-6 py-3 rounded-sm transition-colors"
+                onClick={handleTravelContinue}
+                className="flex items-center gap-2 font-pixel text-[10px] text-primary hover:text-primary/80 transition-colors animate-fade-in-up cursor-pointer group"
               >
-                Next Day
+                Continue
+                <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </button>
+            )}
+          </div>
+        </div>
+      );
+    }
+
+    // Event - show title, description, choices
+    if (dayState === 'event' && currentEvent) {
+      return (
+        <div className="animate-fade-in-up">
+          <p className="font-pixel text-[10px] text-primary crt-glow mb-1">{currentEvent.title}</p>
+          <p className="font-retro text-base md:text-lg text-foreground leading-relaxed mb-3">
+            {currentEvent.description}
+          </p>
+          <div className="space-y-1.5">
+            {currentEvent.choices.map((choice, index) => (
+              <button
+                key={index}
+                onClick={() => handleChoiceMade(choice)}
+                className="w-full text-left flex items-start gap-2 px-3 py-2 rounded border border-primary/10 hover:border-primary/40 hover:bg-primary/5 transition-all cursor-pointer group"
+              >
+                <span className="text-primary font-pixel text-[9px] mt-0.5 shrink-0">{index + 1}.</span>
+                <span className="font-retro text-sm text-foreground/80 group-hover:text-foreground transition-colors">{choice.text}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    // Event result
+    if (dayState === 'event_result' && selectedChoice) {
+      return (
+        <div className="animate-fade-in-up">
+          <p className="font-retro text-base md:text-lg text-foreground leading-relaxed mb-2">
+            <Typewriter key={selectedChoice.result_text} text={selectedChoice.result_text} onComplete={() => setTypingDone(true)} />
+          </p>
+          {typingDone && (
+            <div className="animate-fade-in-up">
+              <div className="flex flex-wrap gap-3 mb-2 font-pixel text-[9px]">
+                {selectedChoice.health_delta !== 0 && (
+                  <span className={selectedChoice.health_delta > 0 ? 'text-game-food' : 'text-game-health'}>
+                    HP {selectedChoice.health_delta > 0 ? '+' : ''}{selectedChoice.health_delta}
+                  </span>
+                )}
+                {selectedChoice.food_delta !== 0 && (
+                  <span className={selectedChoice.food_delta > 0 ? 'text-game-food' : 'text-game-health'}>
+                    Food {selectedChoice.food_delta > 0 ? '+' : ''}{selectedChoice.food_delta}
+                  </span>
+                )}
+                {selectedChoice.morale_delta !== 0 && (
+                  <span className={selectedChoice.morale_delta > 0 ? 'text-game-food' : 'text-game-health'}>
+                    Morale {selectedChoice.morale_delta > 0 ? '+' : ''}{selectedChoice.morale_delta}
+                  </span>
+                )}
+                {selectedChoice.money_delta !== 0 && (
+                  <span className={selectedChoice.money_delta > 0 ? 'text-game-food' : 'text-game-health'}>
+                    Money {selectedChoice.money_delta > 0 ? '+' : ''}{selectedChoice.money_delta}
+                  </span>
+                )}
+              </div>
+              <div className="flex justify-end">
+                <button
+                  onClick={handleContinueAfterResult}
+                  className="flex items-center gap-2 font-pixel text-[10px] text-primary hover:text-primary/80 transition-colors cursor-pointer group"
+                >
+                  Continue Journey
+                  <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </button>
+              </div>
             </div>
           )}
-
-          {dayState === 'traveling' && (
-            <TravelAnimation
-              phase={gameState.currentPhaseOrder}
-              day={gameState.dayInPhase}
-              onContinue={handleTravelContinue}
-            />
-          )}
-
-          {dayState === 'event' && currentEvent && (
-            <EventCard event={currentEvent} onChoiceMade={handleChoiceMade} />
-          )}
         </div>
+      );
+    }
+
+    return null;
+  };
+
+  return (
+    <div className="h-full flex flex-col bg-background relative scanlines">
+      {/* Stats bar at top */}
+      <div className="p-3">
+        <StatsBar stats={gameState.stats} phase={gameState.currentPhaseOrder} day={gameState.dayInPhase} />
+      </div>
+
+      {/* Main area fills remaining space and pushes HUD to bottom */}
+      <div className="flex-1 flex flex-col justify-end pb-4 md:pb-6">
+        {/* Event image above HUD if present */}
+        {dayState === 'event' && currentEvent?.image_url && (
+          <div className="mx-4 md:mx-16 lg:mx-28 mb-3 animate-fade-in-up">
+            <div className="rounded-lg overflow-hidden border border-primary/10 max-h-[35vh]">
+              <img src={currentEvent.image_url} alt={currentEvent.title} className="w-full h-full object-cover pixel-art" />
+            </div>
+          </div>
+        )}
+
+        {/* Game HUD with content + menu */}
+        <GameHUD menuBar={<GameMenuBar onSaveAndExit={onMainMenu} />}>
+          {renderHUDContent()}
+        </GameHUD>
       </div>
     </div>
   );

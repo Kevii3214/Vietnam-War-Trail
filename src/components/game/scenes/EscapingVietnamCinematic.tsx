@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { ChevronRight } from 'lucide-react';
+import { GameHUD } from '../GameHUD';
 import { GameMenuBar } from '../GameMenuBar';
 import { PixelHelicopter } from './PixelHelicopter';
 import { PixelCrowd } from './PixelPeople';
