@@ -39,7 +39,10 @@ export interface GamePhase {
 
 function normalizeChoice(raw: unknown): EventChoice {
   if (raw && typeof raw === 'object' && 'outcomes' in raw) {
-    return raw as EventChoice;
+    const choice = raw as EventChoice;
+    if (Array.isArray(choice.outcomes) && choice.outcomes.length > 0) {
+      return choice;
+    }
   }
   const old = raw as {
     text?: string;
@@ -65,7 +68,7 @@ function normalizeChoice(raw: unknown): EventChoice {
 
 function pickWeightedRandom<T>(items: T[], getWeight: (item: T) => number): T | null {
   const total = items.reduce((sum, item) => sum + getWeight(item), 0);
-  if (total <= 0) return items[0] ?? null;
+  if (total <= 0) return null;
   let rand = Math.random() * total;
   for (const item of items) {
     rand -= getWeight(item);
