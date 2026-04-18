@@ -26,7 +26,8 @@ const DEFAULT_STATS: GameStats = {
 };
 
 export function useGameState() {
-  const [initialStats, setInitialStats] = useState<GameStats>(DEFAULT_STATS);
+  const [initialStats, setInitialStats] = useState<GameStats | null>(null);
+  const [settingsLoaded, setSettingsLoaded] = useState(false);
   const [gameState, setGameState] = useState<GameState>({
     currentPhaseOrder: 1,
     dayInPhase: 1,
@@ -44,7 +45,7 @@ export function useGameState() {
       const { data } = await supabase
         .from('game_settings')
         .select('key, value');
-      if (data) {
+      if (data && data.length > 0) {
         const stats = { ...DEFAULT_STATS };
         for (const row of data) {
           if (row.key === 'starting_health') stats.health = row.value;
@@ -53,23 +54,31 @@ export function useGameState() {
           if (row.key === 'starting_money') stats.money = row.value;
         }
         setInitialStats(stats);
+      } else {
+        setInitialStats(DEFAULT_STATS);
       }
+      setSettingsLoaded(true);
     };
     fetchSettings();
   }, []);
 
+  const getStartingStats = useCallback((): GameStats => {
+    return initialStats ?? DEFAULT_STATS;
+  }, [initialStats]);
+
   const startNewGame = useCallback(() => {
+    const stats = getStartingStats();
     setGameState({
       currentPhaseOrder: 1,
       dayInPhase: 1,
-      stats: { ...initialStats },
+      stats: { ...stats },
       eventsSeen: [],
       isGameOver: false,
       gameOverReason: null,
       isVictory: false,
     });
     setShowPhaseIntro(true);
-  }, [initialStats]);
+  }, [getStartingStats]);
 
   const loadGameState = useCallback((saved: {
     current_phase_order: number;
@@ -184,6 +193,7 @@ export function useGameState() {
   return {
     gameState,
     showPhaseIntro,
+    settingsLoaded,
     startNewGame,
     loadGameState,
     applyStatChanges,
