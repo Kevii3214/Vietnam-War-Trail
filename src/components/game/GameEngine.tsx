@@ -7,6 +7,7 @@ import { GameHUD } from './GameHUD';
 import { GameMenuBar } from './GameMenuBar';
 import { EscapingVietnamCinematic } from './scenes/EscapingVietnamCinematic';
 import { CityFallsScene } from './scenes/CityFallsScene';
+import { ReeducationCampScene } from './scenes/ReeducationCampScene';
 import { EVENT_SCENE_MAP } from './scenes/eventSceneMap';
 import { useGameState } from '@/hooks/useGameState';
 import { useGameEvents, type EventChoice, type EventOutcome, pickRandomOutcome } from '@/hooks/useGameEvents';
@@ -257,6 +258,7 @@ export function GameEngine({ userId, onMainMenu, loadExistingSave }: GameEngineP
   const renderEventScene = () => {
     switch (eventSceneKey) {
       case 'city-falls': return <CityFallsScene />;
+      case 'reeducation-camp': return <ReeducationCampScene />;
       default: return null;
     }
   };
