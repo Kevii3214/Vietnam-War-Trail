@@ -1,0 +1,19 @@
+
+-- Drop all existing SELECT policies on profiles
+DROP POLICY IF EXISTS "Users can read own profile" ON profiles;
+DROP POLICY IF EXISTS "Admins can read all profiles" ON profiles;
+
+-- Create a security definer function to check admin status (avoids recursive RLS)
+CREATE OR REPLACE FUNCTION public.is_admin(user_id UUID)
+RETURNS BOOLEAN AS $$
+  SELECT COALESCE(
+    (SELECT is_admin FROM profiles WHERE id = user_id),
+    false
+  );
+$$ LANGUAGE sql SECURITY DEFINER STABLE;
+
+-- Recreate SELECT policy: users can read their own, admins can read all
+CREATE POLICY "Users can read own profile" ON profiles 
+  FOR SELECT USING (
+    auth.uid() = id OR public.is_admin(auth.uid())
+  );
