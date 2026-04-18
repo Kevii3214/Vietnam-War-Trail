@@ -1,0 +1,185 @@
+<h2>Button Style Direction</h2>
+<p class="subtitle">Current vs. proposed Apple-like redesign using <strong>#2596BE</strong>. Pick the style that feels right.</p>
+
+<style>
+  /* Current style simulation */
+  .btn-current-primary {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 10px 20px;
+    background: #FFD147;
+    color: #111;
+    font-family: 'Courier New', monospace;
+    font-size: 10px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    border: 2px solid #FFD147;
+    border-radius: 2px;
+    cursor: pointer;
+    text-transform: uppercase;
+  }
+  .btn-current-outline {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 10px 20px;
+    background: transparent;
+    color: #FFD147;
+    font-family: 'Courier New', monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+    border: 2px solid rgba(255,209,71,0.6);
+    border-radius: 2px;
+    cursor: pointer;
+    text-transform: uppercase;
+  }
+
+  /* Option A: Full Apple */
+  .btn-apple-primary {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 11px 22px;
+    background: #2596BE;
+    color: #fff;
+    font-family: 'Courier New', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(37,150,190,0.35), inset 0 1px 0 rgba(255,255,255,0.15);
+    text-transform: uppercase;
+    transition: all 0.2s ease;
+  }
+  .btn-apple-outline {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 11px 22px;
+    background: transparent;
+    color: #2596BE;
+    font-family: 'Courier New', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    border: 1.5px solid rgba(37,150,190,0.5);
+    border-radius: 12px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.2s ease;
+  }
+  .btn-apple-ghost {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 11px 22px;
+    background: rgba(37,150,190,0.1);
+    color: #2596BE;
+    font-family: 'Courier New', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.2s ease;
+  }
+
+  /* Option B: Soft Retro-Apple hybrid */
+  .btn-hybrid-primary {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 11px 22px;
+    background: #2596BE;
+    color: #fff;
+    font-family: 'Courier New', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    border: 1px solid rgba(37,150,190,0.4);
+    border-radius: 6px;
+    cursor: pointer;
+    box-shadow: 0 1px 4px rgba(37,150,190,0.2);
+    text-transform: uppercase;
+    transition: all 0.18s ease;
+  }
+  .btn-hybrid-outline {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 11px 22px;
+    background: transparent;
+    color: #2596BE;
+    font-family: 'Courier New', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    border: 1.5px solid rgba(37,150,190,0.55);
+    border-radius: 6px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.18s ease;
+  }
+  .btn-hybrid-ghost {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 11px 22px;
+    background: transparent;
+    color: #aaa;
+    font-family: 'Courier New', monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    text-transform: uppercase;
+  }
+
+  .demo-bg {
+    background: #0f1219;
+    border-radius: 8px;
+    padding: 24px 28px;
+  }
+  .btn-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+  .label-small { font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+  .divider { border-color: #333; margin: 18px 0; }
+  .section { margin-bottom: 0; }
+</style>
+
+<div class="cards">
+
+  <div class="card" data-choice="current" onclick="toggleSelect(this)">
+    <div class="card-image demo-bg">
+      <div class="label-small">Current</div>
+      <div class="btn-row">
+        <button class="btn-current-primary">▶ New Journey</button>
+        <button class="btn-current-outline">History</button>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>Current</h3>
+      <p>Sharp corners, yellow primary, pixel borders. Retro-faithful but dated looking.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="apple" onclick="toggleSelect(this)">
+    <div class="card-image demo-bg">
+      <div class="label-small">Option A — Full Apple</div>
+      <div class="btn-row">
+        <button class="btn-apple-primary">▶ New Journey</button>
+        <button class="btn-apple-outline">History</button>
+        <button class="btn-apple-ghost">Sign Out</button>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>Option A — Full Apple</h3>
+      <p>12px radius, <strong>#2596BE</strong> blue, soft glow shadow, clean hierarchy. Most polished.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="hybrid" onclick="toggleSelect(this)">
+    <div class="card-image demo-bg">
+      <div class="label-small">Option B — Retro-Apple Hybrid</div>
+      <div class="btn-row">
+        <button class="btn-hybrid-primary">▶ New Journey</button>
+        <button class="btn-hybrid-outline">History</button>
+        <button class="btn-hybrid-ghost">Sign Out</button>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>Option B — Retro-Apple Hybrid</h3>
+      <p>6px radius, <strong>#2596BE</strong> blue, subtle border retained. Balanced — game aesthetic with modern feel.</p>
+    </div>
+  </div>
+
+</div>
+
+<p class="subtitle" style="margin-top:20px">Click to select, then let me know in the terminal.</p>

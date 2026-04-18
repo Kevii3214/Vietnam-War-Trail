@@ -30,10 +30,17 @@ export default function TitleScreen() {
 
   if (loading || checkingSave) {
     return (
-      <div className="h-full flex items-center justify-center bg-background">
-        <p className="font-pixel text-sm text-primary crt-glow flicker">Loading...</p>
+      <div className="h-full flex flex-col items-center justify-center gap-6 bg-background">
+        <h1 className="font-pixel text-sm text-primary crt-glow flicker">Vietnam Trail</h1>
+        <div className="loading-spinner" />
+        <p className="font-retro text-xl text-muted-foreground/35 italic">Loading your journey...</p>
       </div>
     );
+  }
+
+  if (!user) {
+    navigate('/auth');
+    return null;
   }
 
   return (
@@ -51,8 +58,7 @@ export default function TitleScreen() {
         </div>
 
         {/* Menu */}
-        {user ? (
-          <div className="space-y-3">
+        <div className="space-y-3">
             <p className="font-retro text-lg text-muted-foreground">
               Welcome, <span className="text-primary">{profile?.username || user.email}</span>
             </p>
@@ -60,7 +66,7 @@ export default function TitleScreen() {
             {hasSave && (
               <Button
                 onClick={() => navigate('/game?continue=true')}
-                className="w-full font-pixel text-[10px] bg-primary text-primary-foreground hover:bg-primary/80 h-12"
+                className="w-full font-pixel text-[10px] h-12"
               >
                 <Play className="w-4 h-4 mr-2" />
                 Continue Journey
@@ -70,7 +76,7 @@ export default function TitleScreen() {
             <Button
               onClick={() => navigate('/game')}
               variant="outline"
-              className="w-full font-pixel text-[10px] border-border text-foreground hover:bg-muted h-12"
+              className="w-full font-pixel text-[10px] h-12"
             >
               <Plus className="w-4 h-4 mr-2" />
               New Journey
@@ -79,7 +85,7 @@ export default function TitleScreen() {
             <Button
               onClick={() => navigate('/history')}
               variant="outline"
-              className="w-full font-pixel text-[10px] border-border text-foreground hover:bg-muted h-12"
+              className="w-full font-pixel text-[10px] h-12"
             >
               <History className="w-4 h-4 mr-2" />
               Journey History
@@ -89,7 +95,7 @@ export default function TitleScreen() {
               <Button
                 onClick={() => navigate('/admin')}
                 variant="outline"
-                className="w-full font-pixel text-[10px] border-border text-secondary hover:bg-muted h-12"
+                className="w-full font-pixel text-[10px] h-12"
               >
                 <Settings className="w-4 h-4 mr-2" />
                 Admin Panel
@@ -100,23 +106,13 @@ export default function TitleScreen() {
               <Button
                 onClick={signOut}
                 variant="ghost"
-                className="font-retro text-lg text-muted-foreground hover:text-foreground"
+                className="font-retro text-lg"
               >
                 <LogOut className="w-4 h-4 mr-2" />
                 Sign Out
               </Button>
             </div>
           </div>
-        ) : (
-          <div className="space-y-3">
-            <Button
-              onClick={() => navigate('/auth')}
-              className="w-full font-pixel text-[10px] bg-primary text-primary-foreground hover:bg-primary/80 h-12"
-            >
-              Sign In / Sign Up
-            </Button>
-          </div>
-        )}
 
         {/* Footer */}
         <div className="pt-8 border-t border-border/30">

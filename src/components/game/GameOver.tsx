@@ -51,17 +51,10 @@ export function GameOver({ isVictory, reason, stats, phase, day, onNewGame, onMa
         </div>
 
         <div className="flex gap-3 justify-center">
-          <Button
-            onClick={onNewGame}
-            className="font-pixel text-[10px] bg-primary text-primary-foreground hover:bg-primary/80"
-          >
+          <Button onClick={onNewGame} className="font-pixel text-[10px]">
             Try Again
           </Button>
-          <Button
-            onClick={onMainMenu}
-            variant="outline"
-            className="font-pixel text-[10px] border-border text-foreground hover:bg-muted"
-          >
+          <Button onClick={onMainMenu} variant="outline" className="font-pixel text-[10px]">
             Main Menu
           </Button>
         </div>

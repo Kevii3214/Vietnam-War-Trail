@@ -332,3 +332,84 @@ body,
 .cinematic-twinkle {
   animation: twinkle 2s ease-in-out infinite;
 }
+
+/* ===== NEON ARCADE BUTTON SYSTEM ===== */
+.btn-neon {
+  background: transparent;
+  color: hsl(var(--primary));
+  border: 2px solid hsl(var(--primary) / 0.65);
+  border-radius: 2px;
+  text-shadow: 0 0 8px hsl(var(--primary) / 0.5);
+  box-shadow: 0 0 6px hsl(var(--primary) / 0.2), inset 0 0 6px hsl(var(--primary) / 0.03);
+  transition: all 0.15s ease;
+}
+.btn-neon:hover:not(:disabled) {
+  background: hsl(var(--primary) / 0.08);
+  border-color: hsl(var(--primary));
+  text-shadow: 0 0 12px hsl(var(--primary) / 0.9), 0 0 24px hsl(var(--primary) / 0.4);
+  box-shadow: 0 0 16px hsl(var(--primary) / 0.5), 0 0 32px hsl(var(--primary) / 0.15), inset 0 0 10px hsl(var(--primary) / 0.06);
+}
+.btn-neon:active:not(:disabled) { transform: scale(0.95); }
+.btn-neon:disabled { opacity: 0.35; cursor: not-allowed; }
+
+.btn-neon-dim {
+  background: transparent;
+  color: hsl(var(--primary) / 0.5);
+  border: 1.5px solid hsl(var(--primary) / 0.2);
+  border-radius: 2px;
+  transition: all 0.15s ease;
+}
+.btn-neon-dim:hover:not(:disabled) {
+  color: hsl(var(--primary) / 0.85);
+  border-color: hsl(var(--primary) / 0.55);
+  background: hsl(var(--primary) / 0.05);
+  text-shadow: 0 0 8px hsl(var(--primary) / 0.45);
+}
+.btn-neon-dim:active:not(:disabled) { transform: scale(0.95); }
+.btn-neon-dim:disabled { opacity: 0.35; cursor: not-allowed; }
+
+.btn-neon-ghost {
+  background: transparent;
+  color: hsl(var(--foreground) / 0.3);
+  border: none;
+  border-radius: 2px;
+  transition: color 0.15s ease;
+}
+.btn-neon-ghost:hover:not(:disabled) { color: hsl(var(--foreground) / 0.7); }
+.btn-neon-ghost:active:not(:disabled) { transform: scale(0.95); }
+
+.btn-neon-danger {
+  background: transparent;
+  color: hsl(var(--destructive));
+  border: 1.5px solid hsl(var(--destructive) / 0.4);
+  border-radius: 2px;
+  text-shadow: 0 0 8px hsl(var(--destructive) / 0.4);
+  transition: all 0.15s ease;
+}
+.btn-neon-danger:hover:not(:disabled) {
+  background: hsl(var(--destructive) / 0.08);
+  border-color: hsl(var(--destructive) / 0.7);
+  text-shadow: 0 0 12px hsl(var(--destructive) / 0.7);
+  box-shadow: 0 0 10px hsl(var(--destructive) / 0.25);
+}
+.btn-neon-danger:active:not(:disabled) { transform: scale(0.95); }
+.btn-neon-danger:disabled { opacity: 0.35; cursor: not-allowed; }
+
+/* Smooth modal entrance */
+@keyframes modal-in {
+  from { opacity: 0; transform: scale(0.93) translateY(10px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+.modal-enter {
+  animation: modal-in 0.22s cubic-bezier(0.34, 1.3, 0.64, 1) forwards;
+}
+
+/* Loading spinner */
+.loading-spinner {
+  width: 28px; height: 28px;
+  border: 2px solid hsl(var(--primary) / 0.15);
+  border-top-color: hsl(var(--primary));
+  border-radius: 50%;
+  animation: spin-cw 0.85s linear infinite;
+}
+@keyframes spin-cw { to { transform: rotate(360deg); } }

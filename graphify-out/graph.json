@@ -1,0 +1,3642 @@
+{
+  "directed": false,
+  "multigraph": false,
+  "graph": {
+    "hyperedges": [
+      {
+        "id": "core_game_hooks",
+        "label": "Core Game Hook Triad",
+        "nodes": [
+          "claude_hook_useGameState",
+          "claude_hook_useGameEvents",
+          "claude_hook_useGameSave"
+        ],
+        "relation": "implement",
+        "confidence": "EXTRACTED",
+        "confidence_score": 1.0,
+        "source_file": "CLAUDE.md"
+      },
+      {
+        "id": "supabase_tables_all",
+        "label": "All Supabase Tables",
+        "nodes": [
+          "claude_table_profiles",
+          "claude_table_game_phases",
+          "claude_table_game_events",
+          "claude_table_game_saves",
+          "claude_table_game_runs",
+          "claude_table_game_settings"
+        ],
+        "relation": "participate_in",
+        "confidence": "EXTRACTED",
+        "confidence_score": 1.0,
+        "source_file": "CLAUDE.md"
+      },
+      {
+        "id": "game_loop_mechanics",
+        "label": "Core Game Loop Mechanics",
+        "nodes": [
+          "game_stats_concept",
+          "game_starvation_mechanic",
+          "game_event_system",
+          "game_phases_concept"
+        ],
+        "relation": "implement",
+        "confidence": "EXTRACTED",
+        "confidence_score": 1.0,
+        "source_file": "CLAUDE.md"
+      },
+      {
+        "id": "tech_stack_components",
+        "label": "Full Tech Stack",
+        "nodes": [
+          "claude_tech_stack",
+          "claude_supabase_backend",
+          "claude_design_system",
+          "claude_routing"
+        ],
+        "relation": "form",
+        "confidence": "EXTRACTED",
+        "confidence_score": 0.95,
+        "source_file": "CLAUDE.md"
+      },
+      {
+        "id": "project_docs_set",
+        "label": "Project Documentation Set",
+        "nodes": [
+          "claude_project_guidance",
+          "codeguideline_doc",
+          "readme_doc"
+        ],
+        "relation": "participate_in",
+        "confidence": "EXTRACTED",
+        "confidence_score": 1.0,
+        "source_file": "CLAUDE.md"
+      }
+    ]
+  },
+  "nodes": [
+    {
+      "label": "eslint.config.js",
+      "file_type": "code",
+      "source_file": "eslint.config.js",
+      "source_location": "L1",
+      "id": "eslint_config_js",
+      "community": 39
+    },
+    {
+      "label": "postcss.config.js",
+      "file_type": "code",
+      "source_file": "postcss.config.js",
+      "source_location": "L1",
+      "id": "postcss_config_js",
+      "community": 40
+    },
+    {
+      "label": "tailwind.config.ts",
+      "file_type": "code",
+      "source_file": "tailwind.config.ts",
+      "source_location": "L1",
+      "id": "tailwind_config_ts",
+      "community": 41
+    },
+    {
+      "label": "vite.config.ts",
+      "file_type": "code",
+      "source_file": "vite.config.ts",
+      "source_location": "L1",
+      "id": "vite_config_ts",
+      "community": 42
+    },
+    {
+      "label": "App.tsx",
+      "file_type": "code",
+      "source_file": "src\\App.tsx",
+      "source_location": "L1",
+      "id": "src_app_tsx",
+      "community": 12
+    },
+    {
+      "label": "App()",
+      "file_type": "code",
+      "source_file": "src\\App.tsx",
+      "source_location": "L10",
+      "id": "app_app",
+      "community": 12
+    },
+    {
+      "label": "env.d.ts",
+      "file_type": "code",
+      "source_file": "src\\env.d.ts",
+      "source_location": "L1",
+      "id": "src_env_d_ts",
+      "community": 43
+    },
+    {
+      "label": "main.tsx",
+      "file_type": "code",
+      "source_file": "src\\main.tsx",
+      "source_location": "L1",
+      "id": "src_main_tsx",
+      "community": 12
+    },
+    {
+      "label": "router.tsx",
+      "file_type": "code",
+      "source_file": "src\\router.tsx",
+      "source_location": "L1",
+      "id": "src_router_tsx",
+      "community": 44
+    },
+    {
+      "label": "EventForm.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\admin\\EventForm.tsx",
+      "source_location": "L1",
+      "id": "src_components_admin_eventform_tsx",
+      "community": 7
+    },
+    {
+      "label": "updateChoice()",
+      "file_type": "code",
+      "source_file": "src\\components\\admin\\EventForm.tsx",
+      "source_location": "L44",
+      "id": "eventform_updatechoice",
+      "community": 7
+    },
+    {
+      "label": "addChoice()",
+      "file_type": "code",
+      "source_file": "src\\components\\admin\\EventForm.tsx",
+      "source_location": "L50",
+      "id": "eventform_addchoice",
+      "community": 7
+    },
+    {
+      "label": "removeChoice()",
+      "file_type": "code",
+      "source_file": "src\\components\\admin\\EventForm.tsx",
+      "source_location": "L54",
+      "id": "eventform_removechoice",
+      "community": 7
+    },
+    {
+      "label": "handleSubmit()",
+      "file_type": "code",
+      "source_file": "src\\components\\admin\\EventForm.tsx",
+      "source_location": "L59",
+      "id": "eventform_handlesubmit",
+      "community": 7
+    },
+    {
+      "label": "EventManager.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\admin\\EventManager.tsx",
+      "source_location": "L1",
+      "id": "src_components_admin_eventmanager_tsx",
+      "community": 5
+    },
+    {
+      "label": "fetchEvents()",
+      "file_type": "code",
+      "source_file": "src\\components\\admin\\EventManager.tsx",
+      "source_location": "L29",
+      "id": "eventmanager_fetchevents",
+      "community": 5
+    },
+    {
+      "label": "handleCreateEvent()",
+      "file_type": "code",
+      "source_file": "src\\components\\admin\\EventManager.tsx",
+      "source_location": "L45",
+      "id": "eventmanager_handlecreateevent",
+      "community": 5
+    },
+    {
+      "label": "handleUpdateEvent()",
+      "file_type": "code",
+      "source_file": "src\\components\\admin\\EventManager.tsx",
+      "source_location": "L68",
+      "id": "eventmanager_handleupdateevent",
+      "community": 5
+    },
+    {
+      "label": "toggleActive()",
+      "file_type": "code",
+      "source_file": "src\\components\\admin\\EventManager.tsx",
+      "source_location": "L93",
+      "id": "eventmanager_toggleactive",
+      "community": 5
+    },
+    {
+      "label": "deleteEvent()",
+      "file_type": "code",
+      "source_file": "src\\components\\admin\\EventManager.tsx",
+      "source_location": "L98",
+      "id": "eventmanager_deleteevent",
+      "community": 5
+    },
+    {
+      "label": "ImageUpload.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\admin\\ImageUpload.tsx",
+      "source_location": "L1",
+      "id": "src_components_admin_imageupload_tsx",
+      "community": 8
+    },
+    {
+      "label": "uploadFile()",
+      "file_type": "code",
+      "source_file": "src\\components\\admin\\ImageUpload.tsx",
+      "source_location": "L20",
+      "id": "imageupload_uploadfile",
+      "community": 8
+    },
+    {
+      "label": "handleFileSelect()",
+      "file_type": "code",
+      "source_file": "src\\components\\admin\\ImageUpload.tsx",
+      "source_location": "L55",
+      "id": "imageupload_handlefileselect",
+      "community": 8
+    },
+    {
+      "label": "handleDrop()",
+      "file_type": "code",
+      "source_file": "src\\components\\admin\\ImageUpload.tsx",
+      "source_location": "L60",
+      "id": "imageupload_handledrop",
+      "community": 8
+    },
+    {
+      "label": "handleRemove()",
+      "file_type": "code",
+      "source_file": "src\\components\\admin\\ImageUpload.tsx",
+      "source_location": "L67",
+      "id": "imageupload_handleremove",
+      "community": 8
+    },
+    {
+      "label": "PhaseManager.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\admin\\PhaseManager.tsx",
+      "source_location": "L1",
+      "id": "src_components_admin_phasemanager_tsx",
+      "community": 9
+    },
+    {
+      "label": "startEdit()",
+      "file_type": "code",
+      "source_file": "src\\components\\admin\\PhaseManager.tsx",
+      "source_location": "L23",
+      "id": "phasemanager_startedit",
+      "community": 9
+    },
+    {
+      "label": "saveEdit()",
+      "file_type": "code",
+      "source_file": "src\\components\\admin\\PhaseManager.tsx",
+      "source_location": "L28",
+      "id": "phasemanager_saveedit",
+      "community": 9
+    },
+    {
+      "label": "createPhase()",
+      "file_type": "code",
+      "source_file": "src\\components\\admin\\PhaseManager.tsx",
+      "source_location": "L49",
+      "id": "phasemanager_createphase",
+      "community": 9
+    },
+    {
+      "label": "SettingsManager.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\admin\\SettingsManager.tsx",
+      "source_location": "L1",
+      "id": "src_components_admin_settingsmanager_tsx",
+      "community": 10
+    },
+    {
+      "label": "fetchSettings()",
+      "file_type": "code",
+      "source_file": "src\\components\\admin\\SettingsManager.tsx",
+      "source_location": "L33",
+      "id": "settingsmanager_fetchsettings",
+      "community": 10
+    },
+    {
+      "label": "updateValue()",
+      "file_type": "code",
+      "source_file": "src\\components\\admin\\SettingsManager.tsx",
+      "source_location": "L42",
+      "id": "settingsmanager_updatevalue",
+      "community": 10
+    },
+    {
+      "label": "saveAll()",
+      "file_type": "code",
+      "source_file": "src\\components\\admin\\SettingsManager.tsx",
+      "source_location": "L48",
+      "id": "settingsmanager_saveall",
+      "community": 10
+    },
+    {
+      "label": "AuthForm.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\auth\\AuthForm.tsx",
+      "source_location": "L1",
+      "id": "src_components_auth_authform_tsx",
+      "community": 16
+    },
+    {
+      "label": "handleSubmit()",
+      "file_type": "code",
+      "source_file": "src\\components\\auth\\AuthForm.tsx",
+      "source_location": "L20",
+      "id": "authform_handlesubmit",
+      "community": 16
+    },
+    {
+      "label": "EventCard.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\game\\EventCard.tsx",
+      "source_location": "L1",
+      "id": "src_components_game_eventcard_tsx",
+      "community": 13
+    },
+    {
+      "label": "handleChoice()",
+      "file_type": "code",
+      "source_file": "src\\components\\game\\EventCard.tsx",
+      "source_location": "L15",
+      "id": "eventcard_handlechoice",
+      "community": 13
+    },
+    {
+      "label": "handleContinue()",
+      "file_type": "code",
+      "source_file": "src\\components\\game\\EventCard.tsx",
+      "source_location": "L20",
+      "id": "eventcard_handlecontinue",
+      "community": 13
+    },
+    {
+      "label": "GameEngine.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\game\\GameEngine.tsx",
+      "source_location": "L1",
+      "id": "src_components_game_gameengine_tsx",
+      "community": 14
+    },
+    {
+      "label": "Typewriter()",
+      "file_type": "code",
+      "source_file": "src\\components\\game\\GameEngine.tsx",
+      "source_location": "L52",
+      "id": "gameengine_typewriter",
+      "community": 14
+    },
+    {
+      "label": "GameEngine()",
+      "file_type": "code",
+      "source_file": "src\\components\\game\\GameEngine.tsx",
+      "source_location": "L71",
+      "id": "gameengine_gameengine",
+      "community": 14
+    },
+    {
+      "label": "GameHUD.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\game\\GameHUD.tsx",
+      "source_location": "L1",
+      "id": "src_components_game_gamehud_tsx",
+      "community": 17
+    },
+    {
+      "label": "GameHUD()",
+      "file_type": "code",
+      "source_file": "src\\components\\game\\GameHUD.tsx",
+      "source_location": "L8",
+      "id": "gamehud_gamehud",
+      "community": 17
+    },
+    {
+      "label": "GameMenuBar.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\game\\GameMenuBar.tsx",
+      "source_location": "L1",
+      "id": "src_components_game_gamemenubar_tsx",
+      "community": 18
+    },
+    {
+      "label": "MenuButton()",
+      "file_type": "code",
+      "source_file": "src\\components\\game\\GameMenuBar.tsx",
+      "source_location": "L8",
+      "id": "gamemenubar_menubutton",
+      "community": 18
+    },
+    {
+      "label": "GameOver.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\game\\GameOver.tsx",
+      "source_location": "L1",
+      "id": "src_components_game_gameover_tsx",
+      "community": 45
+    },
+    {
+      "label": "PhaseIntro.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\game\\PhaseIntro.tsx",
+      "source_location": "L1",
+      "id": "src_components_game_phaseintro_tsx",
+      "community": 46
+    },
+    {
+      "label": "StatsBar.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\game\\StatsBar.tsx",
+      "source_location": "L1",
+      "id": "src_components_game_statsbar_tsx",
+      "community": 47
+    },
+    {
+      "label": "TravelAnimation.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\game\\TravelAnimation.tsx",
+      "source_location": "L1",
+      "id": "src_components_game_travelanimation_tsx",
+      "community": 48
+    },
+    {
+      "label": "EscapingVietnamCinematic.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\game\\scenes\\EscapingVietnamCinematic.tsx",
+      "source_location": "L1",
+      "id": "src_components_game_scenes_escapingvietnamcinematic_tsx",
+      "community": 19
+    },
+    {
+      "label": "Typewriter()",
+      "file_type": "code",
+      "source_file": "src\\components\\game\\scenes\\EscapingVietnamCinematic.tsx",
+      "source_location": "L19",
+      "id": "escapingvietnamcinematic_typewriter",
+      "community": 19
+    },
+    {
+      "label": "PixelBoat.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\game\\scenes\\PixelBoat.tsx",
+      "source_location": "L1",
+      "id": "src_components_game_scenes_pixelboat_tsx",
+      "community": 49
+    },
+    {
+      "label": "PixelHelicopter.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\game\\scenes\\PixelHelicopter.tsx",
+      "source_location": "L1",
+      "id": "src_components_game_scenes_pixelhelicopter_tsx",
+      "community": 20
+    },
+    {
+      "label": "PixelHelicopter()",
+      "file_type": "code",
+      "source_file": "src\\components\\game\\scenes\\PixelHelicopter.tsx",
+      "source_location": "L40",
+      "id": "pixelhelicopter_pixelhelicopter",
+      "community": 20
+    },
+    {
+      "label": "PixelPeople.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\game\\scenes\\PixelPeople.tsx",
+      "source_location": "L1",
+      "id": "src_components_game_scenes_pixelpeople_tsx",
+      "community": 21
+    },
+    {
+      "label": "getCellColor()",
+      "file_type": "code",
+      "source_file": "src\\components\\game\\scenes\\PixelPeople.tsx",
+      "source_location": "L60",
+      "id": "pixelpeople_getcellcolor",
+      "community": 21
+    },
+    {
+      "label": "accordion.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\ui\\accordion.tsx",
+      "source_location": "L1",
+      "id": "src_components_ui_accordion_tsx",
+      "community": 50
+    },
+    {
+      "label": "alert-dialog.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\ui\\alert-dialog.tsx",
+      "source_location": "L1",
+      "id": "src_components_ui_alert_dialog_tsx",
+      "community": 51
+    },
+    {
+      "label": "alert.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\ui\\alert.tsx",
+      "source_location": "L1",
+      "id": "src_components_ui_alert_tsx",
+      "community": 52
+    },
+    {
+      "label": "aspect-ratio.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\ui\\aspect-ratio.tsx",
+      "source_location": "L1",
+      "id": "src_components_ui_aspect_ratio_tsx",
+      "community": 53
+    },
+    {
+      "label": "avatar.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\ui\\avatar.tsx",
+      "source_location": "L1",
+      "id": "src_components_ui_avatar_tsx",
+      "community": 54
+    },
+    {
+      "label": "badge.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\ui\\badge.tsx",
+      "source_location": "L1",
+      "id": "src_components_ui_badge_tsx",
+      "community": 22
+    },
+    {
+      "label": "Badge()",
+      "file_type": "code",
+      "source_file": "src\\components\\ui\\badge.tsx",
+      "source_location": "L30",
+      "id": "badge_badge",
+      "community": 22
+    },
+    {
+      "label": "breadcrumb.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\ui\\breadcrumb.tsx",
+      "source_location": "L1",
+      "id": "src_components_ui_breadcrumb_tsx",
+      "community": 55
+    },
+    {
+      "label": "button.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\ui\\button.tsx",
+      "source_location": "L1",
+      "id": "src_components_ui_button_tsx",
+      "community": 56
+    },
+    {
+      "label": "calendar.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\ui\\calendar.tsx",
+      "source_location": "L1",
+      "id": "src_components_ui_calendar_tsx",
+      "community": 23
+    },
+    {
+      "label": "Calendar()",
+      "file_type": "code",
+      "source_file": "src\\components\\ui\\calendar.tsx",
+      "source_location": "L10",
+      "id": "calendar_calendar",
+      "community": 23
+    },
+    {
+      "label": "card.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\ui\\card.tsx",
+      "source_location": "L1",
+      "id": "src_components_ui_card_tsx",
+      "community": 57
+    },
+    {
+      "label": "carousel.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\ui\\carousel.tsx",
+      "source_location": "L1",
+      "id": "src_components_ui_carousel_tsx",
+      "community": 24
+    },
+    {
+      "label": "useCarousel()",
+      "file_type": "code",
+      "source_file": "src\\components\\ui\\carousel.tsx",
+      "source_location": "L33",
+      "id": "carousel_usecarousel",
+      "community": 24
+    },
+    {
+      "label": "chart.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\ui\\chart.tsx",
+      "source_location": "L1",
+      "id": "src_components_ui_chart_tsx",
+      "community": 15
+    },
+    {
+      "label": "useChart()",
+      "file_type": "code",
+      "source_file": "src\\components\\ui\\chart.tsx",
+      "source_location": "L25",
+      "id": "chart_usechart",
+      "community": 15
+    },
+    {
+      "label": "cn()",
+      "file_type": "code",
+      "source_file": "src\\components\\ui\\chart.tsx",
+      "source_location": "L52",
+      "id": "chart_cn",
+      "community": 15
+    },
+    {
+      "label": "checkbox.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\ui\\checkbox.tsx",
+      "source_location": "L1",
+      "id": "src_components_ui_checkbox_tsx",
+      "community": 58
+    },
+    {
+      "label": "collapsible.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\ui\\collapsible.tsx",
+      "source_location": "L1",
+      "id": "src_components_ui_collapsible_tsx",
+      "community": 59
+    },
+    {
+      "label": "command.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\ui\\command.tsx",
+      "source_location": "L1",
+      "id": "src_components_ui_command_tsx",
+      "community": 60
+    },
+    {
+      "label": "context-menu.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\ui\\context-menu.tsx",
+      "source_location": "L1",
+      "id": "src_components_ui_context_menu_tsx",
+      "community": 61
+    },
+    {
+      "label": "dialog.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\ui\\dialog.tsx",
+      "source_location": "L1",
+      "id": "src_components_ui_dialog_tsx",
+      "community": 62
+    },
+    {
+      "label": "drawer.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\ui\\drawer.tsx",
+      "source_location": "L1",
+      "id": "src_components_ui_drawer_tsx",
+      "community": 63
+    },
+    {
+      "label": "dropdown-menu.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\ui\\dropdown-menu.tsx",
+      "source_location": "L1",
+      "id": "src_components_ui_dropdown_menu_tsx",
+      "community": 64
+    },
+    {
+      "label": "form.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\ui\\form.tsx",
+      "source_location": "L1",
+      "id": "src_components_ui_form_tsx",
+      "community": 65
+    },
+    {
+      "label": "hover-card.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\ui\\hover-card.tsx",
+      "source_location": "L1",
+      "id": "src_components_ui_hover_card_tsx",
+      "community": 66
+    },
+    {
+      "label": "input-otp.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\ui\\input-otp.tsx",
+      "source_location": "L1",
+      "id": "src_components_ui_input_otp_tsx",
+      "community": 67
+    },
+    {
+      "label": "input.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\ui\\input.tsx",
+      "source_location": "L1",
+      "id": "src_components_ui_input_tsx",
+      "community": 68
+    },
+    {
+      "label": "label.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\ui\\label.tsx",
+      "source_location": "L1",
+      "id": "src_components_ui_label_tsx",
+      "community": 69
+    },
+    {
+      "label": "menubar.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\ui\\menubar.tsx",
+      "source_location": "L1",
+      "id": "src_components_ui_menubar_tsx",
+      "community": 70
+    },
+    {
+      "label": "navigation-menu.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\ui\\navigation-menu.tsx",
+      "source_location": "L1",
+      "id": "src_components_ui_navigation_menu_tsx",
+      "community": 71
+    },
+    {
+      "label": "pagination.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\ui\\pagination.tsx",
+      "source_location": "L1",
+      "id": "src_components_ui_pagination_tsx",
+      "community": 6
+    },
+    {
+      "label": "Pagination()",
+      "file_type": "code",
+      "source_file": "src\\components\\ui\\pagination.tsx",
+      "source_location": "L7",
+      "id": "pagination_pagination",
+      "community": 6
+    },
+    {
+      "label": "PaginationLink()",
+      "file_type": "code",
+      "source_file": "src\\components\\ui\\pagination.tsx",
+      "source_location": "L42",
+      "id": "pagination_paginationlink",
+      "community": 6
+    },
+    {
+      "label": "PaginationPrevious()",
+      "file_type": "code",
+      "source_file": "src\\components\\ui\\pagination.tsx",
+      "source_location": "L62",
+      "id": "pagination_paginationprevious",
+      "community": 6
+    },
+    {
+      "label": "PaginationNext()",
+      "file_type": "code",
+      "source_file": "src\\components\\ui\\pagination.tsx",
+      "source_location": "L78",
+      "id": "pagination_paginationnext",
+      "community": 6
+    },
+    {
+      "label": "PaginationEllipsis()",
+      "file_type": "code",
+      "source_file": "src\\components\\ui\\pagination.tsx",
+      "source_location": "L94",
+      "id": "pagination_paginationellipsis",
+      "community": 6
+    },
+    {
+      "label": "popover.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\ui\\popover.tsx",
+      "source_location": "L1",
+      "id": "src_components_ui_popover_tsx",
+      "community": 72
+    },
+    {
+      "label": "progress.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\ui\\progress.tsx",
+      "source_location": "L1",
+      "id": "src_components_ui_progress_tsx",
+      "community": 73
+    },
+    {
+      "label": "radio-group.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\ui\\radio-group.tsx",
+      "source_location": "L1",
+      "id": "src_components_ui_radio_group_tsx",
+      "community": 74
+    },
+    {
+      "label": "resizable.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\ui\\resizable.tsx",
+      "source_location": "L1",
+      "id": "src_components_ui_resizable_tsx",
+      "community": 75
+    },
+    {
+      "label": "scroll-area.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\ui\\scroll-area.tsx",
+      "source_location": "L1",
+      "id": "src_components_ui_scroll_area_tsx",
+      "community": 76
+    },
+    {
+      "label": "select.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\ui\\select.tsx",
+      "source_location": "L1",
+      "id": "src_components_ui_select_tsx",
+      "community": 77
+    },
+    {
+      "label": "separator.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\ui\\separator.tsx",
+      "source_location": "L1",
+      "id": "src_components_ui_separator_tsx",
+      "community": 78
+    },
+    {
+      "label": "sheet.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\ui\\sheet.tsx",
+      "source_location": "L1",
+      "id": "src_components_ui_sheet_tsx",
+      "community": 79
+    },
+    {
+      "label": "sidebar.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\ui\\sidebar.tsx",
+      "source_location": "L1",
+      "id": "src_components_ui_sidebar_tsx",
+      "community": 11
+    },
+    {
+      "label": "useSidebar()",
+      "file_type": "code",
+      "source_file": "src\\components\\ui\\sidebar.tsx",
+      "source_location": "L39",
+      "id": "sidebar_usesidebar",
+      "community": 11
+    },
+    {
+      "label": "handleKeyDown()",
+      "file_type": "code",
+      "source_file": "src\\components\\ui\\sidebar.tsx",
+      "source_location": "L99",
+      "id": "sidebar_handlekeydown",
+      "community": 11
+    },
+    {
+      "label": "cn()",
+      "file_type": "code",
+      "source_file": "src\\components\\ui\\sidebar.tsx",
+      "source_location": "L141",
+      "id": "sidebar_cn",
+      "community": 11
+    },
+    {
+      "label": "skeleton.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\ui\\skeleton.tsx",
+      "source_location": "L1",
+      "id": "src_components_ui_skeleton_tsx",
+      "community": 25
+    },
+    {
+      "label": "Skeleton()",
+      "file_type": "code",
+      "source_file": "src\\components\\ui\\skeleton.tsx",
+      "source_location": "L3",
+      "id": "skeleton_skeleton",
+      "community": 25
+    },
+    {
+      "label": "slider.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\ui\\slider.tsx",
+      "source_location": "L1",
+      "id": "src_components_ui_slider_tsx",
+      "community": 80
+    },
+    {
+      "label": "sonner.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\ui\\sonner.tsx",
+      "source_location": "L1",
+      "id": "src_components_ui_sonner_tsx",
+      "community": 26
+    },
+    {
+      "label": "Toaster()",
+      "file_type": "code",
+      "source_file": "src\\components\\ui\\sonner.tsx",
+      "source_location": "L6",
+      "id": "sonner_toaster",
+      "community": 26
+    },
+    {
+      "label": "switch.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\ui\\switch.tsx",
+      "source_location": "L1",
+      "id": "src_components_ui_switch_tsx",
+      "community": 81
+    },
+    {
+      "label": "table.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\ui\\table.tsx",
+      "source_location": "L1",
+      "id": "src_components_ui_table_tsx",
+      "community": 82
+    },
+    {
+      "label": "tabs.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\ui\\tabs.tsx",
+      "source_location": "L1",
+      "id": "src_components_ui_tabs_tsx",
+      "community": 83
+    },
+    {
+      "label": "textarea.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\ui\\textarea.tsx",
+      "source_location": "L1",
+      "id": "src_components_ui_textarea_tsx",
+      "community": 84
+    },
+    {
+      "label": "toast.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\ui\\toast.tsx",
+      "source_location": "L1",
+      "id": "src_components_ui_toast_tsx",
+      "community": 85
+    },
+    {
+      "label": "toaster.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\ui\\toaster.tsx",
+      "source_location": "L1",
+      "id": "src_components_ui_toaster_tsx",
+      "community": 86
+    },
+    {
+      "label": "toggle-group.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\ui\\toggle-group.tsx",
+      "source_location": "L1",
+      "id": "src_components_ui_toggle_group_tsx",
+      "community": 87
+    },
+    {
+      "label": "toggle.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\ui\\toggle.tsx",
+      "source_location": "L1",
+      "id": "src_components_ui_toggle_tsx",
+      "community": 88
+    },
+    {
+      "label": "tooltip.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\ui\\tooltip.tsx",
+      "source_location": "L1",
+      "id": "src_components_ui_tooltip_tsx",
+      "community": 89
+    },
+    {
+      "label": "use-toast.ts",
+      "file_type": "code",
+      "source_file": "src\\components\\ui\\use-toast.ts",
+      "source_location": "L1",
+      "id": "src_components_ui_use_toast_ts",
+      "community": 90
+    },
+    {
+      "label": "use-mobile.tsx",
+      "file_type": "code",
+      "source_file": "src\\hooks\\use-mobile.tsx",
+      "source_location": "L1",
+      "id": "src_hooks_use_mobile_tsx",
+      "community": 27
+    },
+    {
+      "label": "useIsMobile()",
+      "file_type": "code",
+      "source_file": "src\\hooks\\use-mobile.tsx",
+      "source_location": "L5",
+      "id": "use_mobile_useismobile",
+      "community": 27
+    },
+    {
+      "label": "use-toast.ts",
+      "file_type": "code",
+      "source_file": "src\\hooks\\use-toast.ts",
+      "source_location": "L1",
+      "id": "src_hooks_use_toast_ts",
+      "community": 3
+    },
+    {
+      "label": "genId()",
+      "file_type": "code",
+      "source_file": "src\\hooks\\use-toast.ts",
+      "source_location": "L27",
+      "id": "use_toast_genid",
+      "community": 3
+    },
+    {
+      "label": "addToRemoveQueue()",
+      "file_type": "code",
+      "source_file": "src\\hooks\\use-toast.ts",
+      "source_location": "L58",
+      "id": "use_toast_addtoremovequeue",
+      "community": 3
+    },
+    {
+      "label": "reducer()",
+      "file_type": "code",
+      "source_file": "src\\hooks\\use-toast.ts",
+      "source_location": "L74",
+      "id": "use_toast_reducer",
+      "community": 3
+    },
+    {
+      "label": "dispatch()",
+      "file_type": "code",
+      "source_file": "src\\hooks\\use-toast.ts",
+      "source_location": "L133",
+      "id": "use_toast_dispatch",
+      "community": 3
+    },
+    {
+      "label": "toast()",
+      "file_type": "code",
+      "source_file": "src\\hooks\\use-toast.ts",
+      "source_location": "L142",
+      "id": "use_toast_toast",
+      "community": 3
+    },
+    {
+      "label": "useToast()",
+      "file_type": "code",
+      "source_file": "src\\hooks\\use-toast.ts",
+      "source_location": "L171",
+      "id": "use_toast_usetoast",
+      "community": 3
+    },
+    {
+      "label": "useAuth.ts",
+      "file_type": "code",
+      "source_file": "src\\hooks\\useAuth.ts",
+      "source_location": "L1",
+      "id": "src_hooks_useauth_ts",
+      "community": 28
+    },
+    {
+      "label": "useAuth()",
+      "file_type": "code",
+      "source_file": "src\\hooks\\useAuth.ts",
+      "source_location": "L12",
+      "id": "useauth_useauth",
+      "community": 28
+    },
+    {
+      "label": "useGameEvents.ts",
+      "file_type": "code",
+      "source_file": "src\\hooks\\useGameEvents.ts",
+      "source_location": "L1",
+      "id": "src_hooks_usegameevents_ts",
+      "community": 29
+    },
+    {
+      "label": "useGameEvents()",
+      "file_type": "code",
+      "source_file": "src\\hooks\\useGameEvents.ts",
+      "source_location": "L32",
+      "id": "usegameevents_usegameevents",
+      "community": 29
+    },
+    {
+      "label": "useGameSave.ts",
+      "file_type": "code",
+      "source_file": "src\\hooks\\useGameSave.ts",
+      "source_location": "L1",
+      "id": "src_hooks_usegamesave_ts",
+      "community": 30
+    },
+    {
+      "label": "useGameSave()",
+      "file_type": "code",
+      "source_file": "src\\hooks\\useGameSave.ts",
+      "source_location": "L5",
+      "id": "usegamesave_usegamesave",
+      "community": 30
+    },
+    {
+      "label": "useGameState.ts",
+      "file_type": "code",
+      "source_file": "src\\hooks\\useGameState.ts",
+      "source_location": "L1",
+      "id": "src_hooks_usegamestate_ts",
+      "community": 31
+    },
+    {
+      "label": "useGameState()",
+      "file_type": "code",
+      "source_file": "src\\hooks\\useGameState.ts",
+      "source_location": "L28",
+      "id": "usegamestate_usegamestate",
+      "community": 31
+    },
+    {
+      "label": "client.ts",
+      "file_type": "code",
+      "source_file": "src\\integrations\\supabase\\client.ts",
+      "source_location": "L1",
+      "id": "src_integrations_supabase_client_ts",
+      "community": 91
+    },
+    {
+      "label": "types.ts",
+      "file_type": "code",
+      "source_file": "src\\integrations\\supabase\\types.ts",
+      "source_location": "L1",
+      "id": "src_integrations_supabase_types_ts",
+      "community": 92
+    },
+    {
+      "label": "utils.ts",
+      "file_type": "code",
+      "source_file": "src\\lib\\utils.ts",
+      "source_location": "L1",
+      "id": "src_lib_utils_ts",
+      "community": 32
+    },
+    {
+      "label": "cn()",
+      "file_type": "code",
+      "source_file": "src\\lib\\utils.ts",
+      "source_location": "L4",
+      "id": "utils_cn",
+      "community": 32
+    },
+    {
+      "label": "AdminPage.tsx",
+      "file_type": "code",
+      "source_file": "src\\pages\\AdminPage.tsx",
+      "source_location": "L1",
+      "id": "src_pages_adminpage_tsx",
+      "community": 33
+    },
+    {
+      "label": "AdminPage()",
+      "file_type": "code",
+      "source_file": "src\\pages\\AdminPage.tsx",
+      "source_location": "L12",
+      "id": "adminpage_adminpage",
+      "community": 33
+    },
+    {
+      "label": "AuthPage.tsx",
+      "file_type": "code",
+      "source_file": "src\\pages\\AuthPage.tsx",
+      "source_location": "L1",
+      "id": "src_pages_authpage_tsx",
+      "community": 34
+    },
+    {
+      "label": "AuthPage()",
+      "file_type": "code",
+      "source_file": "src\\pages\\AuthPage.tsx",
+      "source_location": "L6",
+      "id": "authpage_authpage",
+      "community": 34
+    },
+    {
+      "label": "GamePage.tsx",
+      "file_type": "code",
+      "source_file": "src\\pages\\GamePage.tsx",
+      "source_location": "L1",
+      "id": "src_pages_gamepage_tsx",
+      "community": 35
+    },
+    {
+      "label": "GamePage()",
+      "file_type": "code",
+      "source_file": "src\\pages\\GamePage.tsx",
+      "source_location": "L6",
+      "id": "gamepage_gamepage",
+      "community": 35
+    },
+    {
+      "label": "HistoryPage.tsx",
+      "file_type": "code",
+      "source_file": "src\\pages\\HistoryPage.tsx",
+      "source_location": "L1",
+      "id": "src_pages_historypage_tsx",
+      "community": 36
+    },
+    {
+      "label": "fetchRuns()",
+      "file_type": "code",
+      "source_file": "src\\pages\\HistoryPage.tsx",
+      "source_location": "L33",
+      "id": "historypage_fetchruns",
+      "community": 36
+    },
+    {
+      "label": "Index.tsx",
+      "file_type": "code",
+      "source_file": "src\\pages\\Index.tsx",
+      "source_location": "L1",
+      "id": "src_pages_index_tsx",
+      "community": 93
+    },
+    {
+      "label": "NotFound.tsx",
+      "file_type": "code",
+      "source_file": "src\\pages\\NotFound.tsx",
+      "source_location": "L1",
+      "id": "src_pages_notfound_tsx",
+      "community": 37
+    },
+    {
+      "label": "NotFound()",
+      "file_type": "code",
+      "source_file": "src\\pages\\NotFound.tsx",
+      "source_location": "L4",
+      "id": "notfound_notfound",
+      "community": 37
+    },
+    {
+      "label": "TitleScreen.tsx",
+      "file_type": "code",
+      "source_file": "src\\pages\\TitleScreen.tsx",
+      "source_location": "L1",
+      "id": "src_pages_titlescreen_tsx",
+      "community": 38
+    },
+    {
+      "label": "checkSave()",
+      "file_type": "code",
+      "source_file": "src\\pages\\TitleScreen.tsx",
+      "source_location": "L15",
+      "id": "titlescreen_checksave",
+      "community": 38
+    },
+    {
+      "label": "CLAUDE.md Project Guidance",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "claude_project_guidance",
+      "community": 1
+    },
+    {
+      "label": "Game Loop (4-Phase Day Cycle)",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "Game Loop section",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "claude_game_loop",
+      "community": 4
+    },
+    {
+      "label": "State Management (3-Hook Architecture)",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "State Management section",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "claude_state_management",
+      "community": 0
+    },
+    {
+      "label": "useGameState Hook",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "State Management section",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "claude_hook_useGameState",
+      "community": 0
+    },
+    {
+      "label": "useGameEvents Hook",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "State Management section",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "claude_hook_useGameEvents",
+      "community": 0
+    },
+    {
+      "label": "useGameSave Hook",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "State Management section",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "claude_hook_useGameSave",
+      "community": 0
+    },
+    {
+      "label": "useAuth Hook",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "State Management section",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "claude_hook_useAuth",
+      "community": 0
+    },
+    {
+      "label": "GameEngine.tsx",
+      "file_type": "code",
+      "source_file": "CLAUDE.md",
+      "source_location": "State Management section",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "claude_gameengine",
+      "community": 0
+    },
+    {
+      "label": "Supabase Schema",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "Supabase Schema section",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "claude_supabase_schema",
+      "community": 0
+    },
+    {
+      "label": "profiles Table",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "Supabase Schema section",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "claude_table_profiles",
+      "community": 0
+    },
+    {
+      "label": "game_phases Table",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "Supabase Schema section",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "claude_table_game_phases",
+      "community": 0
+    },
+    {
+      "label": "game_events Table",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "Supabase Schema section",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "claude_table_game_events",
+      "community": 0
+    },
+    {
+      "label": "game_saves Table",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "Supabase Schema section",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "claude_table_game_saves",
+      "community": 0
+    },
+    {
+      "label": "game_runs Table",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "Supabase Schema section",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "claude_table_game_runs",
+      "community": 0
+    },
+    {
+      "label": "game_settings Table",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "Supabase Schema section",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "claude_table_game_settings",
+      "community": 0
+    },
+    {
+      "label": "Routing (router.tsx + App.tsx)",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "Routing section",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "claude_routing",
+      "community": 1
+    },
+    {
+      "label": "Design System (Retro Pixel-Art)",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "Design System section",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "claude_design_system",
+      "community": 1
+    },
+    {
+      "label": "Tech Stack (Vite + React 19 + TypeScript + shadcn/ui + Tailwind)",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "Architecture Overview",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "claude_tech_stack",
+      "community": 1
+    },
+    {
+      "label": "Supabase Backend (EnterCloud)",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "Architecture Overview",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "claude_supabase_backend",
+      "community": 1
+    },
+    {
+      "label": "Row Level Security Policy",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "Supabase Schema section",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "claude_rls_policy",
+      "community": 0
+    },
+    {
+      "label": "src/integrations/supabase/types.ts",
+      "file_type": "code",
+      "source_file": "CLAUDE.md",
+      "source_location": "Supabase Schema section",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "claude_supabase_types",
+      "community": 0
+    },
+    {
+      "label": "Rationale: No Global Store \u00e2\u20ac\u201d Logic in Three Hooks",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "State Management section",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "claude_rationale_no_global_store",
+      "community": 0
+    },
+    {
+      "label": "Rationale: GameEngine.tsx as Single Entry Point",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "State Management section",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "claude_rationale_gameengine_entry",
+      "community": 0
+    },
+    {
+      "label": "Rationale: Route name Field for Enter.pro Tooling",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "Routing section",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "claude_rationale_route_name_field",
+      "community": 1
+    },
+    {
+      "label": "Code Guideline Document",
+      "file_type": "document",
+      "source_file": "CodeGuideline.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "codeguideline_doc",
+      "community": 1
+    },
+    {
+      "label": "Project Directory Structure",
+      "file_type": "document",
+      "source_file": "CodeGuideline.md",
+      "source_location": "Project Structure Overview",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "codeguideline_project_structure",
+      "community": 2
+    },
+    {
+      "label": "public/ Directory",
+      "file_type": "document",
+      "source_file": "CodeGuideline.md",
+      "source_location": "Directory Responsibilities",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "codeguideline_dir_public",
+      "community": 2
+    },
+    {
+      "label": "src/components/ Directory",
+      "file_type": "document",
+      "source_file": "CodeGuideline.md",
+      "source_location": "Directory Responsibilities",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "codeguideline_dir_components",
+      "community": 2
+    },
+    {
+      "label": "src/hooks/ Directory",
+      "file_type": "document",
+      "source_file": "CodeGuideline.md",
+      "source_location": "Directory Responsibilities",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "codeguideline_dir_hooks",
+      "community": 2
+    },
+    {
+      "label": "src/lib/ Directory",
+      "file_type": "document",
+      "source_file": "CodeGuideline.md",
+      "source_location": "Directory Responsibilities",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "codeguideline_dir_lib",
+      "community": 2
+    },
+    {
+      "label": "src/pages/ Directory",
+      "file_type": "document",
+      "source_file": "CodeGuideline.md",
+      "source_location": "Directory Responsibilities",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "codeguideline_dir_pages",
+      "community": 2
+    },
+    {
+      "label": "Naming Conventions (PascalCase / camelCase)",
+      "file_type": "document",
+      "source_file": "CodeGuideline.md",
+      "source_location": "Coding Best Practices",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "codeguideline_naming_conventions",
+      "community": 1
+    },
+    {
+      "label": "Single Responsibility Principle",
+      "file_type": "document",
+      "source_file": "CodeGuideline.md",
+      "source_location": "Coding Best Practices",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "codeguideline_single_responsibility",
+      "community": 1
+    },
+    {
+      "label": "Component 100-Line Size Limit",
+      "file_type": "document",
+      "source_file": "CodeGuideline.md",
+      "source_location": "Coding Best Practices",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "codeguideline_100line_limit",
+      "community": 1
+    },
+    {
+      "label": "Rationale: Documentation Must Stay Current With Code Changes",
+      "file_type": "document",
+      "source_file": "CodeGuideline.md",
+      "source_location": "Directory Responsibilities",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "codeguideline_rationale_doc_update",
+      "community": 1
+    },
+    {
+      "label": "README \u00e2\u20ac\u201d Enter.pro Project Overview",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "readme_doc",
+      "community": 1
+    },
+    {
+      "label": "Enter.pro Platform",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "Overview",
+      "source_url": "https://enter.pro",
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "readme_enter_pro",
+      "community": 1
+    },
+    {
+      "label": "Live App Preview URL",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "Project URLs",
+      "source_url": "https://e218bf4067bb4e31b629e9247f7f2623-latest.preview.enter.pro",
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "readme_live_app",
+      "community": 1
+    },
+    {
+      "label": "Enter.pro Project Edit URL",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "Project URLs",
+      "source_url": "https://enter.pro/project/e218bf4067bb4e31b629e9247f7f2623",
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "readme_enter_project_url",
+      "community": 1
+    },
+    {
+      "label": "robots.txt (SEO Crawl Permissions)",
+      "file_type": "document",
+      "source_file": "public/robots.txt",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "robots_txt",
+      "community": 2
+    },
+    {
+      "label": "Placeholder SVG (Image Placeholder UI Element)",
+      "file_type": "image",
+      "source_file": "public/placeholder.svg",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "placeholder_svg",
+      "community": 2
+    },
+    {
+      "label": "Oregon Trail-Style Game Concept",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "Architecture Overview",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "game_concept_oregon_trail_style",
+      "community": 4
+    },
+    {
+      "label": "Vietnam War Diaspora Narrative Theme",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "Architecture Overview",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "game_concept_vietnam_diaspora",
+      "community": 4
+    },
+    {
+      "label": "4 Game Phases (Vietnam \u00e2\u2020\u2019 Boat \u00e2\u2020\u2019 Camp \u00e2\u2020\u2019 America)",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "Game Loop section",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "game_phases_concept",
+      "community": 4
+    },
+    {
+      "label": "Player Stats (health, food, morale, money)",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "Game Loop section",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "game_stats_concept",
+      "community": 4
+    },
+    {
+      "label": "Starvation Mechanic (food=0 \u00e2\u2020\u2019 health -10/day)",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "Game Loop section",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "game_starvation_mechanic",
+      "community": 4
+    },
+    {
+      "label": "Random Event System (70% daily chance, JSONB choices)",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "Game Loop section",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "game_event_system",
+      "community": 4
+    }
+  ],
+  "links": [
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\App.tsx",
+      "source_location": "L10",
+      "weight": 1.0,
+      "_src": "src_app_tsx",
+      "_tgt": "app_app",
+      "source": "src_app_tsx",
+      "target": "app_app",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\main.tsx",
+      "source_location": "L2",
+      "weight": 1.0,
+      "_src": "src_main_tsx",
+      "_tgt": "src_app_tsx",
+      "source": "src_app_tsx",
+      "target": "src_main_tsx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\admin\\EventForm.tsx",
+      "source_location": "L44",
+      "weight": 1.0,
+      "_src": "src_components_admin_eventform_tsx",
+      "_tgt": "eventform_updatechoice",
+      "source": "src_components_admin_eventform_tsx",
+      "target": "eventform_updatechoice",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\admin\\EventForm.tsx",
+      "source_location": "L50",
+      "weight": 1.0,
+      "_src": "src_components_admin_eventform_tsx",
+      "_tgt": "eventform_addchoice",
+      "source": "src_components_admin_eventform_tsx",
+      "target": "eventform_addchoice",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\admin\\EventForm.tsx",
+      "source_location": "L54",
+      "weight": 1.0,
+      "_src": "src_components_admin_eventform_tsx",
+      "_tgt": "eventform_removechoice",
+      "source": "src_components_admin_eventform_tsx",
+      "target": "eventform_removechoice",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\admin\\EventForm.tsx",
+      "source_location": "L59",
+      "weight": 1.0,
+      "_src": "src_components_admin_eventform_tsx",
+      "_tgt": "eventform_handlesubmit",
+      "source": "src_components_admin_eventform_tsx",
+      "target": "eventform_handlesubmit",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\admin\\EventManager.tsx",
+      "source_location": "L29",
+      "weight": 1.0,
+      "_src": "src_components_admin_eventmanager_tsx",
+      "_tgt": "eventmanager_fetchevents",
+      "source": "src_components_admin_eventmanager_tsx",
+      "target": "eventmanager_fetchevents",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\admin\\EventManager.tsx",
+      "source_location": "L45",
+      "weight": 1.0,
+      "_src": "src_components_admin_eventmanager_tsx",
+      "_tgt": "eventmanager_handlecreateevent",
+      "source": "src_components_admin_eventmanager_tsx",
+      "target": "eventmanager_handlecreateevent",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\admin\\EventManager.tsx",
+      "source_location": "L68",
+      "weight": 1.0,
+      "_src": "src_components_admin_eventmanager_tsx",
+      "_tgt": "eventmanager_handleupdateevent",
+      "source": "src_components_admin_eventmanager_tsx",
+      "target": "eventmanager_handleupdateevent",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\admin\\EventManager.tsx",
+      "source_location": "L93",
+      "weight": 1.0,
+      "_src": "src_components_admin_eventmanager_tsx",
+      "_tgt": "eventmanager_toggleactive",
+      "source": "src_components_admin_eventmanager_tsx",
+      "target": "eventmanager_toggleactive",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\admin\\EventManager.tsx",
+      "source_location": "L98",
+      "weight": 1.0,
+      "_src": "src_components_admin_eventmanager_tsx",
+      "_tgt": "eventmanager_deleteevent",
+      "source": "src_components_admin_eventmanager_tsx",
+      "target": "eventmanager_deleteevent",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\admin\\ImageUpload.tsx",
+      "source_location": "L20",
+      "weight": 1.0,
+      "_src": "src_components_admin_imageupload_tsx",
+      "_tgt": "imageupload_uploadfile",
+      "source": "src_components_admin_imageupload_tsx",
+      "target": "imageupload_uploadfile",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\admin\\ImageUpload.tsx",
+      "source_location": "L55",
+      "weight": 1.0,
+      "_src": "src_components_admin_imageupload_tsx",
+      "_tgt": "imageupload_handlefileselect",
+      "source": "src_components_admin_imageupload_tsx",
+      "target": "imageupload_handlefileselect",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\admin\\ImageUpload.tsx",
+      "source_location": "L60",
+      "weight": 1.0,
+      "_src": "src_components_admin_imageupload_tsx",
+      "_tgt": "imageupload_handledrop",
+      "source": "src_components_admin_imageupload_tsx",
+      "target": "imageupload_handledrop",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\admin\\ImageUpload.tsx",
+      "source_location": "L67",
+      "weight": 1.0,
+      "_src": "src_components_admin_imageupload_tsx",
+      "_tgt": "imageupload_handleremove",
+      "source": "src_components_admin_imageupload_tsx",
+      "target": "imageupload_handleremove",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\admin\\ImageUpload.tsx",
+      "source_location": "L57",
+      "weight": 1.0,
+      "_src": "imageupload_handlefileselect",
+      "_tgt": "imageupload_uploadfile",
+      "source": "imageupload_uploadfile",
+      "target": "imageupload_handlefileselect",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\admin\\ImageUpload.tsx",
+      "source_location": "L64",
+      "weight": 1.0,
+      "_src": "imageupload_handledrop",
+      "_tgt": "imageupload_uploadfile",
+      "source": "imageupload_uploadfile",
+      "target": "imageupload_handledrop",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\admin\\PhaseManager.tsx",
+      "source_location": "L23",
+      "weight": 1.0,
+      "_src": "src_components_admin_phasemanager_tsx",
+      "_tgt": "phasemanager_startedit",
+      "source": "src_components_admin_phasemanager_tsx",
+      "target": "phasemanager_startedit",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\admin\\PhaseManager.tsx",
+      "source_location": "L28",
+      "weight": 1.0,
+      "_src": "src_components_admin_phasemanager_tsx",
+      "_tgt": "phasemanager_saveedit",
+      "source": "src_components_admin_phasemanager_tsx",
+      "target": "phasemanager_saveedit",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\admin\\PhaseManager.tsx",
+      "source_location": "L49",
+      "weight": 1.0,
+      "_src": "src_components_admin_phasemanager_tsx",
+      "_tgt": "phasemanager_createphase",
+      "source": "src_components_admin_phasemanager_tsx",
+      "target": "phasemanager_createphase",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\admin\\SettingsManager.tsx",
+      "source_location": "L33",
+      "weight": 1.0,
+      "_src": "src_components_admin_settingsmanager_tsx",
+      "_tgt": "settingsmanager_fetchsettings",
+      "source": "src_components_admin_settingsmanager_tsx",
+      "target": "settingsmanager_fetchsettings",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\admin\\SettingsManager.tsx",
+      "source_location": "L42",
+      "weight": 1.0,
+      "_src": "src_components_admin_settingsmanager_tsx",
+      "_tgt": "settingsmanager_updatevalue",
+      "source": "src_components_admin_settingsmanager_tsx",
+      "target": "settingsmanager_updatevalue",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\admin\\SettingsManager.tsx",
+      "source_location": "L48",
+      "weight": 1.0,
+      "_src": "src_components_admin_settingsmanager_tsx",
+      "_tgt": "settingsmanager_saveall",
+      "source": "src_components_admin_settingsmanager_tsx",
+      "target": "settingsmanager_saveall",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\auth\\AuthForm.tsx",
+      "source_location": "L20",
+      "weight": 1.0,
+      "_src": "src_components_auth_authform_tsx",
+      "_tgt": "authform_handlesubmit",
+      "source": "src_components_auth_authform_tsx",
+      "target": "authform_handlesubmit",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\game\\EventCard.tsx",
+      "source_location": "L15",
+      "weight": 1.0,
+      "_src": "src_components_game_eventcard_tsx",
+      "_tgt": "eventcard_handlechoice",
+      "source": "src_components_game_eventcard_tsx",
+      "target": "eventcard_handlechoice",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\game\\EventCard.tsx",
+      "source_location": "L20",
+      "weight": 1.0,
+      "_src": "src_components_game_eventcard_tsx",
+      "_tgt": "eventcard_handlecontinue",
+      "source": "src_components_game_eventcard_tsx",
+      "target": "eventcard_handlecontinue",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\game\\GameEngine.tsx",
+      "source_location": "L52",
+      "weight": 1.0,
+      "_src": "src_components_game_gameengine_tsx",
+      "_tgt": "gameengine_typewriter",
+      "source": "src_components_game_gameengine_tsx",
+      "target": "gameengine_typewriter",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\game\\GameEngine.tsx",
+      "source_location": "L71",
+      "weight": 1.0,
+      "_src": "src_components_game_gameengine_tsx",
+      "_tgt": "gameengine_gameengine",
+      "source": "src_components_game_gameengine_tsx",
+      "target": "gameengine_gameengine",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\game\\GameHUD.tsx",
+      "source_location": "L8",
+      "weight": 1.0,
+      "_src": "src_components_game_gamehud_tsx",
+      "_tgt": "gamehud_gamehud",
+      "source": "src_components_game_gamehud_tsx",
+      "target": "gamehud_gamehud",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\game\\GameMenuBar.tsx",
+      "source_location": "L8",
+      "weight": 1.0,
+      "_src": "src_components_game_gamemenubar_tsx",
+      "_tgt": "gamemenubar_menubutton",
+      "source": "src_components_game_gamemenubar_tsx",
+      "target": "gamemenubar_menubutton",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\game\\scenes\\EscapingVietnamCinematic.tsx",
+      "source_location": "L19",
+      "weight": 1.0,
+      "_src": "src_components_game_scenes_escapingvietnamcinematic_tsx",
+      "_tgt": "escapingvietnamcinematic_typewriter",
+      "source": "src_components_game_scenes_escapingvietnamcinematic_tsx",
+      "target": "escapingvietnamcinematic_typewriter",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\game\\scenes\\PixelHelicopter.tsx",
+      "source_location": "L40",
+      "weight": 1.0,
+      "_src": "src_components_game_scenes_pixelhelicopter_tsx",
+      "_tgt": "pixelhelicopter_pixelhelicopter",
+      "source": "src_components_game_scenes_pixelhelicopter_tsx",
+      "target": "pixelhelicopter_pixelhelicopter",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\game\\scenes\\PixelPeople.tsx",
+      "source_location": "L60",
+      "weight": 1.0,
+      "_src": "src_components_game_scenes_pixelpeople_tsx",
+      "_tgt": "pixelpeople_getcellcolor",
+      "source": "src_components_game_scenes_pixelpeople_tsx",
+      "target": "pixelpeople_getcellcolor",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\ui\\badge.tsx",
+      "source_location": "L30",
+      "weight": 1.0,
+      "_src": "src_components_ui_badge_tsx",
+      "_tgt": "badge_badge",
+      "source": "src_components_ui_badge_tsx",
+      "target": "badge_badge",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\ui\\calendar.tsx",
+      "source_location": "L10",
+      "weight": 1.0,
+      "_src": "src_components_ui_calendar_tsx",
+      "_tgt": "calendar_calendar",
+      "source": "src_components_ui_calendar_tsx",
+      "target": "calendar_calendar",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\ui\\carousel.tsx",
+      "source_location": "L33",
+      "weight": 1.0,
+      "_src": "src_components_ui_carousel_tsx",
+      "_tgt": "carousel_usecarousel",
+      "source": "src_components_ui_carousel_tsx",
+      "target": "carousel_usecarousel",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\ui\\chart.tsx",
+      "source_location": "L25",
+      "weight": 1.0,
+      "_src": "src_components_ui_chart_tsx",
+      "_tgt": "chart_usechart",
+      "source": "src_components_ui_chart_tsx",
+      "target": "chart_usechart",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\ui\\chart.tsx",
+      "source_location": "L52",
+      "weight": 1.0,
+      "_src": "src_components_ui_chart_tsx",
+      "_tgt": "chart_cn",
+      "source": "src_components_ui_chart_tsx",
+      "target": "chart_cn",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\ui\\pagination.tsx",
+      "source_location": "L7",
+      "weight": 1.0,
+      "_src": "src_components_ui_pagination_tsx",
+      "_tgt": "pagination_pagination",
+      "source": "src_components_ui_pagination_tsx",
+      "target": "pagination_pagination",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\ui\\pagination.tsx",
+      "source_location": "L42",
+      "weight": 1.0,
+      "_src": "src_components_ui_pagination_tsx",
+      "_tgt": "pagination_paginationlink",
+      "source": "src_components_ui_pagination_tsx",
+      "target": "pagination_paginationlink",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\ui\\pagination.tsx",
+      "source_location": "L62",
+      "weight": 1.0,
+      "_src": "src_components_ui_pagination_tsx",
+      "_tgt": "pagination_paginationprevious",
+      "source": "src_components_ui_pagination_tsx",
+      "target": "pagination_paginationprevious",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\ui\\pagination.tsx",
+      "source_location": "L78",
+      "weight": 1.0,
+      "_src": "src_components_ui_pagination_tsx",
+      "_tgt": "pagination_paginationnext",
+      "source": "src_components_ui_pagination_tsx",
+      "target": "pagination_paginationnext",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\ui\\pagination.tsx",
+      "source_location": "L94",
+      "weight": 1.0,
+      "_src": "src_components_ui_pagination_tsx",
+      "_tgt": "pagination_paginationellipsis",
+      "source": "src_components_ui_pagination_tsx",
+      "target": "pagination_paginationellipsis",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\ui\\sidebar.tsx",
+      "source_location": "L39",
+      "weight": 1.0,
+      "_src": "src_components_ui_sidebar_tsx",
+      "_tgt": "sidebar_usesidebar",
+      "source": "src_components_ui_sidebar_tsx",
+      "target": "sidebar_usesidebar",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\ui\\sidebar.tsx",
+      "source_location": "L99",
+      "weight": 1.0,
+      "_src": "src_components_ui_sidebar_tsx",
+      "_tgt": "sidebar_handlekeydown",
+      "source": "src_components_ui_sidebar_tsx",
+      "target": "sidebar_handlekeydown",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\ui\\sidebar.tsx",
+      "source_location": "L141",
+      "weight": 1.0,
+      "_src": "src_components_ui_sidebar_tsx",
+      "_tgt": "sidebar_cn",
+      "source": "src_components_ui_sidebar_tsx",
+      "target": "sidebar_cn",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\ui\\skeleton.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "_src": "src_components_ui_skeleton_tsx",
+      "_tgt": "skeleton_skeleton",
+      "source": "src_components_ui_skeleton_tsx",
+      "target": "skeleton_skeleton",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\ui\\sonner.tsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "_src": "src_components_ui_sonner_tsx",
+      "_tgt": "sonner_toaster",
+      "source": "src_components_ui_sonner_tsx",
+      "target": "sonner_toaster",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\hooks\\use-mobile.tsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "_src": "src_hooks_use_mobile_tsx",
+      "_tgt": "use_mobile_useismobile",
+      "source": "src_hooks_use_mobile_tsx",
+      "target": "use_mobile_useismobile",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\hooks\\use-toast.ts",
+      "source_location": "L27",
+      "weight": 1.0,
+      "_src": "src_hooks_use_toast_ts",
+      "_tgt": "use_toast_genid",
+      "source": "src_hooks_use_toast_ts",
+      "target": "use_toast_genid",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\hooks\\use-toast.ts",
+      "source_location": "L58",
+      "weight": 1.0,
+      "_src": "src_hooks_use_toast_ts",
+      "_tgt": "use_toast_addtoremovequeue",
+      "source": "src_hooks_use_toast_ts",
+      "target": "use_toast_addtoremovequeue",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\hooks\\use-toast.ts",
+      "source_location": "L74",
+      "weight": 1.0,
+      "_src": "src_hooks_use_toast_ts",
+      "_tgt": "use_toast_reducer",
+      "source": "src_hooks_use_toast_ts",
+      "target": "use_toast_reducer",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\hooks\\use-toast.ts",
+      "source_location": "L133",
+      "weight": 1.0,
+      "_src": "src_hooks_use_toast_ts",
+      "_tgt": "use_toast_dispatch",
+      "source": "src_hooks_use_toast_ts",
+      "target": "use_toast_dispatch",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\hooks\\use-toast.ts",
+      "source_location": "L142",
+      "weight": 1.0,
+      "_src": "src_hooks_use_toast_ts",
+      "_tgt": "use_toast_toast",
+      "source": "src_hooks_use_toast_ts",
+      "target": "use_toast_toast",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\hooks\\use-toast.ts",
+      "source_location": "L171",
+      "weight": 1.0,
+      "_src": "src_hooks_use_toast_ts",
+      "_tgt": "use_toast_usetoast",
+      "source": "src_hooks_use_toast_ts",
+      "target": "use_toast_usetoast",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\hooks\\use-toast.ts",
+      "source_location": "L143",
+      "weight": 1.0,
+      "_src": "use_toast_toast",
+      "_tgt": "use_toast_genid",
+      "source": "use_toast_genid",
+      "target": "use_toast_toast",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\hooks\\use-toast.ts",
+      "source_location": "L96",
+      "weight": 1.0,
+      "_src": "use_toast_reducer",
+      "_tgt": "use_toast_addtoremovequeue",
+      "source": "use_toast_addtoremovequeue",
+      "target": "use_toast_reducer",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\hooks\\use-toast.ts",
+      "source_location": "L134",
+      "weight": 1.0,
+      "_src": "use_toast_dispatch",
+      "_tgt": "use_toast_reducer",
+      "source": "use_toast_reducer",
+      "target": "use_toast_dispatch",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\hooks\\use-toast.ts",
+      "source_location": "L152",
+      "weight": 1.0,
+      "_src": "use_toast_toast",
+      "_tgt": "use_toast_dispatch",
+      "source": "use_toast_dispatch",
+      "target": "use_toast_toast",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\hooks\\useAuth.ts",
+      "source_location": "L12",
+      "weight": 1.0,
+      "_src": "src_hooks_useauth_ts",
+      "_tgt": "useauth_useauth",
+      "source": "src_hooks_useauth_ts",
+      "target": "useauth_useauth",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\hooks\\useGameEvents.ts",
+      "source_location": "L32",
+      "weight": 1.0,
+      "_src": "src_hooks_usegameevents_ts",
+      "_tgt": "usegameevents_usegameevents",
+      "source": "src_hooks_usegameevents_ts",
+      "target": "usegameevents_usegameevents",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\hooks\\useGameSave.ts",
+      "source_location": "L5",
+      "weight": 1.0,
+      "_src": "src_hooks_usegamesave_ts",
+      "_tgt": "usegamesave_usegamesave",
+      "source": "src_hooks_usegamesave_ts",
+      "target": "usegamesave_usegamesave",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\hooks\\useGameState.ts",
+      "source_location": "L28",
+      "weight": 1.0,
+      "_src": "src_hooks_usegamestate_ts",
+      "_tgt": "usegamestate_usegamestate",
+      "source": "src_hooks_usegamestate_ts",
+      "target": "usegamestate_usegamestate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\lib\\utils.ts",
+      "source_location": "L4",
+      "weight": 1.0,
+      "_src": "src_lib_utils_ts",
+      "_tgt": "utils_cn",
+      "source": "src_lib_utils_ts",
+      "target": "utils_cn",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\pages\\AdminPage.tsx",
+      "source_location": "L12",
+      "weight": 1.0,
+      "_src": "src_pages_adminpage_tsx",
+      "_tgt": "adminpage_adminpage",
+      "source": "src_pages_adminpage_tsx",
+      "target": "adminpage_adminpage",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\pages\\AuthPage.tsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "_src": "src_pages_authpage_tsx",
+      "_tgt": "authpage_authpage",
+      "source": "src_pages_authpage_tsx",
+      "target": "authpage_authpage",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\pages\\GamePage.tsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "_src": "src_pages_gamepage_tsx",
+      "_tgt": "gamepage_gamepage",
+      "source": "src_pages_gamepage_tsx",
+      "target": "gamepage_gamepage",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\pages\\HistoryPage.tsx",
+      "source_location": "L33",
+      "weight": 1.0,
+      "_src": "src_pages_historypage_tsx",
+      "_tgt": "historypage_fetchruns",
+      "source": "src_pages_historypage_tsx",
+      "target": "historypage_fetchruns",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\pages\\NotFound.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "_src": "src_pages_notfound_tsx",
+      "_tgt": "notfound_notfound",
+      "source": "src_pages_notfound_tsx",
+      "target": "notfound_notfound",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\pages\\TitleScreen.tsx",
+      "source_location": "L15",
+      "weight": 1.0,
+      "_src": "src_pages_titlescreen_tsx",
+      "_tgt": "titlescreen_checksave",
+      "source": "src_pages_titlescreen_tsx",
+      "target": "titlescreen_checksave",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CLAUDE.md",
+      "source_location": "Game Loop section",
+      "weight": 1.0,
+      "_src": "claude_project_guidance",
+      "_tgt": "claude_game_loop",
+      "source": "claude_project_guidance",
+      "target": "claude_game_loop"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CLAUDE.md",
+      "source_location": "State Management section",
+      "weight": 1.0,
+      "_src": "claude_project_guidance",
+      "_tgt": "claude_state_management",
+      "source": "claude_project_guidance",
+      "target": "claude_state_management"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CLAUDE.md",
+      "source_location": "Supabase Schema section",
+      "weight": 1.0,
+      "_src": "claude_project_guidance",
+      "_tgt": "claude_supabase_schema",
+      "source": "claude_project_guidance",
+      "target": "claude_supabase_schema"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CLAUDE.md",
+      "source_location": "Routing section",
+      "weight": 1.0,
+      "_src": "claude_project_guidance",
+      "_tgt": "claude_routing",
+      "source": "claude_project_guidance",
+      "target": "claude_routing"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CLAUDE.md",
+      "source_location": "Design System section",
+      "weight": 1.0,
+      "_src": "claude_project_guidance",
+      "_tgt": "claude_design_system",
+      "source": "claude_project_guidance",
+      "target": "claude_design_system"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CLAUDE.md",
+      "source_location": "Architecture Overview",
+      "weight": 1.0,
+      "_src": "claude_project_guidance",
+      "_tgt": "claude_tech_stack",
+      "source": "claude_project_guidance",
+      "target": "claude_tech_stack"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CLAUDE.md",
+      "source_location": "Key Conventions section",
+      "weight": 1.0,
+      "_src": "claude_project_guidance",
+      "_tgt": "codeguideline_doc",
+      "source": "claude_project_guidance",
+      "target": "codeguideline_doc"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CLAUDE.md",
+      "source_location": "Key Conventions section",
+      "weight": 1.0,
+      "_src": "codeguideline_naming_conventions",
+      "_tgt": "claude_project_guidance",
+      "source": "claude_project_guidance",
+      "target": "codeguideline_naming_conventions"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CLAUDE.md",
+      "source_location": "Key Conventions section",
+      "weight": 1.0,
+      "_src": "codeguideline_100line_limit",
+      "_tgt": "claude_project_guidance",
+      "source": "claude_project_guidance",
+      "target": "codeguideline_100line_limit"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CLAUDE.md",
+      "source_location": "Game Loop section",
+      "weight": 1.0,
+      "_src": "claude_game_loop",
+      "_tgt": "game_phases_concept",
+      "source": "claude_game_loop",
+      "target": "game_phases_concept"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CLAUDE.md",
+      "source_location": "Game Loop section",
+      "weight": 1.0,
+      "_src": "claude_game_loop",
+      "_tgt": "game_stats_concept",
+      "source": "claude_game_loop",
+      "target": "game_stats_concept"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CLAUDE.md",
+      "source_location": "Game Loop section",
+      "weight": 1.0,
+      "_src": "claude_game_loop",
+      "_tgt": "game_starvation_mechanic",
+      "source": "claude_game_loop",
+      "target": "game_starvation_mechanic"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CLAUDE.md",
+      "source_location": "Game Loop section",
+      "weight": 1.0,
+      "_src": "claude_game_loop",
+      "_tgt": "game_event_system",
+      "source": "claude_game_loop",
+      "target": "game_event_system"
+    },
+    {
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "CLAUDE.md",
+      "source_location": "Architecture Overview",
+      "weight": 0.85,
+      "_src": "game_concept_oregon_trail_style",
+      "_tgt": "claude_game_loop",
+      "source": "claude_game_loop",
+      "target": "game_concept_oregon_trail_style"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CLAUDE.md",
+      "source_location": "State Management section",
+      "weight": 1.0,
+      "_src": "claude_state_management",
+      "_tgt": "claude_hook_useGameState",
+      "source": "claude_state_management",
+      "target": "claude_hook_useGameState"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CLAUDE.md",
+      "source_location": "State Management section",
+      "weight": 1.0,
+      "_src": "claude_state_management",
+      "_tgt": "claude_hook_useGameEvents",
+      "source": "claude_state_management",
+      "target": "claude_hook_useGameEvents"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CLAUDE.md",
+      "source_location": "State Management section",
+      "weight": 1.0,
+      "_src": "claude_state_management",
+      "_tgt": "claude_hook_useGameSave",
+      "source": "claude_state_management",
+      "target": "claude_hook_useGameSave"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CLAUDE.md",
+      "source_location": "State Management section",
+      "weight": 1.0,
+      "_src": "claude_state_management",
+      "_tgt": "claude_hook_useAuth",
+      "source": "claude_state_management",
+      "target": "claude_hook_useAuth"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CLAUDE.md",
+      "source_location": "State Management section",
+      "weight": 1.0,
+      "_src": "claude_rationale_no_global_store",
+      "_tgt": "claude_state_management",
+      "source": "claude_state_management",
+      "target": "claude_rationale_no_global_store"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CLAUDE.md",
+      "source_location": "State Management section",
+      "weight": 1.0,
+      "_src": "claude_gameengine",
+      "_tgt": "claude_hook_useGameState",
+      "source": "claude_hook_useGameState",
+      "target": "claude_gameengine"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CLAUDE.md",
+      "source_location": "State Management section",
+      "weight": 1.0,
+      "_src": "claude_hook_useGameState",
+      "_tgt": "claude_table_game_settings",
+      "source": "claude_hook_useGameState",
+      "target": "claude_table_game_settings"
+    },
+    {
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "CodeGuideline.md",
+      "source_location": "Directory Responsibilities",
+      "weight": 0.8,
+      "_src": "codeguideline_dir_hooks",
+      "_tgt": "claude_hook_useGameState",
+      "source": "claude_hook_useGameState",
+      "target": "codeguideline_dir_hooks"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CLAUDE.md",
+      "source_location": "State Management section",
+      "weight": 1.0,
+      "_src": "claude_gameengine",
+      "_tgt": "claude_hook_useGameEvents",
+      "source": "claude_hook_useGameEvents",
+      "target": "claude_gameengine"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CLAUDE.md",
+      "source_location": "State Management section",
+      "weight": 1.0,
+      "_src": "claude_hook_useGameEvents",
+      "_tgt": "claude_table_game_events",
+      "source": "claude_hook_useGameEvents",
+      "target": "claude_table_game_events"
+    },
+    {
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "CodeGuideline.md",
+      "source_location": "Directory Responsibilities",
+      "weight": 0.8,
+      "_src": "codeguideline_dir_hooks",
+      "_tgt": "claude_hook_useGameEvents",
+      "source": "claude_hook_useGameEvents",
+      "target": "codeguideline_dir_hooks"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CLAUDE.md",
+      "source_location": "State Management section",
+      "weight": 1.0,
+      "_src": "claude_gameengine",
+      "_tgt": "claude_hook_useGameSave",
+      "source": "claude_hook_useGameSave",
+      "target": "claude_gameengine"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CLAUDE.md",
+      "source_location": "State Management section",
+      "weight": 1.0,
+      "_src": "claude_hook_useGameSave",
+      "_tgt": "claude_table_game_saves",
+      "source": "claude_hook_useGameSave",
+      "target": "claude_table_game_saves"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CLAUDE.md",
+      "source_location": "State Management section",
+      "weight": 1.0,
+      "_src": "claude_hook_useGameSave",
+      "_tgt": "claude_table_game_runs",
+      "source": "claude_hook_useGameSave",
+      "target": "claude_table_game_runs"
+    },
+    {
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "CodeGuideline.md",
+      "source_location": "Directory Responsibilities",
+      "weight": 0.8,
+      "_src": "codeguideline_dir_hooks",
+      "_tgt": "claude_hook_useGameSave",
+      "source": "claude_hook_useGameSave",
+      "target": "codeguideline_dir_hooks"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CLAUDE.md",
+      "source_location": "State Management section",
+      "weight": 1.0,
+      "_src": "claude_gameengine",
+      "_tgt": "claude_hook_useAuth",
+      "source": "claude_hook_useAuth",
+      "target": "claude_gameengine"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CLAUDE.md",
+      "source_location": "State Management section",
+      "weight": 1.0,
+      "_src": "claude_hook_useAuth",
+      "_tgt": "claude_table_profiles",
+      "source": "claude_hook_useAuth",
+      "target": "claude_table_profiles"
+    },
+    {
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "CodeGuideline.md",
+      "source_location": "Directory Responsibilities",
+      "weight": 0.8,
+      "_src": "codeguideline_dir_hooks",
+      "_tgt": "claude_hook_useAuth",
+      "source": "claude_hook_useAuth",
+      "target": "codeguideline_dir_hooks"
+    },
+    {
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.7,
+      "source_file": "CLAUDE.md",
+      "source_location": "Routing section",
+      "weight": 0.7,
+      "_src": "claude_routing",
+      "_tgt": "claude_gameengine",
+      "source": "claude_gameengine",
+      "target": "claude_routing"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CLAUDE.md",
+      "source_location": "State Management section",
+      "weight": 1.0,
+      "_src": "claude_rationale_gameengine_entry",
+      "_tgt": "claude_gameengine",
+      "source": "claude_gameengine",
+      "target": "claude_rationale_gameengine_entry"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CLAUDE.md",
+      "source_location": "Supabase Schema section",
+      "weight": 1.0,
+      "_src": "claude_supabase_schema",
+      "_tgt": "claude_table_profiles",
+      "source": "claude_supabase_schema",
+      "target": "claude_table_profiles"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CLAUDE.md",
+      "source_location": "Supabase Schema section",
+      "weight": 1.0,
+      "_src": "claude_supabase_schema",
+      "_tgt": "claude_table_game_phases",
+      "source": "claude_supabase_schema",
+      "target": "claude_table_game_phases"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CLAUDE.md",
+      "source_location": "Supabase Schema section",
+      "weight": 1.0,
+      "_src": "claude_supabase_schema",
+      "_tgt": "claude_table_game_events",
+      "source": "claude_supabase_schema",
+      "target": "claude_table_game_events"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CLAUDE.md",
+      "source_location": "Supabase Schema section",
+      "weight": 1.0,
+      "_src": "claude_supabase_schema",
+      "_tgt": "claude_table_game_saves",
+      "source": "claude_supabase_schema",
+      "target": "claude_table_game_saves"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CLAUDE.md",
+      "source_location": "Supabase Schema section",
+      "weight": 1.0,
+      "_src": "claude_supabase_schema",
+      "_tgt": "claude_table_game_runs",
+      "source": "claude_supabase_schema",
+      "target": "claude_table_game_runs"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CLAUDE.md",
+      "source_location": "Supabase Schema section",
+      "weight": 1.0,
+      "_src": "claude_supabase_schema",
+      "_tgt": "claude_table_game_settings",
+      "source": "claude_supabase_schema",
+      "target": "claude_table_game_settings"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CLAUDE.md",
+      "source_location": "Supabase Schema section",
+      "weight": 1.0,
+      "_src": "claude_supabase_schema",
+      "_tgt": "claude_supabase_types",
+      "source": "claude_supabase_schema",
+      "target": "claude_supabase_types"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CLAUDE.md",
+      "source_location": "Supabase Schema section",
+      "weight": 1.0,
+      "_src": "claude_supabase_schema",
+      "_tgt": "claude_rls_policy",
+      "source": "claude_supabase_schema",
+      "target": "claude_rls_policy"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CLAUDE.md",
+      "source_location": "Supabase Schema section",
+      "weight": 1.0,
+      "_src": "claude_rls_policy",
+      "_tgt": "claude_table_profiles",
+      "source": "claude_table_profiles",
+      "target": "claude_rls_policy"
+    },
+    {
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "CLAUDE.md",
+      "source_location": "Supabase Schema section",
+      "weight": 0.9,
+      "_src": "claude_table_game_saves",
+      "_tgt": "claude_table_profiles",
+      "source": "claude_table_profiles",
+      "target": "claude_table_game_saves"
+    },
+    {
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "CLAUDE.md",
+      "source_location": "Supabase Schema section",
+      "weight": 0.85,
+      "_src": "claude_table_game_runs",
+      "_tgt": "claude_table_profiles",
+      "source": "claude_table_profiles",
+      "target": "claude_table_game_runs"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CLAUDE.md",
+      "source_location": "Supabase Schema section",
+      "weight": 1.0,
+      "_src": "claude_table_game_events",
+      "_tgt": "claude_table_game_phases",
+      "source": "claude_table_game_phases",
+      "target": "claude_table_game_events"
+    },
+    {
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "CLAUDE.md",
+      "source_location": "Game Loop section",
+      "weight": 0.9,
+      "_src": "game_event_system",
+      "_tgt": "claude_table_game_events",
+      "source": "claude_table_game_events",
+      "target": "game_event_system"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CLAUDE.md",
+      "source_location": "Routing section",
+      "weight": 1.0,
+      "_src": "claude_rationale_route_name_field",
+      "_tgt": "claude_routing",
+      "source": "claude_routing",
+      "target": "claude_rationale_route_name_field"
+    },
+    {
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "CLAUDE.md",
+      "source_location": "Design System section",
+      "weight": 0.8,
+      "_src": "claude_tech_stack",
+      "_tgt": "claude_design_system",
+      "source": "claude_design_system",
+      "target": "claude_tech_stack"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.55,
+      "source_file": "public/placeholder.svg",
+      "source_location": null,
+      "weight": 0.55,
+      "_src": "placeholder_svg",
+      "_tgt": "claude_design_system",
+      "source": "claude_design_system",
+      "target": "placeholder_svg"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CLAUDE.md",
+      "source_location": "Architecture Overview",
+      "weight": 1.0,
+      "_src": "claude_tech_stack",
+      "_tgt": "claude_supabase_backend",
+      "source": "claude_tech_stack",
+      "target": "claude_supabase_backend"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": "Tech stack section",
+      "weight": 1.0,
+      "_src": "readme_doc",
+      "_tgt": "claude_tech_stack",
+      "source": "claude_tech_stack",
+      "target": "readme_doc"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.65,
+      "source_file": "README.md",
+      "source_location": "Overview",
+      "weight": 0.65,
+      "_src": "readme_enter_pro",
+      "_tgt": "claude_supabase_backend",
+      "source": "claude_supabase_backend",
+      "target": "readme_enter_pro"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CodeGuideline.md",
+      "source_location": "Project Structure Overview",
+      "weight": 1.0,
+      "_src": "codeguideline_doc",
+      "_tgt": "codeguideline_project_structure",
+      "source": "codeguideline_doc",
+      "target": "codeguideline_project_structure"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CodeGuideline.md",
+      "source_location": "Coding Best Practices",
+      "weight": 1.0,
+      "_src": "codeguideline_doc",
+      "_tgt": "codeguideline_naming_conventions",
+      "source": "codeguideline_doc",
+      "target": "codeguideline_naming_conventions"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CodeGuideline.md",
+      "source_location": "Coding Best Practices",
+      "weight": 1.0,
+      "_src": "codeguideline_doc",
+      "_tgt": "codeguideline_single_responsibility",
+      "source": "codeguideline_doc",
+      "target": "codeguideline_single_responsibility"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CodeGuideline.md",
+      "source_location": "Coding Best Practices",
+      "weight": 1.0,
+      "_src": "codeguideline_doc",
+      "_tgt": "codeguideline_100line_limit",
+      "source": "codeguideline_doc",
+      "target": "codeguideline_100line_limit"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CodeGuideline.md",
+      "source_location": "Directory Responsibilities",
+      "weight": 1.0,
+      "_src": "codeguideline_rationale_doc_update",
+      "_tgt": "codeguideline_doc",
+      "source": "codeguideline_doc",
+      "target": "codeguideline_rationale_doc_update"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CodeGuideline.md",
+      "source_location": "Directory Responsibilities",
+      "weight": 1.0,
+      "_src": "codeguideline_project_structure",
+      "_tgt": "codeguideline_dir_public",
+      "source": "codeguideline_project_structure",
+      "target": "codeguideline_dir_public"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CodeGuideline.md",
+      "source_location": "Directory Responsibilities",
+      "weight": 1.0,
+      "_src": "codeguideline_project_structure",
+      "_tgt": "codeguideline_dir_components",
+      "source": "codeguideline_project_structure",
+      "target": "codeguideline_dir_components"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CodeGuideline.md",
+      "source_location": "Directory Responsibilities",
+      "weight": 1.0,
+      "_src": "codeguideline_project_structure",
+      "_tgt": "codeguideline_dir_hooks",
+      "source": "codeguideline_project_structure",
+      "target": "codeguideline_dir_hooks"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CodeGuideline.md",
+      "source_location": "Directory Responsibilities",
+      "weight": 1.0,
+      "_src": "codeguideline_project_structure",
+      "_tgt": "codeguideline_dir_lib",
+      "source": "codeguideline_project_structure",
+      "target": "codeguideline_dir_lib"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CodeGuideline.md",
+      "source_location": "Directory Responsibilities",
+      "weight": 1.0,
+      "_src": "codeguideline_project_structure",
+      "_tgt": "codeguideline_dir_pages",
+      "source": "codeguideline_project_structure",
+      "target": "codeguideline_dir_pages"
+    },
+    {
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "public/robots.txt",
+      "source_location": null,
+      "weight": 0.85,
+      "_src": "robots_txt",
+      "_tgt": "codeguideline_dir_public",
+      "source": "codeguideline_dir_public",
+      "target": "robots_txt"
+    },
+    {
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "public/placeholder.svg",
+      "source_location": null,
+      "weight": 0.85,
+      "_src": "placeholder_svg",
+      "_tgt": "codeguideline_dir_public",
+      "source": "codeguideline_dir_public",
+      "target": "placeholder_svg"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": "Overview",
+      "weight": 1.0,
+      "_src": "readme_doc",
+      "_tgt": "readme_enter_pro",
+      "source": "readme_doc",
+      "target": "readme_enter_pro"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": "Project URLs",
+      "weight": 1.0,
+      "_src": "readme_doc",
+      "_tgt": "readme_live_app",
+      "source": "readme_doc",
+      "target": "readme_live_app"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": "Project URLs",
+      "weight": 1.0,
+      "_src": "readme_doc",
+      "_tgt": "readme_enter_project_url",
+      "source": "readme_doc",
+      "target": "readme_enter_project_url"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CLAUDE.md",
+      "source_location": "Architecture Overview",
+      "weight": 1.0,
+      "_src": "game_concept_oregon_trail_style",
+      "_tgt": "game_concept_vietnam_diaspora",
+      "source": "game_concept_oregon_trail_style",
+      "target": "game_concept_vietnam_diaspora"
+    },
+    {
+      "relation": "shares_data_with",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CLAUDE.md",
+      "source_location": "Game Loop section",
+      "weight": 1.0,
+      "_src": "game_starvation_mechanic",
+      "_tgt": "game_stats_concept",
+      "source": "game_stats_concept",
+      "target": "game_starvation_mechanic"
+    },
+    {
+      "relation": "shares_data_with",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CLAUDE.md",
+      "source_location": "Game Loop section",
+      "weight": 1.0,
+      "_src": "game_event_system",
+      "_tgt": "game_stats_concept",
+      "source": "game_stats_concept",
+      "target": "game_event_system"
+    }
+  ],
+  "hyperedges": [
+    {
+      "id": "core_game_hooks",
+      "label": "Core Game Hook Triad",
+      "nodes": [
+        "claude_hook_useGameState",
+        "claude_hook_useGameEvents",
+        "claude_hook_useGameSave"
+      ],
+      "relation": "implement",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CLAUDE.md"
+    },
+    {
+      "id": "supabase_tables_all",
+      "label": "All Supabase Tables",
+      "nodes": [
+        "claude_table_profiles",
+        "claude_table_game_phases",
+        "claude_table_game_events",
+        "claude_table_game_saves",
+        "claude_table_game_runs",
+        "claude_table_game_settings"
+      ],
+      "relation": "participate_in",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CLAUDE.md"
+    },
+    {
+      "id": "game_loop_mechanics",
+      "label": "Core Game Loop Mechanics",
+      "nodes": [
+        "game_stats_concept",
+        "game_starvation_mechanic",
+        "game_event_system",
+        "game_phases_concept"
+      ],
+      "relation": "implement",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CLAUDE.md"
+    },
+    {
+      "id": "tech_stack_components",
+      "label": "Full Tech Stack",
+      "nodes": [
+        "claude_tech_stack",
+        "claude_supabase_backend",
+        "claude_design_system",
+        "claude_routing"
+      ],
+      "relation": "form",
+      "confidence": "EXTRACTED",
+      "confidence_score": 0.95,
+      "source_file": "CLAUDE.md"
+    },
+    {
+      "id": "project_docs_set",
+      "label": "Project Documentation Set",
+      "nodes": [
+        "claude_project_guidance",
+        "codeguideline_doc",
+        "readme_doc"
+      ],
+      "relation": "participate_in",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CLAUDE.md"
+    }
+  ]
+}

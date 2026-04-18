@@ -44,10 +44,7 @@ export function PhaseIntro({ phase, onContinue }: PhaseIntroProps) {
         )}
 
         <div className="border-t border-border pt-6">
-          <Button
-            onClick={onContinue}
-            className="font-pixel text-[10px] bg-primary text-primary-foreground hover:bg-primary/80 px-8"
-          >
+          <Button onClick={onContinue} className="font-pixel text-[10px] px-8">
             Begin
           </Button>
         </div>

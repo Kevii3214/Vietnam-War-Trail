@@ -44,8 +44,10 @@ export default function HistoryPage() {
 
   if (loading) {
     return (
-      <div className="h-full flex items-center justify-center bg-background">
-        <p className="font-pixel text-sm text-primary crt-glow flicker">Loading...</p>
+      <div className="h-full flex flex-col items-center justify-center gap-6 bg-background">
+        <h1 className="font-pixel text-sm text-primary crt-glow flicker">Vietnam Trail</h1>
+        <div className="loading-spinner" />
+        <p className="font-retro text-xl text-muted-foreground/35 italic">Loading your journey...</p>
       </div>
     );
   }
@@ -54,12 +56,7 @@ export default function HistoryPage() {
     <div className="min-h-full bg-background p-4 md:p-6 relative scanlines">
       <div className="max-w-lg mx-auto space-y-6">
         <div className="flex items-center gap-3">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => navigate('/')}
-            className="text-foreground hover:bg-muted"
-          >
+          <Button variant="ghost" size="icon" onClick={() => navigate('/')}>
             <ArrowLeft className="w-5 h-5" />
           </Button>
           <h1 className="font-pixel text-sm text-primary crt-glow">Journey History</h1>

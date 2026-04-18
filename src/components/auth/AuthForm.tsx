@@ -97,11 +97,7 @@ export function AuthForm({ onSuccess }: AuthFormProps) {
           />
         </div>
 
-        <Button
-          type="submit"
-          disabled={loading}
-          className="w-full font-pixel text-[10px] bg-primary text-primary-foreground hover:bg-primary/80"
-        >
+        <Button type="submit" disabled={loading} className="w-full font-pixel text-[10px]">
           {loading ? 'Loading...' : isLogin ? 'Sign In' : 'Sign Up'}
         </Button>
       </form>

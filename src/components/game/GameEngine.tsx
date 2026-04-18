@@ -204,8 +204,10 @@ export function GameEngine({ userId, onMainMenu, loadExistingSave }: GameEngineP
 
   if (loading || !initialized) {
     return (
-      <div className="h-full flex items-center justify-center bg-background">
-        <p className="font-pixel text-sm text-primary crt-glow flicker">Loading...</p>
+      <div className="h-full flex flex-col items-center justify-center gap-6 bg-background">
+        <h1 className="font-pixel text-sm text-primary crt-glow flicker">Vietnam Trail</h1>
+        <div className="loading-spinner" />
+        <p className="font-retro text-xl text-muted-foreground/35 italic">Loading your journey...</p>
       </div>
     );
   }
@@ -240,16 +242,13 @@ export function GameEngine({ userId, onMainMenu, loadExistingSave }: GameEngineP
     if (dayState === 'idle') {
       return (
         <div className="animate-fade-in-up">
-          <p className="font-retro text-base md:text-lg text-foreground/70 mb-2">
+          <p className="font-retro text-base md:text-lg text-foreground/70 mb-3">
             The journey continues. What will today bring?
           </p>
           <div className="flex justify-end">
-            <button
-              onClick={handleNextDay}
-              className="flex items-center gap-2 font-pixel text-[10px] text-primary hover:text-primary/80 transition-colors cursor-pointer group"
-            >
+            <button onClick={handleNextDay} className="btn-neon flex items-center gap-2 font-pixel text-[10px] px-4 py-2">
               Next Day
-              <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              <ChevronRight className="w-4 h-4" />
             </button>
           </div>
         </div>
@@ -267,14 +266,11 @@ export function GameEngine({ userId, onMainMenu, loadExistingSave }: GameEngineP
           <p className="font-retro text-base md:text-lg text-foreground min-h-[1.5em]">
             <Typewriter key={travelText} text={travelText} onComplete={() => setTypingDone(true)} />
           </p>
-          <div className="flex justify-end h-5 mt-1">
+          <div className="flex justify-end mt-2 min-h-[34px]">
             {typingDone && (
-              <button
-                onClick={handleTravelContinue}
-                className="flex items-center gap-2 font-pixel text-[10px] text-primary hover:text-primary/80 transition-colors animate-fade-in-up cursor-pointer group"
-              >
+              <button onClick={handleTravelContinue} className="btn-neon flex items-center gap-2 font-pixel text-[10px] px-4 py-2 animate-fade-in-up">
                 Continue
-                <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                <ChevronRight className="w-4 h-4" />
               </button>
             )}
           </div>
@@ -286,7 +282,10 @@ export function GameEngine({ userId, onMainMenu, loadExistingSave }: GameEngineP
     if (dayState === 'event' && currentEvent) {
       return (
         <div className="animate-fade-in-up">
-          <p className="font-pixel text-[10px] text-primary crt-glow mb-1">{currentEvent.title}</p>
+          <div className="flex items-center gap-2 mb-2">
+            <span className="font-pixel text-[10px] text-primary crt-glow">{currentEvent.title}</span>
+            <div className="flex-1 border-t-2 border-primary/20" />
+          </div>
           <p className="font-retro text-base md:text-lg text-foreground leading-relaxed mb-3">
             {currentEvent.description}
           </p>
@@ -295,10 +294,16 @@ export function GameEngine({ userId, onMainMenu, loadExistingSave }: GameEngineP
               <button
                 key={index}
                 onClick={() => handleChoiceMade(choice)}
-                className="w-full text-left flex items-start gap-2 px-3 py-2 rounded border border-primary/10 hover:border-primary/40 hover:bg-primary/5 transition-all cursor-pointer group"
+                className="w-full text-left flex items-start gap-2.5 px-3 py-2 border border-primary/20 hover:border-primary/70 hover:bg-primary/6 active:scale-[0.99] transition-all cursor-pointer group"
+                style={{ borderRadius: '2px', transition: 'all 0.15s ease' }}
               >
-                <span className="text-primary font-pixel text-[9px] mt-0.5 shrink-0">{index + 1}.</span>
-                <span className="font-retro text-sm text-foreground/80 group-hover:text-foreground transition-colors">{choice.text}</span>
+                <span
+                  className="text-primary font-pixel text-[9px] mt-0.5 shrink-0 transition-all duration-150"
+                  style={{ textShadow: '0 0 6px hsl(var(--primary)/0.4)' }}
+                >
+                  &gt;{index + 1}
+                </span>
+                <span className="font-retro text-base text-foreground/70 group-hover:text-foreground transition-colors duration-150">{choice.text}</span>
               </button>
             ))}
           </div>
@@ -338,12 +343,9 @@ export function GameEngine({ userId, onMainMenu, loadExistingSave }: GameEngineP
                 )}
               </div>
               <div className="flex justify-end">
-                <button
-                  onClick={handleContinueAfterResult}
-                  className="flex items-center gap-2 font-pixel text-[10px] text-primary hover:text-primary/80 transition-colors cursor-pointer group"
-                >
+                <button onClick={handleContinueAfterResult} className="btn-neon flex items-center gap-2 font-pixel text-[10px] px-4 py-2">
                   Continue Journey
-                  <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  <ChevronRight className="w-4 h-4" />
                 </button>
               </div>
             </div>

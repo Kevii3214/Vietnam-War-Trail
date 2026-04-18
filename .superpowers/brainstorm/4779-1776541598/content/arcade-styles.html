@@ -1,0 +1,268 @@
+<h2>Retro Arcade Style Direction</h2>
+<p class="subtitle">Three arcade aesthetics — all using <strong>#2596BE</strong> as the primary accent. Pick one.</p>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap');
+
+  .demo-bg {
+    background: #080c10;
+    border-radius: 8px;
+    padding: 24px 28px;
+  }
+  .section-label {
+    font-size: 10px; color: #555; text-transform: uppercase;
+    letter-spacing: 2px; margin-bottom: 12px; font-family: monospace;
+  }
+  .btn-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 16px; }
+
+  /* ===== OPTION A: NEON GLOW ===== */
+  .neon-primary {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 11px 22px;
+    background: transparent;
+    color: #2596BE;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px;
+    border: 2px solid #2596BE;
+    border-radius: 3px;
+    cursor: pointer;
+    text-shadow: 0 0 8px #2596BE, 0 0 16px rgba(37,150,190,0.5);
+    box-shadow: 0 0 8px rgba(37,150,190,0.4), inset 0 0 8px rgba(37,150,190,0.05);
+    transition: all 0.15s ease;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .neon-primary:hover {
+    background: rgba(37,150,190,0.12);
+    box-shadow: 0 0 16px rgba(37,150,190,0.7), inset 0 0 12px rgba(37,150,190,0.1);
+    text-shadow: 0 0 12px #2596BE, 0 0 24px rgba(37,150,190,0.7);
+  }
+  .neon-secondary {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 11px 22px;
+    background: transparent;
+    color: rgba(37,150,190,0.6);
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px;
+    border: 1px solid rgba(37,150,190,0.3);
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    text-transform: uppercase;
+  }
+  .neon-secondary:hover { border-color: rgba(37,150,190,0.7); color: #2596BE; }
+  .neon-ghost {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 11px 22px;
+    background: transparent;
+    color: rgba(255,255,255,0.3);
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px;
+    border: none;
+    cursor: pointer;
+    transition: color 0.15s;
+    text-transform: uppercase;
+  }
+  .neon-ghost:hover { color: rgba(255,255,255,0.7); }
+  .neon-title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 20px;
+    color: #2596BE;
+    text-shadow: 0 0 10px #2596BE, 0 0 30px rgba(37,150,190,0.5), 0 0 60px rgba(37,150,190,0.2);
+    text-align: center;
+    margin-bottom: 6px;
+  }
+  .neon-sub {
+    font-family: 'VT323', monospace;
+    font-size: 22px;
+    color: rgba(255,255,255,0.4);
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  /* ===== OPTION B: CHUNKY PIXEL ===== */
+  .pixel-primary {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 10px 20px;
+    background: #2596BE;
+    color: #000;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px;
+    border: none;
+    border-radius: 0;
+    cursor: pointer;
+    box-shadow: 4px 4px 0 #1a6d8c, 4px 0 0 #1a6d8c, 0 4px 0 #1a6d8c;
+    transition: transform 0.08s, box-shadow 0.08s;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .pixel-primary:hover { background: #2da8d4; }
+  .pixel-primary:active { transform: translate(4px, 4px); box-shadow: 0 0 0 #1a6d8c; }
+  .pixel-secondary {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 10px 20px;
+    background: #1a2332;
+    color: #2596BE;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px;
+    border: 2px solid #2596BE;
+    border-radius: 0;
+    cursor: pointer;
+    box-shadow: 4px 4px 0 rgba(37,150,190,0.3);
+    transition: transform 0.08s, box-shadow 0.08s;
+    text-transform: uppercase;
+  }
+  .pixel-secondary:active { transform: translate(4px, 4px); box-shadow: 0 0 0; }
+  .pixel-ghost {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 10px 20px;
+    background: transparent;
+    color: rgba(255,255,255,0.35);
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px;
+    border: none;
+    cursor: pointer;
+    text-transform: uppercase;
+  }
+  .pixel-title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 18px;
+    color: #2596BE;
+    text-align: center;
+    margin-bottom: 6px;
+    text-shadow: 3px 3px 0 #1a6d8c;
+  }
+  .pixel-sub {
+    font-family: 'VT323', monospace;
+    font-size: 22px;
+    color: rgba(255,255,255,0.45);
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  /* ===== OPTION C: SCANLINE CRT ===== */
+  .crt-primary {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 11px 22px;
+    background: #2596BE;
+    color: #fff;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px;
+    border: 2px solid #4ab0d4;
+    border-bottom-color: #1a6d8c;
+    border-right-color: #1a6d8c;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: opacity 0.15s;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .crt-primary:hover { opacity: 0.85; }
+  .crt-primary:active { border-color: #1a6d8c; border-top-color: #4ab0d4; border-left-color: #4ab0d4; }
+  .crt-secondary {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 11px 22px;
+    background: #0d1520;
+    color: #2596BE;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px;
+    border: 2px solid #2596BE;
+    border-bottom-color: #1a6d8c;
+    border-right-color: #1a6d8c;
+    border-radius: 2px;
+    cursor: pointer;
+    text-transform: uppercase;
+  }
+  .crt-ghost {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 11px 22px;
+    background: transparent;
+    color: rgba(255,255,255,0.3);
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px;
+    border: none; cursor: pointer; text-transform: uppercase;
+  }
+  .crt-title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 18px;
+    color: #2596BE;
+    text-align: center;
+    margin-bottom: 6px;
+    animation: flicker 3s infinite;
+  }
+  @keyframes flicker {
+    0%,100% { opacity:1; } 92% { opacity:1; } 93% { opacity:0.7; } 94% { opacity:1; } 96% { opacity:0.85; } 97% { opacity:1; }
+  }
+  .crt-sub {
+    font-family: 'VT323', monospace;
+    font-size: 22px;
+    color: rgba(255,255,255,0.4);
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .preview-label {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    color: #444;
+    margin-bottom: 10px;
+    display: block;
+  }
+</style>
+
+<div class="cards">
+
+  <!-- OPTION A -->
+  <div class="card" data-choice="neon" onclick="toggleSelect(this)">
+    <div class="card-image demo-bg">
+      <div class="neon-title">Vietnam Trail</div>
+      <div class="neon-sub">A journey through diaspora</div>
+      <div class="btn-row">
+        <button class="neon-primary">▶ New Journey</button>
+        <button class="neon-secondary">History</button>
+      </div>
+      <button class="neon-ghost">Sign Out</button>
+    </div>
+    <div class="card-body">
+      <h3>A — Neon Glow</h3>
+      <p>Glowing outlines, dark background, CRT text glow. Classic arcade/cyberpunk feel.</p>
+    </div>
+  </div>
+
+  <!-- OPTION B -->
+  <div class="card" data-choice="pixel" onclick="toggleSelect(this)">
+    <div class="card-image demo-bg">
+      <div class="pixel-title">Vietnam Trail</div>
+      <div class="pixel-sub">A journey through diaspora</div>
+      <div class="btn-row">
+        <button class="pixel-primary">▶ New Journey</button>
+        <button class="pixel-secondary">History</button>
+      </div>
+      <button class="pixel-ghost">Sign Out</button>
+    </div>
+    <div class="card-body">
+      <h3>B — Chunky Pixel Drop-Shadow</h3>
+      <p>Hard 4px offset shadow on click, no radius, pure old-school NES/SNES aesthetic.</p>
+    </div>
+  </div>
+
+  <!-- OPTION C -->
+  <div class="card" data-choice="crt" onclick="toggleSelect(this)">
+    <div class="card-image demo-bg">
+      <div class="crt-title">Vietnam Trail</div>
+      <div class="crt-sub">A journey through diaspora</div>
+      <div class="btn-row">
+        <button class="crt-primary">▶ New Journey</button>
+        <button class="crt-secondary">History</button>
+      </div>
+      <button class="crt-ghost">Sign Out</button>
+    </div>
+    <div class="card-body">
+      <h3>C — CRT Bevel</h3>
+      <p>Beveled border (lighter top/left, darker bottom/right), filled blue primary. Classic Windows 95 / early PC RPG.</p>
+    </div>
+  </div>
+
+</div>
+
+<p class="subtitle" style="margin-top:16px">Click to select, or just tell me in the terminal.</p>

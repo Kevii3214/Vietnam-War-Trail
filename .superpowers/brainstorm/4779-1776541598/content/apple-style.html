@@ -1,0 +1,284 @@
+<h2>Apple.com Style — Full UI Preview</h2>
+<p class="subtitle">Pill buttons, clean fills, smooth transitions. Font stays pixel/retro for game identity.</p>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap');
+
+  .demo-bg {
+    background: #0f1219;
+    border-radius: 12px;
+    padding: 28px 32px;
+    margin-bottom: 20px;
+  }
+  .demo-bg-light {
+    background: #141b24;
+    border-radius: 12px;
+    padding: 28px 32px;
+    margin-bottom: 20px;
+  }
+
+  /* === APPLE.COM BUTTONS === */
+  .ab-primary {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 12px 24px;
+    background: #2596BE;
+    color: #fff;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px;
+    border: none;
+    border-radius: 980px;
+    cursor: pointer;
+    transition: opacity 0.2s ease, transform 0.15s ease;
+    letter-spacing: 0.5px;
+  }
+  .ab-primary:hover { opacity: 0.85; }
+  .ab-primary:active { transform: scale(0.97); }
+
+  .ab-secondary {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 12px 24px;
+    background: rgba(37,150,190,0.12);
+    color: #2596BE;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px;
+    border: none;
+    border-radius: 980px;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.15s ease;
+    letter-spacing: 0.5px;
+  }
+  .ab-secondary:hover { background: rgba(37,150,190,0.2); }
+  .ab-secondary:active { transform: scale(0.97); }
+
+  .ab-ghost {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 12px 24px;
+    background: transparent;
+    color: rgba(255,255,255,0.45);
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px;
+    border: none;
+    border-radius: 980px;
+    cursor: pointer;
+    transition: color 0.2s ease, transform 0.15s ease;
+    letter-spacing: 0.5px;
+  }
+  .ab-ghost:hover { color: rgba(255,255,255,0.8); }
+  .ab-ghost:active { transform: scale(0.97); }
+
+  .ab-danger {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 12px 24px;
+    background: rgba(220,38,38,0.15);
+    color: #ef4444;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px;
+    border: none;
+    border-radius: 980px;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.15s ease;
+  }
+  .ab-danger:hover { background: rgba(220,38,38,0.25); }
+  .ab-danger:active { transform: scale(0.97); }
+
+  /* === TITLE SCREEN MOCKUP === */
+  .title-mock {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+  .title-mock h1 {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 18px;
+    color: #2596BE;
+    text-shadow: 0 0 20px rgba(37,150,190,0.4);
+    margin: 0;
+  }
+  .title-mock p {
+    font-family: 'VT323', monospace;
+    font-size: 20px;
+    color: rgba(255,255,255,0.5);
+    margin: 0;
+  }
+  .title-mock .btn-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 260px;
+    margin-top: 8px;
+  }
+  .ab-primary-full {
+    width: 100%;
+    justify-content: center;
+    padding: 14px 0;
+    background: #2596BE;
+    color: #fff;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px;
+    border: none;
+    border-radius: 980px;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+    letter-spacing: 0.5px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .ab-secondary-full {
+    width: 100%;
+    justify-content: center;
+    padding: 14px 0;
+    background: rgba(37,150,190,0.12);
+    color: #2596BE;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px;
+    border: none;
+    border-radius: 980px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    letter-spacing: 0.5px;
+    display: flex; align-items: center; gap: 8px;
+  }
+
+  /* === MODAL MOCKUP === */
+  .modal-mock {
+    background: rgba(15,18,25,0.92);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(37,150,190,0.2);
+    border-radius: 20px;
+    overflow: hidden;
+    max-width: 320px;
+    margin: 0 auto;
+    animation: modal-enter 0.25s cubic-bezier(0.34,1.56,0.64,1) forwards;
+  }
+  @keyframes modal-enter {
+    from { opacity: 0; transform: scale(0.92) translateY(10px); }
+    to   { opacity: 1; transform: scale(1) translateY(0); }
+  }
+  .modal-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 20px;
+    border-bottom: 1px solid rgba(37,150,190,0.15);
+  }
+  .modal-header span {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px;
+    color: #2596BE;
+  }
+  .modal-close {
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.08);
+    border: none;
+    color: rgba(255,255,255,0.6);
+    cursor: pointer;
+    font-size: 14px;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s;
+  }
+  .modal-close:hover { background: rgba(255,255,255,0.15); }
+  .modal-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px 20px;
+    color: rgba(255,255,255,0.7);
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    cursor: pointer;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    transition: background 0.15s, color 0.15s;
+  }
+  .modal-item:last-child { border-bottom: none; }
+  .modal-item:hover { background: rgba(37,150,190,0.08); color: #2596BE; }
+
+  /* === LOADING SCREEN === */
+  .loading-mock {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 24px;
+    min-height: 200px;
+  }
+  .spinner {
+    width: 36px; height: 36px;
+    border: 2.5px solid rgba(37,150,190,0.2);
+    border-top-color: #2596BE;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loading-title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 13px;
+    color: #2596BE;
+    text-shadow: 0 0 16px rgba(37,150,190,0.35);
+  }
+  .loading-quote {
+    font-family: 'VT323', monospace;
+    font-size: 20px;
+    color: rgba(255,255,255,0.45);
+    text-align: center;
+    max-width: 320px;
+    line-height: 1.5;
+    font-style: italic;
+  }
+
+  .section-label {
+    font-size: 11px; color: #666; text-transform: uppercase;
+    letter-spacing: 1.5px; margin-bottom: 14px; font-family: monospace;
+  }
+  .section { margin-bottom: 28px; }
+  hr { border-color: #1e2530; margin: 24px 0; }
+</style>
+
+<!-- Button palette -->
+<div class="section">
+  <div class="section-label">Button Palette</div>
+  <div class="demo-bg" style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;">
+    <button class="ab-primary">▶ New Journey</button>
+    <button class="ab-secondary">History</button>
+    <button class="ab-secondary">Continue</button>
+    <button class="ab-ghost">Sign Out</button>
+    <button class="ab-danger">Quit</button>
+  </div>
+</div>
+
+<!-- Title screen mockup -->
+<div class="section">
+  <div class="section-label">Title Screen</div>
+  <div class="demo-bg">
+    <div class="title-mock">
+      <h1>Vietnam Trail</h1>
+      <p>A journey through the Vietnam War diaspora</p>
+      <div class="btn-stack">
+        <button class="ab-primary-full">▶ New Journey</button>
+        <button class="ab-secondary-full">▶ Continue Journey</button>
+        <button class="ab-secondary-full">History</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal mockup -->
+<div class="section">
+  <div class="section-label">Menu Popup (smooth scale + blur entry)</div>
+  <div class="demo-bg">
+    <div class="modal-mock">
+      <div class="modal-header">
+        <span>SAVE</span>
+        <button class="modal-close">✕</button>
+      </div>
+      <div class="modal-item">💾 Save Game</div>
+      <div class="modal-item">🚪 Save &amp; Exit</div>
+    </div>
+  </div>
+</div>
+
+<!-- Loading screen mockup -->
+<div class="section">
+  <div class="section-label">Loading Screen (with quote placeholder)</div>
+  <div class="demo-bg">
+    <div class="loading-mock">
+      <div class="loading-title">Vietnam Trail</div>
+      <div class="spinner"></div>
+      <div class="loading-quote">"We left with nothing but hope."</div>
+    </div>
+  </div>
+</div>
