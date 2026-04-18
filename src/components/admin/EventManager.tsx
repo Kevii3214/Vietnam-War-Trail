@@ -3,11 +3,54 @@ import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { EventForm } from './EventForm';
+import type { EventFormData } from './EventForm';
 import type { GamePhase, GameEvent, EventChoice } from '@/hooks/useGameEvents';
 import { Plus, Edit2, Trash2, Eye, EyeOff } from 'lucide-react';
 
 interface EventManagerProps {
   phases: GamePhase[];
+}
+
+function serializeDayWeights(dw: { day: number; probability: number }[]): Record<string, number> | null {
+  if (dw.length === 0) return null;
+  return Object.fromEntries(dw.map(({ day, probability }) => [String(day), probability]));
+}
+
+function deserializeDayWeights(raw: unknown): { day: number; probability: number }[] {
+  if (!raw || typeof raw !== 'object') return [];
+  return Object.entries(raw as Record<string, number>).map(([day, probability]) => ({
+    day: parseInt(day),
+    probability,
+  }));
+}
+
+function normalizeChoiceForForm(raw: unknown): EventChoice {
+  if (raw && typeof raw === 'object' && 'outcomes' in raw) {
+    const choice = raw as EventChoice;
+    if (Array.isArray(choice.outcomes) && choice.outcomes.length > 0) {
+      return choice;
+    }
+  }
+  const old = raw as {
+    text?: string;
+    result_text?: string;
+    health_delta?: number;
+    food_delta?: number;
+    morale_delta?: number;
+    money_delta?: number;
+  };
+  return {
+    text: old.text ?? '',
+    outcomes: [{
+      probability: 100,
+      health_delta: old.health_delta ?? 0,
+      food_delta: old.food_delta ?? 0,
+      morale_delta: old.morale_delta ?? 0,
+      money_delta: old.money_delta ?? 0,
+      result_text: old.result_text ?? '',
+      force_phase_order: null,
+    }],
+  };
 }
 
 export function EventManager({ phases }: EventManagerProps) {
@@ -24,25 +67,28 @@ export function EventManager({ phases }: EventManagerProps) {
     }
   }, [phases, selectedPhase]);
 
+  const refetchEvents = async (phaseId: string) => {
+    const { data } = await supabase
+      .from('game_events')
+      .select('*')
+      .eq('phase_id', phaseId)
+      .order('created_at');
+    if (data) {
+      setEvents(data.map(e => ({
+        ...e,
+        probability_weight: (e.probability_weight as number | undefined) ?? 50,
+        day_weights: (e.day_weights as Record<string, number> | null) ?? null,
+        choices: ((typeof e.choices === 'string' ? JSON.parse(e.choices) : e.choices) as unknown[]).map(normalizeChoiceForForm),
+      })) as GameEvent[]);
+    }
+  };
+
   useEffect(() => {
     if (!selectedPhase) return;
-    const fetchEvents = async () => {
-      const { data } = await supabase
-        .from('game_events')
-        .select('*')
-        .eq('phase_id', selectedPhase)
-        .order('created_at');
-      if (data) {
-        setEvents(data.map(e => ({
-          ...e,
-          choices: (typeof e.choices === 'string' ? JSON.parse(e.choices) : e.choices) as EventChoice[],
-        })) as GameEvent[]);
-      }
-    };
-    fetchEvents();
+    refetchEvents(selectedPhase);
   }, [selectedPhase]);
 
-  const handleCreateEvent = async (formData: { title: string; description: string; image_url: string; choices: EventChoice[]; is_active: boolean }) => {
+  const handleCreateEvent = async (formData: EventFormData) => {
     setLoading(true);
     const { error } = await supabase.from('game_events').insert({
       phase_id: selectedPhase,
@@ -51,6 +97,8 @@ export function EventManager({ phases }: EventManagerProps) {
       image_url: formData.image_url || null,
       choices: formData.choices as unknown as Record<string, unknown>[],
       is_active: formData.is_active,
+      probability_weight: formData.probability_weight,
+      day_weights: serializeDayWeights(formData.day_weights),
     });
 
     if (error) {
@@ -58,14 +106,12 @@ export function EventManager({ phases }: EventManagerProps) {
     } else {
       toast({ title: 'Event created' });
       setCreatingEvent(false);
-      // Refetch
-      const { data } = await supabase.from('game_events').select('*').eq('phase_id', selectedPhase).order('created_at');
-      if (data) setEvents(data.map(e => ({ ...e, choices: (typeof e.choices === 'string' ? JSON.parse(e.choices) : e.choices) as EventChoice[] })) as GameEvent[]);
+      await refetchEvents(selectedPhase);
     }
     setLoading(false);
   };
 
-  const handleUpdateEvent = async (formData: { title: string; description: string; image_url: string; choices: EventChoice[]; is_active: boolean }) => {
+  const handleUpdateEvent = async (formData: EventFormData) => {
     if (!editingEvent) return;
     setLoading(true);
     const { error } = await supabase
@@ -76,6 +122,8 @@ export function EventManager({ phases }: EventManagerProps) {
         image_url: formData.image_url || null,
         choices: formData.choices as unknown as Record<string, unknown>[],
         is_active: formData.is_active,
+        probability_weight: formData.probability_weight,
+        day_weights: serializeDayWeights(formData.day_weights),
       })
       .eq('id', editingEvent.id);
 
@@ -84,8 +132,7 @@ export function EventManager({ phases }: EventManagerProps) {
     } else {
       toast({ title: 'Event updated' });
       setEditingEvent(null);
-      const { data } = await supabase.from('game_events').select('*').eq('phase_id', selectedPhase).order('created_at');
-      if (data) setEvents(data.map(e => ({ ...e, choices: (typeof e.choices === 'string' ? JSON.parse(e.choices) : e.choices) as EventChoice[] })) as GameEvent[]);
+      await refetchEvents(selectedPhase);
     }
     setLoading(false);
   };
@@ -146,11 +193,12 @@ export function EventManager({ phases }: EventManagerProps) {
         ))}
       </div>
 
-      {/* Create/Edit form */}
+      {/* Create form */}
       {creatingEvent && (
         <div className="border border-primary/30 rounded-sm p-3 bg-card">
           <p className="font-pixel text-[9px] text-primary mb-3">New Event</p>
           <EventForm
+            phases={phases}
             onSubmit={handleCreateEvent}
             onCancel={() => setCreatingEvent(false)}
             loading={loading}
@@ -158,16 +206,20 @@ export function EventManager({ phases }: EventManagerProps) {
         </div>
       )}
 
+      {/* Edit form */}
       {editingEvent && (
         <div className="border border-primary/30 rounded-sm p-3 bg-card">
           <p className="font-pixel text-[9px] text-primary mb-3">Edit Event</p>
           <EventForm
+            phases={phases}
             initialData={{
               title: editingEvent.title,
               description: editingEvent.description,
               image_url: editingEvent.image_url || '',
               choices: editingEvent.choices,
               is_active: editingEvent.is_active,
+              probability_weight: editingEvent.probability_weight,
+              day_weights: deserializeDayWeights(editingEvent.day_weights),
             }}
             onSubmit={handleUpdateEvent}
             onCancel={() => setEditingEvent(null)}
@@ -194,7 +246,7 @@ export function EventManager({ phases }: EventManagerProps) {
                     <p className="font-pixel text-[9px] text-foreground">{event.title}</p>
                     <p className="font-retro text-base text-muted-foreground truncate">{event.description}</p>
                     <p className="font-retro text-sm text-muted-foreground/70 mt-1">
-                      {event.choices.length} choice{event.choices.length !== 1 ? 's' : ''}
+                      {event.choices.length} choice{event.choices.length !== 1 ? 's' : ''} · base {event.probability_weight}%
                     </p>
                   </div>
                   <div className="flex items-center gap-1 shrink-0">
