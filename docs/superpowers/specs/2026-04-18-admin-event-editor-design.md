@@ -91,7 +91,7 @@ All callsites in `GameEngine.tsx` must pass `dayInPhase` from `useGameState`.
 When a player picks a choice:
 1. Use weighted random selection over `choice.outcomes` using each outcome's `probability` field.
 2. Apply the selected outcome's stat deltas via `applyStatChanges`.
-3. If `force_phase_order` is set on the selected outcome, advance the game to that phase immediately (call the appropriate phase-advance logic in `useGameState`, bypassing normal day-count advancement).
+3. If `force_phase_order` is set on the selected outcome, advance the game to that phase immediately (call the appropriate phase-advance logic in `useGameState`, bypassing normal day-count advancement). The engine sets `currentPhaseOrder` to the target value unconditionally — the admin is responsible for only setting forward skips, but no guard is enforced in the engine.
 
 ---
 
