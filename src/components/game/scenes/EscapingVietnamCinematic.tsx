@@ -45,9 +45,9 @@ function Typewriter({ text, onComplete, speed = 45 }: TypewriterProps) {
 // --- Scene 1: Helicopter Evacuation ---
 function Scene1() {
   return (
-    <div className="relative w-full h-56 md:h-64 overflow-hidden rounded-sm border border-border bg-gradient-to-b from-[#1a0a2e] via-[#2d1b4e] to-[#1a3a1a]">
+    <div className="absolute inset-0 overflow-hidden bg-gradient-to-b from-[#1a0a2e] via-[#2d1b4e] to-[#1a3a1a]">
       {/* Embassy building */}
-      <svg className="absolute bottom-0 left-1/2 -translate-x-1/2" width="200" height="180" viewBox="0 0 200 180" style={{ imageRendering: 'pixelated' }}>
+      <svg className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[60%] md:w-[40%] h-[70%]" viewBox="0 0 200 180" preserveAspectRatio="xMidYMax meet" style={{ imageRendering: 'pixelated' }}>
         {/* Building base */}
         <rect x="40" y="40" width="120" height="140" fill="#3a3a3a" />
         <rect x="50" y="50" width="100" height="6" fill="#555" />
@@ -72,7 +72,7 @@ function Scene1() {
       </svg>
 
       {/* Crowd reaching up at base */}
-      <svg className="absolute bottom-0 left-0 w-full h-full" viewBox="0 0 400 220" style={{ imageRendering: 'pixelated' }}>
+      <svg className="absolute bottom-0 left-0 w-full h-full" viewBox="0 0 400 220" preserveAspectRatio="xMidYMax slice" style={{ imageRendering: 'pixelated' }}>
         <PixelCrowd count={14} x={80} y={178} spread={16} variant="civilian" colors={['#d4a574', '#c49464', '#a47844', '#e8c9a0']} scale={1.2} />
         {/* Reaching arms */}
         {[0,1,2,3,4,5,6,7].map(i => (
@@ -96,9 +96,9 @@ function Scene1() {
 // --- Scene 2: Fall of Saigon ---
 function Scene2() {
   return (
-    <div className="relative w-full h-56 md:h-64 overflow-hidden rounded-sm border border-border bg-gradient-to-b from-[#1a0505] via-[#3a1a0a] to-[#1a1a0a]">
+    <div className="absolute inset-0 overflow-hidden bg-gradient-to-b from-[#1a0505] via-[#3a1a0a] to-[#1a1a0a]">
       {/* City skyline */}
-      <svg className="absolute bottom-0 left-0 w-full" viewBox="0 0 400 200" style={{ imageRendering: 'pixelated' }}>
+      <svg className="absolute bottom-0 left-0 w-full h-[70%]" viewBox="0 0 400 200" preserveAspectRatio="xMidYMax slice" style={{ imageRendering: 'pixelated' }}>
         {/* Buildings */}
         <rect x="10" y="80" width="35" height="120" fill="#2a2a2a" />
         <rect x="55" y="60" width="30" height="140" fill="#333" />
@@ -155,8 +155,8 @@ function Scene2() {
 // --- Scene 3: Citizens Fleeing ---
 function Scene3() {
   return (
-    <div className="relative w-full h-56 md:h-64 overflow-hidden rounded-sm border border-border bg-gradient-to-b from-[#0a1a2a] via-[#1a2a1a] to-[#2a3a1a]">
-      <svg className="absolute bottom-0 left-0 w-full h-full" viewBox="0 0 400 220" style={{ imageRendering: 'pixelated' }}>
+    <div className="absolute inset-0 overflow-hidden bg-gradient-to-b from-[#0a1a2a] via-[#1a2a1a] to-[#2a3a1a]">
+      <svg className="absolute bottom-0 left-0 w-full h-full" viewBox="0 0 400 220" preserveAspectRatio="xMidYMax slice" style={{ imageRendering: 'pixelated' }}>
         {/* Road */}
         <rect x="0" y="185" width="400" height="35" fill="#4a4a3a" />
         <rect x="0" y="188" width="400" height="2" fill="#5a5a4a" />
@@ -202,8 +202,8 @@ function Scene3() {
 // --- Scene 4: Fleeing by Boat ---
 function Scene4() {
   return (
-    <div className="relative w-full h-56 md:h-64 overflow-hidden rounded-sm border border-border bg-gradient-to-b from-[#0a0a2a] via-[#0a2a4a] to-[#0a3a5a]">
-      <svg className="absolute bottom-0 left-0 w-full h-full" viewBox="0 0 400 220" style={{ imageRendering: 'pixelated' }}>
+    <div className="absolute inset-0 overflow-hidden bg-gradient-to-b from-[#0a0a2a] via-[#0a2a4a] to-[#0a3a5a]">
+      <svg className="absolute bottom-0 left-0 w-full h-full" viewBox="0 0 400 220" preserveAspectRatio="xMidYMax slice" style={{ imageRendering: 'pixelated' }}>
         {/* Shoreline */}
         <rect x="0" y="160" width="120" height="60" fill="#6a6a3a" />
         <rect x="80" y="165" width="60" height="55" fill="#5a5a2a" />
@@ -312,10 +312,16 @@ export function EscapingVietnamCinematic({ onComplete }: CinematicProps) {
   const scene = SCENES[sceneIndex];
 
   return (
-    <div className="fixed inset-0 z-50 bg-background flex items-center justify-center">
-      <div className="w-full max-w-2xl mx-auto px-4 space-y-6">
+    <div className="fixed inset-0 z-50 bg-background">
+      {/* Full-screen scene background */}
+      <div key={sceneIndex} className="animate-fade-in-up">
+        <scene.Component />
+      </div>
+
+      {/* Overlay UI on top of scene */}
+      <div className="absolute inset-0 z-10 flex flex-col justify-end pb-8 md:pb-16">
         {/* Scene counter */}
-        <div className="flex justify-center gap-2 mb-2">
+        <div className="flex justify-center gap-2 mb-4">
           {SCENES.map((_, i) => (
             <div
               key={i}
@@ -326,36 +332,34 @@ export function EscapingVietnamCinematic({ onComplete }: CinematicProps) {
           ))}
         </div>
 
-        {/* Animated scene */}
-        <div key={sceneIndex} className="animate-fade-in-up">
-          <scene.Component />
-        </div>
+        {/* Text area with dark backdrop */}
+        <div className="mx-4 md:mx-auto md:max-w-2xl bg-background/80 backdrop-blur-sm border border-border/50 rounded-sm p-6">
+          {/* Typewriter text */}
+          <div className="min-h-[60px] flex items-center justify-center">
+            <Typewriter
+              key={sceneIndex}
+              text={scene.text}
+              onComplete={handleTextDone}
+            />
+          </div>
 
-        {/* Typewriter text */}
-        <div className="min-h-[80px] flex items-center justify-center">
-          <Typewriter
-            key={sceneIndex}
-            text={scene.text}
-            onComplete={handleTextDone}
-          />
-        </div>
-
-        {/* Next arrow */}
-        <div className="flex justify-center h-12">
-          {arrowVisible && (
-            <button
-              onClick={handleNext}
-              className="flex items-center gap-2 font-pixel text-[10px] text-primary hover:text-primary/80 transition-colors animate-fade-in-up cursor-pointer group"
-            >
-              {sceneIndex < SCENES.length - 1 ? 'Continue' : 'Begin Your Journey'}
-              <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </button>
-          )}
+          {/* Next arrow */}
+          <div className="flex justify-center h-10 mt-3">
+            {arrowVisible && (
+              <button
+                onClick={handleNext}
+                className="flex items-center gap-2 font-pixel text-[10px] text-primary hover:text-primary/80 transition-colors animate-fade-in-up cursor-pointer group"
+              >
+                {sceneIndex < SCENES.length - 1 ? 'Continue' : 'Begin Your Journey'}
+                <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
       {/* Scanline overlay */}
-      <div className="absolute inset-0 pointer-events-none scanlines" />
+      <div className="absolute inset-0 pointer-events-none scanlines z-20" />
     </div>
   );
 }
