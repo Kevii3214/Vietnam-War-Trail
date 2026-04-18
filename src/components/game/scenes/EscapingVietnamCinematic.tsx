@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { ChevronRight } from 'lucide-react';
+import { GameMenuBar } from '../GameMenuBar';
 import { PixelHelicopter } from './PixelHelicopter';
 import { PixelCrowd } from './PixelPeople';
 import { PixelBoat } from './PixelBoat';
@@ -388,28 +389,38 @@ export function EscapingVietnamCinematic({ onComplete }: CinematicProps) {
           ))}
         </div>
 
-        {/* Pixel dialog box with text */}
-        <PixelDialogBox>
-          <div className="min-h-[40px] flex items-center justify-center">
-            <Typewriter
-              key={sceneIndex}
-              text={scene.text}
-              onComplete={handleTextDone}
-            />
+        {/* Dialog box + menu bar row */}
+        <div className="flex items-end gap-2 mx-8 md:mx-24 lg:mx-40">
+          {/* Pixel dialog box with text */}
+          <div className="flex-1">
+            <PixelDialogBox>
+              <div className="min-h-[40px] flex items-center justify-center">
+                <Typewriter
+                  key={sceneIndex}
+                  text={scene.text}
+                  onComplete={handleTextDone}
+                />
+              </div>
+              {/* Continue button inside box, bottom right */}
+              <div className="flex justify-end h-6 mt-1">
+                {arrowVisible && (
+                  <button
+                    onClick={handleNext}
+                    className="flex items-center gap-2 font-pixel text-[10px] text-primary hover:text-primary/80 transition-colors animate-fade-in-up cursor-pointer group"
+                  >
+                    {sceneIndex < SCENES.length - 1 ? 'Continue' : 'Begin Your Journey'}
+                    <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </button>
+                )}
+              </div>
+            </PixelDialogBox>
           </div>
-          {/* Continue button inside box, bottom right */}
-          <div className="flex justify-end h-6 mt-1">
-            {arrowVisible && (
-              <button
-                onClick={handleNext}
-                className="flex items-center gap-2 font-pixel text-[10px] text-primary hover:text-primary/80 transition-colors animate-fade-in-up cursor-pointer group"
-              >
-                {sceneIndex < SCENES.length - 1 ? 'Continue' : 'Begin Your Journey'}
-                <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </button>
-            )}
+
+          {/* Menu bar on the right */}
+          <div className="flex-shrink-0 mb-1">
+            <GameMenuBar onSaveAndExit={onComplete} />
           </div>
-        </PixelDialogBox>
+        </div>
       </div>
 
       {/* Scanline overlay */}
