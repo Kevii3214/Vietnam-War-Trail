@@ -7,7 +7,7 @@ import { GameHUD } from './GameHUD';
 import { GameMenuBar } from './GameMenuBar';
 import { EscapingVietnamCinematic } from './scenes/EscapingVietnamCinematic';
 import { useGameState } from '@/hooks/useGameState';
-import { useGameEvents, type EventChoice } from '@/hooks/useGameEvents';
+import { useGameEvents, type EventChoice, type EventOutcome, pickRandomOutcome } from '@/hooks/useGameEvents';
 import { useGameSave } from '@/hooks/useGameSave';
 import type { GameEvent } from '@/hooks/useGameEvents';
 
@@ -80,6 +80,7 @@ export function GameEngine({ userId, onMainMenu, loadExistingSave }: GameEngineP
     advanceDay,
     setPhaseIntroSeen,
     triggerPhaseIntro,
+    jumpToPhase,
   } = useGameState();
 
   const { phases, loading, getPhaseByOrder, getRandomEvent } = useGameEvents();
@@ -88,6 +89,7 @@ export function GameEngine({ userId, onMainMenu, loadExistingSave }: GameEngineP
   const [dayState, setDayState] = useState<DayState>('idle');
   const [currentEvent, setCurrentEvent] = useState<GameEvent | null>(null);
   const [selectedChoice, setSelectedChoice] = useState<EventChoice | null>(null);
+  const [resolvedOutcome, setResolvedOutcome] = useState<EventOutcome | null>(null);
   const [initialized, setInitialized] = useState(false);
   const [lastPhase, setLastPhase] = useState(1);
   const [showCinematic, setShowCinematic] = useState(false);
@@ -150,7 +152,7 @@ export function GameEngine({ userId, onMainMenu, loadExistingSave }: GameEngineP
     setTypingDone(false);
     const roll = Math.random();
     if (roll < eventChancePct / 100) {
-      const event = getRandomEvent(gameState.currentPhaseOrder, gameState.eventsSeen);
+      const event = getRandomEvent(gameState.currentPhaseOrder, gameState.eventsSeen, gameState.dayInPhase);
       if (event) {
         setCurrentEvent(event);
         setSelectedChoice(null);
@@ -163,29 +165,40 @@ export function GameEngine({ userId, onMainMenu, loadExistingSave }: GameEngineP
     const msgs = PHASE_MESSAGES[gameState.currentPhaseOrder] || PHASE_MESSAGES[1];
     setTravelText(msgs[Math.floor(Math.random() * msgs.length)]);
     setDayState('traveling');
-  }, [gameState.currentPhaseOrder, gameState.eventsSeen, getRandomEvent, markEventSeen, eventChancePct]);
+  }, [gameState.currentPhaseOrder, gameState.dayInPhase, gameState.eventsSeen, getRandomEvent, markEventSeen, eventChancePct]);
 
   const handleChoiceMade = useCallback((choice: EventChoice) => {
+    const outcome = pickRandomOutcome(choice.outcomes);
     setSelectedChoice(choice);
+    setResolvedOutcome(outcome);
     setTypingDone(false);
     setDayState('event_result');
   }, []);
 
   const handleContinueAfterResult = useCallback(() => {
-    if (selectedChoice) {
+    if (resolvedOutcome) {
       applyStatChanges({
-        health: selectedChoice.health_delta,
-        food: selectedChoice.food_delta,
-        morale: selectedChoice.morale_delta,
-        money: selectedChoice.money_delta,
+        health: resolvedOutcome.health_delta,
+        food: resolvedOutcome.food_delta,
+        morale: resolvedOutcome.morale_delta,
+        money: resolvedOutcome.money_delta,
       });
+      if (resolvedOutcome.force_phase_order != null) {
+        setCurrentEvent(null);
+        setSelectedChoice(null);
+        setResolvedOutcome(null);
+        setDayState('idle');
+        jumpToPhase(resolvedOutcome.force_phase_order);
+        return;
+      }
     }
     setCurrentEvent(null);
     setSelectedChoice(null);
+    setResolvedOutcome(null);
     setDayState('idle');
     const phase = getPhaseByOrder(gameState.currentPhaseOrder);
     if (phase) advanceDay(phase.days_in_phase);
-  }, [selectedChoice, applyStatChanges, advanceDay, getPhaseByOrder, gameState.currentPhaseOrder]);
+  }, [resolvedOutcome, applyStatChanges, jumpToPhase, advanceDay, getPhaseByOrder, gameState.currentPhaseOrder]);
 
   const handleTravelContinue = useCallback(() => {
     setDayState('idle');
@@ -312,34 +325,37 @@ export function GameEngine({ userId, onMainMenu, loadExistingSave }: GameEngineP
     }
 
     // Event result
-    if (dayState === 'event_result' && selectedChoice) {
+    if (dayState === 'event_result' && resolvedOutcome) {
       return (
         <div className="animate-fade-in-up">
           <p className="font-retro text-base md:text-lg text-foreground leading-relaxed mb-2">
-            <Typewriter key={selectedChoice.result_text} text={selectedChoice.result_text} onComplete={() => setTypingDone(true)} />
+            <Typewriter key={resolvedOutcome.result_text} text={resolvedOutcome.result_text} onComplete={() => setTypingDone(true)} />
           </p>
           {typingDone && (
             <div className="animate-fade-in-up">
               <div className="flex flex-wrap gap-3 mb-2 font-pixel text-[9px]">
-                {selectedChoice.health_delta !== 0 && (
-                  <span className={selectedChoice.health_delta > 0 ? 'text-game-food' : 'text-game-health'}>
-                    HP {selectedChoice.health_delta > 0 ? '+' : ''}{selectedChoice.health_delta}
+                {resolvedOutcome.health_delta !== 0 && (
+                  <span className={resolvedOutcome.health_delta > 0 ? 'text-game-food' : 'text-game-health'}>
+                    HP {resolvedOutcome.health_delta > 0 ? '+' : ''}{resolvedOutcome.health_delta}
                   </span>
                 )}
-                {selectedChoice.food_delta !== 0 && (
-                  <span className={selectedChoice.food_delta > 0 ? 'text-game-food' : 'text-game-health'}>
-                    Food {selectedChoice.food_delta > 0 ? '+' : ''}{selectedChoice.food_delta}
+                {resolvedOutcome.food_delta !== 0 && (
+                  <span className={resolvedOutcome.food_delta > 0 ? 'text-game-food' : 'text-game-health'}>
+                    Food {resolvedOutcome.food_delta > 0 ? '+' : ''}{resolvedOutcome.food_delta}
                   </span>
                 )}
-                {selectedChoice.morale_delta !== 0 && (
-                  <span className={selectedChoice.morale_delta > 0 ? 'text-game-food' : 'text-game-health'}>
-                    Morale {selectedChoice.morale_delta > 0 ? '+' : ''}{selectedChoice.morale_delta}
+                {resolvedOutcome.morale_delta !== 0 && (
+                  <span className={resolvedOutcome.morale_delta > 0 ? 'text-game-food' : 'text-game-health'}>
+                    Morale {resolvedOutcome.morale_delta > 0 ? '+' : ''}{resolvedOutcome.morale_delta}
                   </span>
                 )}
-                {selectedChoice.money_delta !== 0 && (
-                  <span className={selectedChoice.money_delta > 0 ? 'text-game-food' : 'text-game-health'}>
-                    Money {selectedChoice.money_delta > 0 ? '+' : ''}{selectedChoice.money_delta}
+                {resolvedOutcome.money_delta !== 0 && (
+                  <span className={resolvedOutcome.money_delta > 0 ? 'text-game-food' : 'text-game-health'}>
+                    Money {resolvedOutcome.money_delta > 0 ? '+' : ''}{resolvedOutcome.money_delta}
                   </span>
+                )}
+                {resolvedOutcome.force_phase_order != null && (
+                  <span className="text-primary">Phase skip incoming...</span>
                 )}
               </div>
               <div className="flex justify-end">
