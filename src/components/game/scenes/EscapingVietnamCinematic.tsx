@@ -314,7 +314,7 @@ export function EscapingVietnamCinematic({ onComplete }: CinematicProps) {
   return (
     <div className="fixed inset-0 z-50 bg-background">
       {/* Full-screen scene background */}
-      <div key={sceneIndex} className="animate-fade-in-up">
+      <div key={sceneIndex} className="absolute inset-0 animate-fade-in-up">
         <scene.Component />
       </div>
 
