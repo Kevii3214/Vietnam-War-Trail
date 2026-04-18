@@ -43,41 +43,40 @@ function Typewriter({ text, onComplete, speed = 45 }: TypewriterProps) {
   );
 }
 
-/* Game-style dialog panel with beveled edges and glow */
-function PixelDialogBox({ children }: { children: React.ReactNode }) {
+/* Unified game HUD panel - dialog text + menu icons in one frame */
+function GameHUD({ children, menuBar }: { children: React.ReactNode; menuBar: React.ReactNode }) {
   return (
-    <div className="relative">
+    <div className="relative mx-6 md:mx-20 lg:mx-36">
       {/* Outer glow */}
-      <div className="absolute -inset-1 rounded-sm bg-primary/15 blur-md" />
-      {/* Bevel frame */}
-      <div className="relative border border-primary/40 rounded-sm overflow-hidden">
-        {/* Top gradient bar */}
-        <div className="h-[2px] bg-gradient-to-r from-transparent via-primary/70 to-transparent" />
-        {/* Inner background */}
-        <div className="bg-gradient-to-b from-background/95 to-background/85 backdrop-blur-md px-5 py-3 md:px-6 md:py-3">
-          {/* Subtle inner border glow */}
-          <div className="absolute inset-[1px] rounded-sm border border-primary/10 pointer-events-none" />
-          {/* Corner accents */}
+      <div className="absolute -inset-1 rounded-sm bg-primary/10 blur-md" />
+      {/* Unified frame */}
+      <div className="relative border border-primary/30 rounded-sm overflow-hidden flex">
+        {/* Top gradient bar spans entire width */}
+        <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-primary/60 via-primary/30 to-primary/60 z-10" />
+        {/* Bottom gradient bar */}
+        <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-primary/30 to-transparent z-10" />
+
+        {/* Text area */}
+        <div className="flex-1 bg-gradient-to-b from-background/95 to-background/85 backdrop-blur-md px-5 py-3 md:px-6 md:py-3 relative">
+          {/* Corner accents - only left corners */}
           <div className="absolute top-0 left-0 w-4 h-4">
-            <div className="absolute top-0 left-0 w-full h-[2px] bg-primary/60" />
-            <div className="absolute top-0 left-0 h-full w-[2px] bg-primary/60" />
-          </div>
-          <div className="absolute top-0 right-0 w-4 h-4">
-            <div className="absolute top-0 right-0 w-full h-[2px] bg-primary/60" />
-            <div className="absolute top-0 right-0 h-full w-[2px] bg-primary/60" />
+            <div className="absolute top-0 left-0 w-full h-[2px] bg-primary/50" />
+            <div className="absolute top-0 left-0 h-full w-[2px] bg-primary/50" />
           </div>
           <div className="absolute bottom-0 left-0 w-4 h-4">
-            <div className="absolute bottom-0 left-0 w-full h-[2px] bg-primary/60" />
-            <div className="absolute bottom-0 left-0 h-full w-[2px] bg-primary/60" />
-          </div>
-          <div className="absolute bottom-0 right-0 w-4 h-4">
-            <div className="absolute bottom-0 right-0 w-full h-[2px] bg-primary/60" />
-            <div className="absolute bottom-0 right-0 h-full w-[2px] bg-primary/60" />
+            <div className="absolute bottom-0 left-0 w-full h-[2px] bg-primary/50" />
+            <div className="absolute bottom-0 left-0 h-full w-[2px] bg-primary/50" />
           </div>
           {children}
         </div>
-        {/* Bottom gradient bar */}
-        <div className="h-[2px] bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
+
+        {/* Divider line */}
+        <div className="w-[1px] bg-primary/20 self-stretch" />
+
+        {/* Menu strip - embedded right side */}
+        <div className="flex flex-col bg-gradient-to-b from-background/90 to-background/80 backdrop-blur-md">
+          {menuBar}
+        </div>
       </div>
     </div>
   );
@@ -404,38 +403,28 @@ export function EscapingVietnamCinematic({ onComplete }: CinematicProps) {
           ))}
         </div>
 
-        {/* Dialog box + menu bar row */}
-        <div className="flex items-end gap-0 mx-6 md:mx-20 lg:mx-36">
-          {/* Pixel dialog box with text */}
-          <div className="flex-1">
-            <PixelDialogBox>
-              <div className="min-h-[36px] flex items-center justify-center">
-                <Typewriter
-                  key={sceneIndex}
-                  text={scene.text}
-                  onComplete={handleTextDone}
-                />
-              </div>
-              {/* Continue button inside box, bottom right */}
-              <div className="flex justify-end h-5 mt-0.5">
-                {arrowVisible && (
-                  <button
-                    onClick={handleNext}
-                    className="flex items-center gap-2 font-pixel text-[10px] text-primary hover:text-primary/80 transition-colors animate-fade-in-up cursor-pointer group"
-                  >
-                    {sceneIndex < SCENES.length - 1 ? 'Continue' : 'Begin Your Journey'}
-                    <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                  </button>
-                )}
-              </div>
-            </PixelDialogBox>
+        {/* Unified HUD panel */}
+        <GameHUD menuBar={<GameMenuBar onSaveAndExit={onComplete} />}>
+          <div className="min-h-[36px] flex items-center justify-center">
+            <Typewriter
+              key={sceneIndex}
+              text={scene.text}
+              onComplete={handleTextDone}
+            />
           </div>
-
-          {/* Menu icons flush right of dialog */}
-          <div className="flex-shrink-0 pb-[2px]">
-            <GameMenuBar onSaveAndExit={onComplete} />
+          {/* Continue button inside box, bottom right */}
+          <div className="flex justify-end h-5 mt-0.5">
+            {arrowVisible && (
+              <button
+                onClick={handleNext}
+                className="flex items-center gap-2 font-pixel text-[10px] text-primary hover:text-primary/80 transition-colors animate-fade-in-up cursor-pointer group"
+              >
+                {sceneIndex < SCENES.length - 1 ? 'Continue' : 'Begin Your Journey'}
+                <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </button>
+            )}
           </div>
-        </div>
+        </GameHUD>
       </div>
 
       {/* Scanline overlay */}
