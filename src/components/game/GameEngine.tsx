@@ -211,6 +211,7 @@ export function GameEngine({ userId, onMainMenu, loadExistingSave }: GameEngineP
     setDayState('idle');
     setCurrentEvent(null);
     setSelectedChoice(null);
+    setResolvedOutcome(null);
     setInitialized(true);
     setShowCinematic(true);
   }, [startNewGame]);
