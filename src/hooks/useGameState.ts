@@ -38,8 +38,10 @@ export function useGameState() {
     isVictory: false,
   });
   const [showPhaseIntro, setShowPhaseIntro] = useState(true);
+  const [eventChance, setEventChance] = useState(70);
+  const [foodDrainPerDay, setFoodDrainPerDay] = useState(3);
 
-  // Fetch starting stats from DB
+  // Fetch starting stats + gameplay settings from DB
   useEffect(() => {
     const fetchSettings = async () => {
       const { data } = await supabase
@@ -52,6 +54,8 @@ export function useGameState() {
           if (row.key === 'starting_food') stats.food = row.value;
           if (row.key === 'starting_morale') stats.morale = row.value;
           if (row.key === 'starting_money') stats.money = row.value;
+          if (row.key === 'event_chance') setEventChance(row.value);
+          if (row.key === 'food_drain_per_day') setFoodDrainPerDay(row.value);
         }
         setInitialStats(stats);
       } else {
@@ -138,9 +142,8 @@ export function useGameState() {
 
   const advanceDay = useCallback((daysInPhase: number) => {
     setGameState(prev => {
-      // Daily food drain
-      const foodDrain = Math.floor(Math.random() * 3) + 2;
-      const newFood = Math.max(0, prev.stats.food - foodDrain);
+      // Daily food drain (configurable)
+      const newFood = Math.max(0, prev.stats.food - foodDrainPerDay);
 
       // If no food, health drops by 10 per day
       const starvationDamage = newFood <= 0 ? 10 : 0;
@@ -186,7 +189,7 @@ export function useGameState() {
         gameOverReason,
       };
     });
-  }, []);
+  }, [foodDrainPerDay]);
 
   const setPhaseIntroSeen = useCallback(() => {
     setShowPhaseIntro(false);
@@ -200,6 +203,7 @@ export function useGameState() {
     gameState,
     showPhaseIntro,
     settingsLoaded,
+    eventChance,
     startNewGame,
     loadGameState,
     applyStatChanges,

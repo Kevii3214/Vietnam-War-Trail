@@ -72,6 +72,7 @@ export function GameEngine({ userId, onMainMenu, loadExistingSave }: GameEngineP
   const {
     gameState,
     showPhaseIntro,
+    eventChance: eventChancePct,
     startNewGame,
     loadGameState,
     applyStatChanges,
@@ -147,8 +148,8 @@ export function GameEngine({ userId, onMainMenu, loadExistingSave }: GameEngineP
 
   const handleNextDay = useCallback(() => {
     setTypingDone(false);
-    const eventChance = Math.random();
-    if (eventChance < 0.7) {
+    const roll = Math.random();
+    if (roll < eventChancePct / 100) {
       const event = getRandomEvent(gameState.currentPhaseOrder, gameState.eventsSeen);
       if (event) {
         setCurrentEvent(event);
@@ -162,7 +163,7 @@ export function GameEngine({ userId, onMainMenu, loadExistingSave }: GameEngineP
     const msgs = PHASE_MESSAGES[gameState.currentPhaseOrder] || PHASE_MESSAGES[1];
     setTravelText(msgs[Math.floor(Math.random() * msgs.length)]);
     setDayState('traveling');
-  }, [gameState.currentPhaseOrder, gameState.eventsSeen, getRandomEvent, markEventSeen]);
+  }, [gameState.currentPhaseOrder, gameState.eventsSeen, getRandomEvent, markEventSeen, eventChancePct]);
 
   const handleChoiceMade = useCallback((choice: EventChoice) => {
     setSelectedChoice(choice);
