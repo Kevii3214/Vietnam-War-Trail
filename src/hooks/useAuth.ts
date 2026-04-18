@@ -13,15 +13,18 @@ export function useAuth() {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [authLoading, setAuthLoading] = useState(true);
+  const [profileLoading, setProfileLoading] = useState(false);
 
   const fetchProfile = useCallback(async (userId: string) => {
+    setProfileLoading(true);
     const { data } = await supabase
       .from('profiles')
       .select('*')
       .eq('id', userId)
       .maybeSingle();
     setProfile(data as Profile | null);
+    setProfileLoading(false);
   }, []);
 
   useEffect(() => {
@@ -34,7 +37,7 @@ export function useAuth() {
         } else {
           setProfile(null);
         }
-        setLoading(false);
+        setAuthLoading(false);
       }
     );
 
@@ -44,7 +47,7 @@ export function useAuth() {
       if (existingSession?.user) {
         fetchProfile(existingSession.user.id);
       }
-      setLoading(false);
+      setAuthLoading(false);
     });
 
     return () => subscription.unsubscribe();
@@ -76,6 +79,8 @@ export function useAuth() {
     setSession(null);
     setProfile(null);
   };
+
+  const loading = authLoading || profileLoading;
 
   return {
     user,
