@@ -6,6 +6,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import type { GamePhase } from '@/hooks/useGameEvents';
 import { Edit2, Save, X } from 'lucide-react';
+import { ImageUpload } from './ImageUpload';
 
 interface PhaseManagerProps {
   phases: GamePhase[];
@@ -120,11 +121,10 @@ export function PhaseManager({ phases, onRefresh }: PhaseManagerProps) {
             placeholder="Phase description..."
             className="font-retro text-base bg-muted border-border text-foreground min-h-[60px]"
           />
-          <Input
+          <ImageUpload
             value={newPhase.image_url}
-            onChange={e => setNewPhase({ ...newPhase, image_url: e.target.value })}
-            placeholder="Image URL (optional)"
-            className="font-retro text-base bg-muted border-border text-foreground"
+            onChange={(url) => setNewPhase({ ...newPhase, image_url: url })}
+            folder="phases"
           />
           <div className="flex gap-2">
             <Button size="sm" onClick={createPhase} className="font-pixel text-[8px] bg-primary text-primary-foreground">
@@ -158,12 +158,11 @@ export function PhaseManager({ phases, onRefresh }: PhaseManagerProps) {
                 className="font-retro text-base bg-muted border-border text-foreground min-h-[60px]"
               />
               <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <label className="font-retro text-sm text-muted-foreground">Image URL</label>
-                  <Input
+                <div className="col-span-2">
+                  <ImageUpload
                     value={editData.image_url || ''}
-                    onChange={e => setEditData({ ...editData, image_url: e.target.value })}
-                    className="font-retro text-base bg-muted border-border text-foreground h-8"
+                    onChange={(url) => setEditData({ ...editData, image_url: url })}
+                    folder="phases"
                   />
                 </div>
                 <div>

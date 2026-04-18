@@ -3,6 +3,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Plus, Trash2 } from 'lucide-react';
+import { ImageUpload } from './ImageUpload';
 import type { EventChoice } from '@/hooks/useGameEvents';
 
 interface EventFormData {
@@ -88,17 +89,11 @@ export function EventForm({ initialData, onSubmit, onCancel, loading }: EventFor
         />
       </div>
 
-      <div>
-        <label className="font-pixel text-[8px] text-muted-foreground uppercase tracking-wider">
-          Image URL (optional)
-        </label>
-        <Input
+      <ImageUpload
           value={formData.image_url}
-          onChange={e => setFormData({ ...formData, image_url: e.target.value })}
-          className="font-retro text-lg bg-muted border-border text-foreground"
-          placeholder="https://..."
+          onChange={(url) => setFormData({ ...formData, image_url: url })}
+          folder="events"
         />
-      </div>
 
       <div className="flex items-center gap-2">
         <input
