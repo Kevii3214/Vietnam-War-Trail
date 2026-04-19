@@ -4,44 +4,14 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
-import { LogOut, History, Settings, Play, Plus, X, Volume2, VolumeX, Mic, MicOff, Sliders } from 'lucide-react';
+import { LogOut, History, Settings, Play, Plus, X, Sliders } from 'lucide-react';
 import { useMenuMusic } from '@/hooks/useMenuMusic';
-
-const NARRATION_ENABLED_KEY = 'saigone-narration-enabled';
-const NARRATION_VOLUME_KEY = 'saigone-narration-volume';
-const MUSIC_VOLUME_KEY = 'saigone-music-volume';
+import { OptionsPanel } from '@/components/game/OptionsPanel';
 
 function OptionsModal({ onClose }: { onClose: () => void }) {
-  const [musicVolume, setMusicVolume] = useState(() => {
-    const saved = localStorage.getItem(MUSIC_VOLUME_KEY);
-    return saved ? parseFloat(saved) : 0.3;
-  });
-  const [narrationEnabled, setNarrationEnabled] = useState(() => {
-    return localStorage.getItem(NARRATION_ENABLED_KEY) === 'true';
-  });
-  const [narrationVolume, setNarrationVolume] = useState(() => {
-    const saved = localStorage.getItem(NARRATION_VOLUME_KEY);
-    return saved ? parseFloat(saved) : 0.8;
-  });
-
-  const saveMusicVolume = (v: number) => {
-    const clamped = Math.max(0, Math.min(1, v));
-    setMusicVolume(clamped);
-    localStorage.setItem(MUSIC_VOLUME_KEY, String(clamped));
-  };
-
-  const saveNarrationEnabled = () => {
-    setNarrationEnabled(prev => {
-      const next = !prev;
-      localStorage.setItem(NARRATION_ENABLED_KEY, String(next));
-      return next;
-    });
-  };
-
-  const saveNarrationVolume = (v: number) => {
-    const clamped = Math.max(0, Math.min(1, v));
-    setNarrationVolume(clamped);
-    localStorage.setItem(NARRATION_VOLUME_KEY, String(clamped));
+  const handleChange = () => {
+    // Menu music picks up volume from localStorage via polling in useMenuMusic,
+    // so no extra wiring needed here.
   };
 
   return createPortal(
@@ -66,60 +36,7 @@ function OptionsModal({ onClose }: { onClose: () => void }) {
           </button>
         </div>
 
-        <div className="px-4 py-4 space-y-5">
-          {/* Music Volume */}
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <span className="font-pixel text-[9px] text-foreground/60 tracking-wide">MUSIC</span>
-              <span className="flex items-center gap-1 font-pixel text-[8px] text-primary/60">
-                <Volume2 className="w-3 h-3" />
-                {Math.round(musicVolume * 100)}%
-              </span>
-            </div>
-            <input
-              type="range"
-              min={0}
-              max={100}
-              value={Math.round(musicVolume * 100)}
-              onInput={e => saveMusicVolume(Number((e.target as HTMLInputElement).value) / 100)}
-              onChange={e => saveMusicVolume(Number(e.target.value) / 100)}
-              className="volume-slider w-full h-2 cursor-pointer"
-              style={{ accentColor: 'hsl(var(--primary))' }}
-            />
-          </div>
-
-          {/* Narration */}
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <span className="font-pixel text-[9px] text-foreground/60 tracking-wide">NARRATION</span>
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  saveNarrationEnabled();
-                }}
-                className="flex items-center gap-1.5 px-2 py-1 rounded font-pixel text-[8px] text-primary/60 hover:text-primary hover:bg-primary/8 transition-all cursor-pointer"
-              >
-                {narrationEnabled ? <Mic className="w-3 h-3" /> : <MicOff className="w-3 h-3" />}
-                {narrationEnabled ? 'ON' : 'OFF'}
-              </button>
-            </div>
-            <input
-              type="range"
-              min={0}
-              max={100}
-              value={narrationEnabled ? Math.round(narrationVolume * 100) : 0}
-              onInput={e => saveNarrationVolume(Number((e.target as HTMLInputElement).value) / 100)}
-              onChange={e => saveNarrationVolume(Number(e.target.value) / 100)}
-              className="volume-slider w-full h-2 cursor-pointer"
-              style={{ accentColor: 'hsl(var(--primary))' }}
-            />
-            <div className="text-right font-pixel text-[7px] text-muted-foreground/30">
-              {narrationEnabled ? Math.round(narrationVolume * 100) : 0}%
-            </div>
-          </div>
-        </div>
+        <OptionsPanel onChange={handleChange} />
       </div>
     </div>,
     document.body

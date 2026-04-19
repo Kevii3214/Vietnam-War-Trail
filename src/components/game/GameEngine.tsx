@@ -5,6 +5,7 @@ import { PhaseIntro } from './PhaseIntro';
 import { GameOver } from './GameOver';
 import { GameHUD } from './GameHUD';
 import { GameMenuBar } from './GameMenuBar';
+import { OptionValues } from './optionsKeys';
 import { useBackgroundMusic } from '../../hooks/useBackgroundMusic';
 import { useNarration } from '../../hooks/useNarration';
 import { EscapingVietnamCinematic } from './scenes/EscapingVietnamCinematic';
@@ -113,14 +114,23 @@ export function GameEngine({ userId, onMainMenu, loadExistingSave }: GameEngineP
 
   // Background music
   const isMusicPlaying = !gameState.isGameOver && !gameState.isVictory;
-  const { volume, muted, setVolume, toggleMute } = useBackgroundMusic(gameState.currentPhaseOrder, isMusicPlaying);
+  const { volume, muted, setVolume, setMuted, toggleMute } = useBackgroundMusic(gameState.currentPhaseOrder, isMusicPlaying);
 
   // Narration (ElevenLabs TTS)
   const {
     speak, stop: stopNarration, isSpeaking,
     narrationEnabled, narrationVolume, setNarrationVolume, toggleNarration,
+    setNarrationEnabled,
   } = useNarration();
   const { saveGame, loadGame, saveRun } = useGameSave(userId);
+
+  // Callback from the shared OptionsPanel — sync live audio hooks
+  const handleOptionsChange = useCallback((vals: OptionValues) => {
+    setVolume(vals.musicVolume);
+    setMuted(vals.musicMuted);
+    setNarrationVolume(vals.narrationVolume);
+    setNarrationEnabled(vals.narrationEnabled);
+  }, [setVolume, setMuted, setNarrationVolume, setNarrationEnabled]);
 
   const [dayState, setDayState] = useState<DayState>('idle');
   const [currentEvent, setCurrentEvent] = useState<GameEvent | null>(null);
@@ -563,7 +573,7 @@ export function GameEngine({ userId, onMainMenu, loadExistingSave }: GameEngineP
         )}
 
         {/* Game HUD with content + menu */}
-        <GameHUD menuBar={<GameMenuBar onSaveAndExit={onMainMenu} volume={volume} muted={muted} onVolumeChange={setVolume} onToggleMute={toggleMute} narrationEnabled={narrationEnabled} narrationVolume={narrationVolume} onNarrationVolumeChange={setNarrationVolume} onToggleNarration={toggleNarration} isSpeaking={isSpeaking} />}>
+        <GameHUD menuBar={<GameMenuBar onSaveAndExit={onMainMenu} onOptionsChange={handleOptionsChange} />}>
           {renderHUDContent()}
         </GameHUD>
       </div>

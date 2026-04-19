@@ -10,6 +10,7 @@ const PHASE_MUSIC: Record<number, string> = {
 
 const CROSSFADE_MS = 2000;
 const STORAGE_KEY = 'saigone-music-volume';
+const MUTED_KEY = 'saigone-music-muted';
 
 export function useBackgroundMusic(currentPhase: number, isPlaying: boolean) {
   const currentAudioRef = useRef<HTMLAudioElement | null>(null);
@@ -21,13 +22,16 @@ export function useBackgroundMusic(currentPhase: number, isPlaying: boolean) {
     const saved = localStorage.getItem(STORAGE_KEY);
     return saved ? parseFloat(saved) : 0.3;
   });
-  const [muted, setMuted] = useState(false);
+  const [muted, setMutedState] = useState(() => {
+    return localStorage.getItem(MUTED_KEY) === 'true';
+  });
   const volumeRef = useRef(volume);
 
   // Keep ref in sync
   useEffect(() => {
     volumeRef.current = volume;
     localStorage.setItem(STORAGE_KEY, String(volume));
+    localStorage.setItem(MUTED_KEY, String(muted));
     if (currentAudioRef.current) {
       currentAudioRef.current.volume = muted ? 0 : volume;
     }
@@ -129,7 +133,7 @@ export function useBackgroundMusic(currentPhase: number, isPlaying: boolean) {
   }, []);
 
   const toggleMute = useCallback(() => {
-    setMuted(prev => {
+    setMutedState(prev => {
       const next = !prev;
       if (currentAudioRef.current) {
         currentAudioRef.current.volume = next ? 0 : volumeRef.current;
@@ -138,5 +142,12 @@ export function useBackgroundMusic(currentPhase: number, isPlaying: boolean) {
     });
   }, []);
 
-  return { volume, muted, setVolume, toggleMute };
+  const setMutedExplicit = useCallback((val: boolean) => {
+    setMutedState(val);
+    if (currentAudioRef.current) {
+      currentAudioRef.current.volume = val ? 0 : volumeRef.current;
+    }
+  }, []);
+
+  return { volume, muted, setVolume, setMuted: setMutedExplicit, toggleMute };
 }

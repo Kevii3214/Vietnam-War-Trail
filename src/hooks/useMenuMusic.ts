@@ -2,9 +2,10 @@ import { useEffect, useRef } from 'react';
 
 const MENU_MUSIC_URL = 'https://grazia-prod.oss-ap-southeast-1.aliyuncs.com/resources/uid_100035289/cc04.mp3';
 const FADE_MS = 1500;
-const VOLUME_KEY = 'menu-music-volume';
+const VOLUME_KEY = 'saigone-music-volume';
+const MUTED_KEY = 'saigone-music-muted';
 
-// Shared audio element so music doesn't restart between auth ↔ title navigation
+// Shared audio element so music doesn't restart between auth <-> title navigation
 let sharedAudio: HTMLAudioElement | null = null;
 
 function getSharedAudio(): HTMLAudioElement {
@@ -18,11 +19,13 @@ function getSharedAudio(): HTMLAudioElement {
 
 export function useMenuMusic() {
   const fadeRef = useRef<number | null>(null);
+  const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
     const audio = getSharedAudio();
     const savedVol = parseFloat(localStorage.getItem(VOLUME_KEY) ?? '0.3');
-    const targetVol = Math.max(0, Math.min(1, savedVol));
+    const savedMuted = localStorage.getItem(MUTED_KEY) === 'true';
+    const targetVol = savedMuted ? 0 : Math.max(0, Math.min(1, savedVol));
 
     // Fade in
     const fadeIn = () => {
@@ -37,9 +40,8 @@ export function useMenuMusic() {
       fadeRef.current = requestAnimationFrame(step);
     };
 
-    // Start playing (browsers require user gesture — catch and ignore)
+    // Start playing
     audio.play().then(fadeIn).catch(() => {
-      // Autoplay blocked — listen for first interaction
       const tryPlay = () => {
         audio.play().then(fadeIn).catch(() => {});
         document.removeEventListener('click', tryPlay);
@@ -49,9 +51,17 @@ export function useMenuMusic() {
       document.addEventListener('keydown', tryPlay, { once: true });
     });
 
+    // Poll localStorage so OptionsPanel changes apply in real-time
+    pollRef.current = setInterval(() => {
+      const vol = parseFloat(localStorage.getItem(VOLUME_KEY) ?? '0.3');
+      const mut = localStorage.getItem(MUTED_KEY) === 'true';
+      audio.volume = mut ? 0 : Math.max(0, Math.min(1, vol));
+    }, 200);
+
     // Cleanup: fade out when leaving menu pages
     return () => {
       if (fadeRef.current) cancelAnimationFrame(fadeRef.current);
+      if (pollRef.current) clearInterval(pollRef.current);
       const a = sharedAudio;
       if (!a || a.paused) return;
 

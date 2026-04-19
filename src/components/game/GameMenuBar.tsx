@@ -1,18 +1,13 @@
 import { useState } from 'react';
 import { createPortal } from 'react-dom';
-import { Save, Package, Settings, LogOut, X, Volume2, VolumeX, Mic, MicOff } from 'lucide-react';
+import { Save, Package, Settings, LogOut, X } from 'lucide-react';
+import { OptionsPanel } from '@/components/game/OptionsPanel';
+import type { OptionValues } from '@/components/game/optionsKeys';
 
 interface GameMenuBarProps {
   onSaveAndExit?: () => void;
-  volume?: number;
-  muted?: boolean;
-  onVolumeChange?: (v: number) => void;
-  onToggleMute?: () => void;
-  narrationEnabled?: boolean;
-  narrationVolume?: number;
-  onNarrationVolumeChange?: (v: number) => void;
-  onToggleNarration?: () => void;
-  isSpeaking?: boolean;
+  /** Called when the user changes any option in the OPTS modal */
+  onOptionsChange?: (vals: OptionValues) => void;
 }
 
 function MenuButton({ icon, label, onClick }: { icon: React.ReactNode; label: string; onClick: () => void }) {
@@ -69,74 +64,13 @@ function Modal({ title, onClose, children }: { title: string; onClose: () => voi
   );
 }
 
-function VolumeControl({
-  label,
-  icon,
-  offIcon,
-  isOff,
-  value,
-  onToggle,
-  onChange,
-}: {
-  label: string;
-  icon: React.ReactNode;
-  offIcon: React.ReactNode;
-  isOff: boolean;
-  value: number;
-  onToggle: () => void;
-  onChange: (v: number) => void;
-}) {
-  return (
-    <div className="space-y-2">
-      <div className="flex items-center justify-between">
-        <span className="font-pixel text-[9px] text-foreground/60 tracking-wide">{label}</span>
-        <button
-          type="button"
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            onToggle();
-          }}
-          className="flex items-center gap-1.5 px-2 py-1 rounded font-pixel text-[8px] text-primary/60 hover:text-primary hover:bg-primary/8 transition-all cursor-pointer"
-        >
-          {isOff ? offIcon : icon}
-          {isOff ? 'OFF' : 'ON'}
-        </button>
-      </div>
-      <input
-        type="range"
-        min={0}
-        max={100}
-        value={isOff ? 0 : Math.round(value * 100)}
-        onInput={e => onChange(Number((e.target as HTMLInputElement).value) / 100)}
-        onChange={e => onChange(Number(e.target.value) / 100)}
-        className="volume-slider w-full h-2 cursor-pointer"
-        style={{ accentColor: 'hsl(var(--primary))' }}
-      />
-      <div className="text-right font-pixel text-[7px] text-muted-foreground/30">
-        {isOff ? '0' : Math.round(value * 100)}%
-      </div>
-    </div>
-  );
-}
-
 const ITEMS = [
   { id: 'save', icon: <Save className="w-3.5 h-3.5" />, label: 'SAVE' },
   { id: 'inventory', icon: <Package className="w-3.5 h-3.5" />, label: 'ITEMS' },
   { id: 'settings', icon: <Settings className="w-3.5 h-3.5" />, label: 'OPTS' },
 ] as const;
 
-export function GameMenuBar({
-  onSaveAndExit,
-  volume = 0.3,
-  muted = false,
-  onVolumeChange,
-  onToggleMute,
-  narrationEnabled = true,
-  narrationVolume = 0.8,
-  onNarrationVolumeChange,
-  onToggleNarration,
-}: GameMenuBarProps) {
+export function GameMenuBar({ onSaveAndExit, onOptionsChange }: GameMenuBarProps) {
   const [open, setOpen] = useState<string | null>(null);
 
   return (
@@ -190,26 +124,7 @@ export function GameMenuBar({
 
       {open === 'settings' && (
         <Modal title="OPTIONS" onClose={() => setOpen(null)}>
-          <div className="px-4 py-4 space-y-5">
-            <VolumeControl
-              label="MUSIC"
-              icon={<Volume2 className="w-3 h-3" />}
-              offIcon={<VolumeX className="w-3 h-3" />}
-              isOff={muted}
-              value={volume}
-              onToggle={() => onToggleMute?.()}
-              onChange={(v) => onVolumeChange?.(v)}
-            />
-            <VolumeControl
-              label="NARRATION"
-              icon={<Mic className="w-3 h-3" />}
-              offIcon={<MicOff className="w-3 h-3" />}
-              isOff={!narrationEnabled}
-              value={narrationVolume}
-              onToggle={() => onToggleNarration?.()}
-              onChange={(v) => onNarrationVolumeChange?.(v)}
-            />
-          </div>
+          <OptionsPanel onChange={onOptionsChange} />
         </Modal>
       )}
     </>

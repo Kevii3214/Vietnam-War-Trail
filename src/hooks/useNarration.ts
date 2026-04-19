@@ -2,12 +2,11 @@ import { useRef, useState, useCallback, useEffect } from 'react';
 
 const NARRATION_ENABLED_KEY = 'saigone-narration-enabled';
 const NARRATION_VOLUME_KEY = 'saigone-narration-volume';
-const NARRATION_MODE_KEY = 'saigone-narration-mode'; // 'browser' | 'elevenlabs'
 
 export function useNarration() {
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
   const [isSpeaking, setIsSpeaking] = useState(false);
-  const [narrationEnabled, setNarrationEnabled] = useState(() => {
+  const [narrationEnabled, setNarrationEnabled_raw] = useState(() => {
     return localStorage.getItem(NARRATION_ENABLED_KEY) === 'true';
   });
   const [narrationVolume, setNarrationVolumeState] = useState(() => {
@@ -77,8 +76,13 @@ export function useNarration() {
     }
   }, []);
 
+  const setNarrationEnabled = useCallback((val: boolean) => {
+    setNarrationEnabled_raw(val);
+    if (!val) stop();
+  }, [stop]);
+
   const toggleNarration = useCallback(() => {
-    setNarrationEnabled(prev => {
+    setNarrationEnabled_raw(prev => {
       const next = !prev;
       if (!next) stop();
       return next;
@@ -96,6 +100,7 @@ export function useNarration() {
     narrationEnabled,
     narrationVolume,
     setNarrationVolume,
+    setNarrationEnabled,
     toggleNarration,
   };
 }
