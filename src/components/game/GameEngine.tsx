@@ -10,6 +10,12 @@ import { TravelingByBoatCinematic } from './scenes/TravelingByBoatCinematic';
 import { CityFallsScene } from './scenes/CityFallsScene';
 import { ReeducationCampScene } from './scenes/ReeducationCampScene';
 import { AcquiringBoatScene } from './scenes/AcquiringBoatScene';
+import { StormAtSeaScene } from './scenes/StormAtSeaScene';
+import { PiratesScene } from './scenes/PiratesScene';
+import { CoastGuardScene } from './scenes/CoastGuardScene';
+import { EngineFailureScene } from './scenes/EngineFailureScene';
+import { SickPassengerScene } from './scenes/SickPassengerScene';
+import { AnotherBoatScene } from './scenes/AnotherBoatScene';
 import { EVENT_SCENE_MAP } from './scenes/eventSceneMap';
 import { useGameState } from '@/hooks/useGameState';
 import { useGameEvents, type EventChoice, type EventOutcome, pickRandomOutcome } from '@/hooks/useGameEvents';
@@ -272,6 +278,12 @@ export function GameEngine({ userId, onMainMenu, loadExistingSave }: GameEngineP
       case 'city-falls': return <CityFallsScene />;
       case 'reeducation-camp': return <ReeducationCampScene />;
       case 'acquiring-boat': return <AcquiringBoatScene />;
+      case 'storm-at-sea': return <StormAtSeaScene />;
+      case 'pirates': return <PiratesScene />;
+      case 'coast-guard': return <CoastGuardScene />;
+      case 'engine-failure': return <EngineFailureScene />;
+      case 'sick-passenger': return <SickPassengerScene />;
+      case 'another-boat': return <AnotherBoatScene />;
       default: return null;
     }
   };
