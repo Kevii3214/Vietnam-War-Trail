@@ -465,7 +465,7 @@ export function GameEngine({ userId, onMainMenu, loadExistingSave }: GameEngineP
               <button
                 key={index}
                 onClick={() => handleChoiceMade(choice)}
-                className="w-full text-left flex items-start gap-2.5 px-3 py-2 border border-primary/20 hover:border-primary/70 hover:bg-primary/6 active:scale-[0.99] transition-all cursor-pointer group"
+                className="w-full text-left flex items-start gap-2.5 px-3 py-2 border border-white/20 hover:border-white/70 hover:bg-white/6 active:scale-[0.99] transition-all cursor-pointer group"
                 style={{ borderRadius: '2px', transition: 'all 0.15s ease' }}
               >
                 <span

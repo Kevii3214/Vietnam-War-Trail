@@ -1,22 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
-import { ChevronRight } from 'lucide-react';
-import { GameHUD } from '../GameHUD';
-
-/* ─── helpers ─── */
-function TypewriterText({ text, speed = 45, onDone }: { text: string; speed?: number; onDone?: () => void }) {
-  const [displayed, setDisplayed] = useState('');
-  useEffect(() => {
-    setDisplayed('');
-    let i = 0;
-    const iv = setInterval(() => {
-      i++;
-      setDisplayed(text.slice(0, i));
-      if (i >= text.length) { clearInterval(iv); onDone?.(); }
-    }, speed);
-    return () => clearInterval(iv);
-  }, [text, speed, onDone]);
-  return <span>{displayed}<span className="animate-pulse">_</span></span>;
-}
+import { ChevronDown } from 'lucide-react';
+import { GameMenuBar } from '../GameMenuBar';
+import { DialogueBox, DialogueTypewriter } from '../DialogueBox';
 
 /* ─── Scene 1: Application Approved ─── */
 function VisaStampScene() {
@@ -355,28 +340,32 @@ export function MakingItToAmericaCinematic({ onComplete, onNarrate }: Props) {
       {/* Gradient overlay for readability */}
       <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
 
-      {/* Push HUD to bottom */}
+      {/* Push dialogue to bottom */}
       <div className="flex-1" />
 
-      {/* HUD with text */}
-      <div className="relative z-10 pb-4 md:pb-6 px-4 md:px-8">
-        <GameHUD>
-          <div className="space-y-2 flex-1">
-            <h2 className="font-pixel text-[8px] md:text-[10px] text-primary crt-glow tracking-widest">
-              {scene.title}
-            </h2>
-            <p className="font-retro text-sm md:text-base text-foreground/90 leading-relaxed min-h-[3rem]">
-              <TypewriterText key={sceneIdx} text={scene.text} speed={40} onDone={handleTextDone} />
-            </p>
-          </div>
+      {/* Standardised dialogue box */}
+      <div className="relative z-10 pb-2 md:pb-3 pt-1.5 px-4 md:px-8">
+        <DialogueBox menuBar={<GameMenuBar onSaveAndExit={onComplete} />}>
+          <button
+            type="button"
+            onClick={textDone ? advance : undefined}
+            disabled={!textDone}
+            className="w-full text-left focus:outline-none disabled:cursor-default cursor-pointer"
+          >
+            <DialogueTypewriter
+              key={sceneIdx}
+              text={scene.text}
+              label={scene.title}
+              onComplete={handleTextDone}
+            />
 
-          {/* Continue arrow */}
-          {textDone && (
-            <button onClick={advance} className="self-end animate-fade-in-up" aria-label="Continue">
-              <ChevronRight className="w-6 h-6 text-primary animate-pulse" />
-            </button>
-          )}
-        </GameHUD>
+            {textDone && (
+              <div className="absolute right-2 bottom-1 md:right-3 md:bottom-2 animate-fade-in-up">
+                <ChevronDown className="w-4 h-4 md:w-5 md:h-5 text-white animate-pulse" />
+              </div>
+            )}
+          </button>
+        </DialogueBox>
       </div>
     </div>
   );

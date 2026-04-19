@@ -1,45 +1,12 @@
 import { useState, useEffect, useCallback } from 'react';
 import { ChevronDown } from 'lucide-react';
 import { GameMenuBar } from '../GameMenuBar';
+import { DialogueBox, DialogueTypewriter } from '../DialogueBox';
 import { PixelPerson } from './PixelPeople';
 
 interface CinematicProps {
   onComplete: () => void;
   onNarrate?: (text: string) => void;
-}
-
-interface TypewriterProps {
-  text: string;
-  onComplete: () => void;
-  speed?: number;
-}
-
-function Typewriter({ text, onComplete, speed = 28 }: TypewriterProps) {
-  const [displayed, setDisplayed] = useState('');
-  const [done, setDone] = useState(false);
-
-  useEffect(() => {
-    setDisplayed('');
-    setDone(false);
-    let i = 0;
-    const interval = setInterval(() => {
-      i++;
-      setDisplayed(text.slice(0, i));
-      if (i >= text.length) {
-        clearInterval(interval);
-        setDone(true);
-        onComplete();
-      }
-    }, speed);
-    return () => clearInterval(interval);
-  }, [text, speed, onComplete]);
-
-  return (
-    <p className="font-retro text-[11px] md:text-xs leading-snug text-foreground text-left">
-      {displayed}
-      {!done && <span className="opacity-80 animate-pulse">_</span>}
-    </p>
-  );
 }
 
 // ===========================================================================
@@ -698,42 +665,29 @@ export function TravelingByBoatCinematic({ onComplete, onNarrate }: CinematicPro
         <div className="absolute inset-0 pointer-events-none scanlines z-10" />
       </div>
 
-      {/* --- Text panel (bottom) --- */}
-      <div className="relative shrink-0 bg-black px-2 md:px-4 pt-1.5 pb-2 md:pb-3">
-        <div className="relative flex bg-black border-2 border-white">
+      {/* --- Text panel (bottom) --- standardised dialogue box --- */}
+      <div className="relative shrink-0 px-4 md:px-8 pt-1.5 pb-2 md:pb-3">
+        <DialogueBox menuBar={<GameMenuBar onSaveAndExit={onComplete} />}>
           <button
             type="button"
             onClick={handleNext}
             disabled={!arrowVisible}
-            className="flex-1 text-left px-3 md:px-4 py-2 min-h-[54px] md:min-h-[64px] focus:outline-none disabled:cursor-default cursor-pointer"
+            className="w-full text-left focus:outline-none disabled:cursor-default cursor-pointer"
           >
-            <div className="flex flex-col gap-0.5">
-              {scene.label && (
-                <p
-                  key={`label-${sceneIndex}`}
-                  className="font-retro text-[10px] md:text-[11px] tracking-[0.25em] uppercase text-primary animate-fade-in-up"
-                >
-                  [ {scene.label} ]
-                </p>
-              )}
-              <Typewriter
-                key={sceneIndex}
-                text={scene.text}
-                onComplete={handleTextDone}
-              />
-            </div>
+            <DialogueTypewriter
+              key={sceneIndex}
+              text={scene.text}
+              label={scene.label}
+              onComplete={handleTextDone}
+            />
 
             {arrowVisible && (
-              <div className="absolute right-1.5 bottom-0.5 md:right-2 md:bottom-1 animate-fade-in-up">
-                <ChevronDown className="w-3.5 h-3.5 md:w-4 md:h-4 text-white animate-pulse" />
+              <div className="absolute right-2 bottom-1 md:right-3 md:bottom-2 animate-fade-in-up">
+                <ChevronDown className="w-4 h-4 md:w-5 md:h-5 text-white animate-pulse" />
               </div>
             )}
           </button>
-
-          <div className="flex flex-col border-l-2 border-white bg-black">
-            <GameMenuBar onSaveAndExit={onComplete} />
-          </div>
-        </div>
+        </DialogueBox>
       </div>
     </div>
   );
