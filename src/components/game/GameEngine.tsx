@@ -306,7 +306,7 @@ export function GameEngine({ userId, onMainMenu, loadExistingSave }: GameEngineP
   }
 
   if (showCinematic === 3) {
-    return <RefugeeCampCinematic onComplete={() => setShowCinematic(false)} landingCountry={gameState.landingCountry || ''} />;
+    return <RefugeeCampCinematic onComplete={() => setShowCinematic(false)} landingCountry={gameState.landingCountry ?? ''} />;
   }
 
   if (showCinematic === 4) {

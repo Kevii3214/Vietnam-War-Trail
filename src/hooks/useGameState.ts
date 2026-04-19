@@ -14,6 +14,7 @@ export const LANDING_COUNTRIES = [
   'Indonesia',
   'Thailand',
   'Hong Kong',
+  'Singapore',
 ] as const;
 
 export type LandingCountry = (typeof LANDING_COUNTRIES)[number];

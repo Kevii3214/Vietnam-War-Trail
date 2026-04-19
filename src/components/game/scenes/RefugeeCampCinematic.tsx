@@ -2,7 +2,6 @@ import { useState, useEffect, useCallback } from 'react';
 import { ChevronDown } from 'lucide-react';
 import { GameMenuBar } from '../GameMenuBar';
 import { PixelPerson } from './PixelPeople';
-import { LANDING_COUNTRIES } from '@/hooks/useGameState';
 
 interface CinematicProps {
   onComplete: () => void;
@@ -649,7 +648,8 @@ const SCENES_TEMPLATE = [
 ];
 
 export function RefugeeCampCinematic({ onComplete, landingCountry }: CinematicProps) {
-  const country = landingCountry || LANDING_COUNTRIES[Math.floor(Math.random() * LANDING_COUNTRIES.length)];
+  // Use a ref so the country is locked on mount — never changes mid-cinematic
+  const [country] = useState(() => landingCountry || 'Malaysia');
 
   const countryBadge: Record<string, string> = {
     'Malaysia': 'MALAYSIAN COAST · PRE-DAWN',
@@ -657,6 +657,7 @@ export function RefugeeCampCinematic({ onComplete, landingCountry }: CinematicPr
     'Indonesia': 'INDONESIAN COAST · PRE-DAWN',
     'Thailand': 'THAI COAST · PRE-DAWN',
     'Hong Kong': 'HONG KONG HARBOUR · PRE-DAWN',
+    'Singapore': 'SINGAPORE STRAIT · PRE-DAWN',
   };
 
   const scenes = SCENES_TEMPLATE.map(s => ({
