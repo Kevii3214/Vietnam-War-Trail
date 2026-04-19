@@ -8,6 +8,7 @@ import { GameMenuBar } from './GameMenuBar';
 import { EscapingVietnamCinematic } from './scenes/EscapingVietnamCinematic';
 import { TravelingByBoatCinematic } from './scenes/TravelingByBoatCinematic';
 import { RefugeeCampCinematic } from './scenes/RefugeeCampCinematic';
+import { MakingItToAmericaCinematic } from './scenes/MakingItToAmericaCinematic';
 import { CityFallsScene } from './scenes/CityFallsScene';
 import { ReeducationCampScene } from './scenes/ReeducationCampScene';
 import { AcquiringBoatScene } from './scenes/AcquiringBoatScene';
@@ -148,7 +149,7 @@ export function GameEngine({ userId, onMainMenu, loadExistingSave }: GameEngineP
       const newPhase = gameState.currentPhaseOrder;
       setLastPhase(newPhase);
       // Show cinematic for phases that have one, otherwise show phase intro
-      if (newPhase === 2 || newPhase === 3) {
+      if (newPhase === 2 || newPhase === 3 || newPhase === 4) {
         setShowCinematic(newPhase);
       } else {
         triggerPhaseIntro();
@@ -263,6 +264,10 @@ export function GameEngine({ userId, onMainMenu, loadExistingSave }: GameEngineP
 
   if (showCinematic === 3) {
     return <RefugeeCampCinematic onComplete={() => setShowCinematic(false)} />;
+  }
+
+  if (showCinematic === 4) {
+    return <MakingItToAmericaCinematic onComplete={() => setShowCinematic(false)} />;
   }
 
   if (gameState.isGameOver) {
