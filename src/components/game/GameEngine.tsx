@@ -5,6 +5,7 @@ import { PhaseIntro } from './PhaseIntro';
 import { GameOver } from './GameOver';
 import { GameHUD } from './GameHUD';
 import { GameMenuBar } from './GameMenuBar';
+import { useBackgroundMusic } from '../../hooks/useBackgroundMusic';
 import { EscapingVietnamCinematic } from './scenes/EscapingVietnamCinematic';
 import { TravelingByBoatCinematic } from './scenes/TravelingByBoatCinematic';
 import { RefugeeCampCinematic } from './scenes/RefugeeCampCinematic';
@@ -108,6 +109,10 @@ export function GameEngine({ userId, onMainMenu, loadExistingSave }: GameEngineP
   } = useGameState();
 
   const { phases, loading, getPhaseByOrder, getRandomEvent } = useGameEvents();
+
+  // Background music
+  const isMusicPlaying = !gameState.isGameOver && !gameState.isVictory;
+  const { volume, muted, setVolume, toggleMute } = useBackgroundMusic(gameState.currentPhaseOrder, isMusicPlaying);
   const { saveGame, loadGame, saveRun } = useGameSave(userId);
 
   const [dayState, setDayState] = useState<DayState>('idle');
@@ -534,7 +539,7 @@ export function GameEngine({ userId, onMainMenu, loadExistingSave }: GameEngineP
         )}
 
         {/* Game HUD with content + menu */}
-        <GameHUD menuBar={<GameMenuBar onSaveAndExit={onMainMenu} />}>
+        <GameHUD menuBar={<GameMenuBar onSaveAndExit={onMainMenu} volume={volume} muted={muted} onVolumeChange={setVolume} onToggleMute={toggleMute} />}>
           {renderHUDContent()}
         </GameHUD>
       </div>

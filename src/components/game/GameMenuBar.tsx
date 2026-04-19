@@ -1,9 +1,13 @@
 import { useState } from 'react';
 import { createPortal } from 'react-dom';
-import { Save, Package, Settings, LogOut, X } from 'lucide-react';
+import { Save, Package, Settings, LogOut, X, Volume2, VolumeX } from 'lucide-react';
 
 interface GameMenuBarProps {
   onSaveAndExit?: () => void;
+  volume?: number;
+  muted?: boolean;
+  onVolumeChange?: (v: number) => void;
+  onToggleMute?: () => void;
 }
 
 function MenuButton({ icon, label, onClick }: { icon: React.ReactNode; label: string; onClick: () => void }) {
@@ -66,7 +70,7 @@ const ITEMS = [
   { id: 'settings', icon: <Settings className="w-3.5 h-3.5" />, label: 'OPTS' },
 ] as const;
 
-export function GameMenuBar({ onSaveAndExit }: GameMenuBarProps) {
+export function GameMenuBar({ onSaveAndExit, volume = 0.3, muted = false, onVolumeChange, onToggleMute }: GameMenuBarProps) {
   const [open, setOpen] = useState<string | null>(null);
 
   return (
@@ -120,8 +124,45 @@ export function GameMenuBar({ onSaveAndExit }: GameMenuBarProps) {
 
       {open === 'settings' && (
         <Modal title="OPTIONS" onClose={() => setOpen(null)}>
-          <div className="px-4 py-6 font-pixel text-[9px] text-muted-foreground/40 text-center leading-loose">
-            Coming soon.
+          <div className="px-4 py-4 space-y-4">
+            {/* Music Volume */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="font-pixel text-[9px] text-foreground/60 tracking-wide">MUSIC</span>
+                <button
+                  onClick={onToggleMute}
+                  className="flex items-center gap-1.5 px-2 py-1 rounded font-pixel text-[8px] text-primary/60 hover:text-primary hover:bg-primary/8 transition-all cursor-pointer"
+                >
+                  {muted ? <VolumeX className="w-3 h-3" /> : <Volume2 className="w-3 h-3" />}
+                  {muted ? 'MUTED' : 'ON'}
+                </button>
+              </div>
+              <div className="relative">
+                {/* Track background */}
+                <div className="h-2 rounded-full border border-primary/20 overflow-hidden" style={{ background: 'hsl(var(--primary)/0.05)' }}>
+                  <div
+                    className="h-full rounded-full transition-all duration-150"
+                    style={{
+                      width: `${(muted ? 0 : volume) * 100}%`,
+                      background: 'linear-gradient(90deg, hsl(var(--primary)/0.4), hsl(var(--primary)))',
+                      boxShadow: '0 0 6px hsl(var(--primary)/0.4)',
+                    }}
+                  />
+                </div>
+                {/* Invisible range slider over the visual */}
+                <input
+                  type="range"
+                  min={0}
+                  max={100}
+                  value={muted ? 0 : Math.round(volume * 100)}
+                  onChange={e => onVolumeChange?.(Number(e.target.value) / 100)}
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                />
+              </div>
+              <div className="text-right font-pixel text-[7px] text-muted-foreground/30">
+                {muted ? '0' : Math.round(volume * 100)}%
+              </div>
+            </div>
           </div>
         </Modal>
       )}
