@@ -65,10 +65,10 @@ export function InterviewEvent({ onPass, onFail, onForcibleReturn }: InterviewEv
   const [displayedText, setDisplayedText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
-  const typingRef = useRef<NodeJS.Timeout | null>(null);
+  const typingRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   // Typewriter effect for latest assistant message
-  const typewriteText = useCallback((text: string, onDone?: () => void) => {
+  const typewriteText = useCallback((text: string) => {
     setIsTyping(true);
     setDisplayedText('');
     let i = 0;
@@ -78,12 +78,15 @@ export function InterviewEvent({ onPass, onFail, onForcibleReturn }: InterviewEv
         setDisplayedText(text.slice(0, i + 1));
         i++;
       } else {
-        clearInterval(typingRef.current!);
+        if (typingRef.current) clearInterval(typingRef.current);
         typingRef.current = null;
         setIsTyping(false);
-        onDone?.();
       }
     }, 20);
+  }, []);
+
+  // Cleanup on unmount
+  useEffect(() => {
     return () => {
       if (typingRef.current) clearInterval(typingRef.current);
     };
@@ -94,72 +97,72 @@ export function InterviewEvent({ onPass, onFail, onForcibleReturn }: InterviewEv
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: 'smooth' });
   }, [messages, displayedText]);
 
-  // Start the interview
-  const startInterview = useCallback(async () => {
-    setStarted(true);
+  // Call the AI with current history and question index
+  const callAI = useCallback(async (history: InterviewMessage[], qIndex: number) => {
     setIsLoading(true);
-    try {
-      const { data, error } = await supabase.functions.invoke('interview-ai', {
-        body: { history: [], userMessage: null, questionIndex: 0 },
-      });
-      if (error) throw error;
-      const assistantMsg: InterviewMessage = { role: 'assistant', content: data.message };
-      setMessages([assistantMsg]);
-      setQuestionIndex(data.questionIndex ?? 1);
-      typewriteText(data.message);
-    } catch (err) {
-      console.error('Interview start error:', err);
-      const fallback: InterviewMessage = {
-        role: 'assistant',
-        content: 'Please, sit down. I am the UNHCR case officer assigned to your file. I will ask you six questions to determine your refugee status. Let us begin. Do you have family in a resettlement country?',
-      };
-      setMessages([fallback]);
-      setQuestionIndex(1);
-      typewriteText(fallback.content);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [typewriteText]);
-
-  const sendAnswer = useCallback(async (answer: string) => {
-    if (isLoading || isTyping) return;
-
-    const userMsg: InterviewMessage = { role: 'user', content: answer };
-    const newMessages = [...messages, userMsg];
-    setMessages(newMessages);
-    setCustomInput('');
-    setIsLoading(true);
-
     try {
       const { data, error } = await supabase.functions.invoke('interview-ai', {
         body: {
-          history: newMessages.map((m) => ({ role: m.role, content: m.content })),
-          userMessage: answer,
-          questionIndex,
+          history: history.map((m) => ({ role: m.role, content: m.content })),
+          questionIndex: qIndex,
         },
       });
       if (error) throw error;
 
       const assistantMsg: InterviewMessage = { role: 'assistant', content: data.message };
-      setMessages([...newMessages, assistantMsg]);
-      setQuestionIndex(data.questionIndex ?? questionIndex + 1);
+      const updatedMessages = [...history, assistantMsg];
+      setMessages(updatedMessages);
       typewriteText(data.message);
 
       if (data.determination) {
         setDetermination(data.determination);
       }
     } catch (err) {
-      console.error('Interview error:', err);
-      const fallback: InterviewMessage = {
-        role: 'assistant',
-        content: 'I see. Let me note that down. Please continue...',
-      };
-      setMessages([...newMessages, fallback]);
-      typewriteText(fallback.content);
+      console.error('Interview AI error:', err);
+      // Fallback — use a generic response so the game doesn't break
+      const fallbackQuestions = [
+        'Do you have family in a resettlement country?',
+        'What was your occupation in Vietnam?',
+        'What are your language skills?',
+        'Why did you leave Vietnam?',
+        'When did you decide to leave?',
+        'What do you fear if you return?',
+      ];
+      const fallbackText = qIndex < 6
+        ? `I see. Let me note that. Next question: ${fallbackQuestions[qIndex]}`
+        : 'Thank you. I will review your case. Based on what you have told me, I will make my determination.';
+      const fallbackMsg: InterviewMessage = { role: 'assistant', content: fallbackText };
+      setMessages([...history, fallbackMsg]);
+      typewriteText(fallbackText);
     } finally {
       setIsLoading(false);
     }
-  }, [messages, questionIndex, isLoading, isTyping, typewriteText]);
+  }, [typewriteText]);
+
+  // Start the interview
+  const startInterview = useCallback(async () => {
+    setStarted(true);
+    // Send empty history with qIndex 0 to get the first question
+    await callAI([], 0);
+    // After the AI responds with Q1, we're waiting for the user to answer Q1
+    // questionIndex stays at 0 until user answers
+  }, [callAI]);
+
+  const sendAnswer = useCallback(async (answer: string) => {
+    if (isLoading || isTyping) return;
+
+    const userMsg: InterviewMessage = { role: 'user', content: answer };
+    const updatedHistory = [...messages, userMsg];
+    setMessages(updatedHistory);
+    setCustomInput('');
+
+    // User answered question (questionIndex+1), so now we've answered questionIndex+1 total
+    const newQIndex = questionIndex + 1;
+    setQuestionIndex(newQIndex);
+
+    // Call AI with updated history
+    await callAI(updatedHistory, newQIndex);
+  }, [messages, questionIndex, isLoading, isTyping, callAI]);
 
   const handleSubmit = useCallback(() => {
     if (customInput.trim()) {
@@ -265,20 +268,27 @@ export function InterviewEvent({ onPass, onFail, onForcibleReturn }: InterviewEv
   }
 
   // Active interview
-  const suggestedForCurrent = SUGGESTED_ANSWERS[questionIndex - 1] || SUGGESTED_ANSWERS[0];
-  const lastAssistantIndex = [...messages].reverse().findIndex((m) => m.role === 'assistant');
-  const lastAssistantI = lastAssistantIndex >= 0 ? messages.length - 1 - lastAssistantIndex : -1;
+  const suggestedForCurrent = SUGGESTED_ANSWERS[questionIndex] || [];
+  const lastAssistantIdx = messages.length - 1 - [...messages].reverse().findIndex((m) => m.role === 'assistant');
 
   return (
-    <div className="animate-fade-in-up max-h-[45vh] flex flex-col">
+    <div className="animate-fade-in-up flex flex-col" style={{ maxHeight: '45vh' }}>
       <div className="flex items-center gap-2 mb-2">
         <span className="font-pixel text-[10px] text-primary crt-glow">UNHCR Interview</span>
         <div className="flex-1 border-t-2 border-primary/20" />
-        <span className="font-pixel text-[8px] text-muted-foreground">Q{Math.min(questionIndex, 6)}/6</span>
+        <span className="font-pixel text-[8px] text-muted-foreground">Q{Math.min(questionIndex + 1, 6)}/6</span>
       </div>
 
-      {/* Chat log */}
-      <div ref={scrollRef} className="flex-1 overflow-y-auto space-y-2 mb-3 max-h-[20vh] pr-1 scrollbar-thin">
+      {/* Chat log — styled scrollbar */}
+      <div
+        ref={scrollRef}
+        className="flex-1 overflow-y-auto space-y-2 mb-3 pr-1"
+        style={{
+          maxHeight: '18vh',
+          scrollbarWidth: 'thin',
+          scrollbarColor: 'hsl(var(--primary) / 0.3) transparent',
+        }}
+      >
         {messages.map((msg, i) => (
           <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
             <div
@@ -289,8 +299,11 @@ export function InterviewEvent({ onPass, onFail, onForcibleReturn }: InterviewEv
               }`}
               style={{ borderRadius: '2px' }}
             >
-              {msg.role === 'assistant' && i === lastAssistantI ? (
-                <p className="font-retro text-sm text-foreground/90 leading-relaxed">{displayedText}<span className="inline-block w-1.5 h-3 bg-primary/60 ml-0.5 animate-pulse" /></p>
+              {msg.role === 'assistant' && i === lastAssistantIdx ? (
+                <p className="font-retro text-sm text-foreground/90 leading-relaxed">
+                  {displayedText}
+                  {isTyping && <span className="inline-block w-1.5 h-3 bg-primary/60 ml-0.5 animate-pulse" />}
+                </p>
               ) : (
                 <p className={`font-retro text-sm leading-relaxed ${msg.role === 'user' ? 'text-primary' : 'text-foreground/90'}`}>
                   {msg.content}
@@ -308,12 +321,12 @@ export function InterviewEvent({ onPass, onFail, onForcibleReturn }: InterviewEv
         )}
       </div>
 
-      {/* Suggested answers */}
-      {!isLoading && !isTyping && (
+      {/* Suggested answers — only show when not loading/typing and questions remain */}
+      {!isLoading && !isTyping && questionIndex < 6 && suggestedForCurrent.length > 0 && (
         <div className="space-y-1 mb-2">
           {suggestedForCurrent.map((answer, i) => (
             <button
-              key={i}
+              key={`${questionIndex}-${i}`}
               onClick={() => sendAnswer(answer)}
               className="w-full text-left flex items-start gap-2 px-2.5 py-1.5 border border-primary/15 hover:border-primary/50 hover:bg-primary/5 active:scale-[0.99] transition-all cursor-pointer group"
               style={{ borderRadius: '2px' }}
@@ -325,8 +338,8 @@ export function InterviewEvent({ onPass, onFail, onForcibleReturn }: InterviewEv
         </div>
       )}
 
-      {/* Custom input */}
-      {!isLoading && !isTyping && (
+      {/* Custom input — only when not loading/typing and questions remain */}
+      {!isLoading && !isTyping && questionIndex < 6 && (
         <div className="flex gap-2">
           <input
             type="text"

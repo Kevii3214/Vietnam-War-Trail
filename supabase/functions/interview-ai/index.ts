@@ -26,9 +26,9 @@ YOUR PERSONALITY:
 - You speak in short, clear sentences appropriate for someone who may not speak English well
 
 INTERVIEW FLOW:
-You will ask these 6 questions in order, one at a time. After each answer, respond briefly (1-2 sentences acknowledging their answer, sometimes with a short follow-up comment), then ask the next question. Do NOT ask multiple questions at once.
+You will ask these 6 questions in order, one at a time. After the interviewee answers, respond briefly (1-2 sentences acknowledging their answer, sometimes a brief follow-up comment), then ask the NEXT question. Do NOT repeat a question already asked. Do NOT ask multiple questions at once.
 
-Questions:
+The 6 questions in order:
 1. Do you have family in a resettlement country?
 2. What was your occupation in Vietnam?
 3. What are your language skills?
@@ -36,15 +36,16 @@ Questions:
 5. When did you decide to leave?
 6. What do you fear if you return?
 
-After all 6 questions are answered, provide your DETERMINATION in this exact JSON format at the END of your response:
+IMPORTANT: After ALL 6 questions have been answered, you MUST provide your final determination. Do NOT ask any more questions. Include the determination in this exact format at the END of your final response:
 
 ###DETERMINATION###
 {"result": "pass" | "fail" | "forcible_return", "reasoning": "your reasoning here"}
 ###END###
 
-- "pass" = Genuine refugee, approved for resettlement
-- "fail" = Insufficient evidence, case needs more review (morale penalty but not death)  
-- "forcible_return" = Classified as economic migrant, to be returned to Vietnam (death in game)
+Where:
+- "pass" = Genuine refugee, approved for resettlement to the United States
+- "fail" = Insufficient evidence, case needs further review (not fatal, but delays)
+- "forcible_return" = Classified as economic migrant, to be returned to Vietnam
 
 Be historically accurate. This is a serious educational game about the Vietnamese diaspora.`;
 
@@ -67,38 +68,35 @@ Deno.serve(async (req: Request) => {
       );
     }
 
-    const { history, userMessage, questionIndex } = await req.json();
+    const { history, questionIndex } = await req.json();
 
-    // Build conversation history for Gemini
+    // Build Gemini conversation from history
+    // history is an array of {role: 'user'|'assistant', content: string}
     const contents: Message[] = [];
 
-    // Add conversation history
-    if (history && Array.isArray(history)) {
+    if (history && Array.isArray(history) && history.length > 0) {
       for (const msg of history) {
         contents.push({
           role: msg.role === 'assistant' ? 'model' : 'user',
           parts: [{ text: msg.content }],
         });
       }
-    }
-
-    // Add new user message
-    if (userMessage) {
+    } else {
+      // First call — user initiates
       contents.push({
         role: 'user',
-        parts: [{ text: userMessage }],
+        parts: [{ text: 'I am here for my interview. Please begin.' }],
       });
     }
 
-    // If this is the start (no history), add a prompt to begin the interview
-    if (contents.length === 0) {
-      contents.push({
-        role: 'user',
-        parts: [{ text: 'I am ready for my interview. Please begin.' }],
-      });
-    }
+    const questionsAnswered = questionIndex ?? 0;
+    const isLastQuestion = questionsAnswered >= 6;
 
-    console.log(`Interview AI called - question index: ${questionIndex}, history length: ${contents.length}`);
+    const contextNote = isLastQuestion
+      ? 'All 6 questions have been answered by the interviewee. You MUST now provide your DETERMINATION. Do not ask any more questions.'
+      : `The interviewee has answered ${questionsAnswered} of 6 questions so far. You should now ask question number ${questionsAnswered + 1}.`;
+
+    console.log(`Interview AI — questionsAnswered: ${questionsAnswered}, history msgs: ${contents.length}`);
 
     const response = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemma-3-27b-it:generateContent?key=${GEMINI_API_KEY}`,
@@ -108,7 +106,7 @@ Deno.serve(async (req: Request) => {
         body: JSON.stringify({
           contents,
           systemInstruction: {
-            parts: [{ text: SYSTEM_PROMPT + `\n\nThe interviewee has answered ${questionIndex} out of 6 questions so far. ${questionIndex >= 6 ? 'All questions have been asked. Provide your DETERMINATION now.' : `Ask question ${questionIndex + 1} next.`}` }],
+            parts: [{ text: SYSTEM_PROMPT + '\n\n' + contextNote }],
           },
           generationConfig: {
             temperature: 0.7,
@@ -132,9 +130,9 @@ Deno.serve(async (req: Request) => {
     const data = await response.json();
     const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
 
-    console.log('Gemini response:', text.substring(0, 200));
+    console.log('Gemini response:', text.substring(0, 300));
 
-    // Check if there's a determination
+    // Check for determination
     let determination = null;
     const detMatch = text.match(/###DETERMINATION###\s*([\s\S]*?)\s*###END###/);
     if (detMatch) {
@@ -145,15 +143,11 @@ Deno.serve(async (req: Request) => {
       }
     }
 
-    // Clean the response text (remove determination block from display text)
+    // Clean display text
     const displayText = text.replace(/###DETERMINATION###[\s\S]*?###END###/, '').trim();
 
     return new Response(
-      JSON.stringify({
-        message: displayText,
-        determination,
-        questionIndex: determination ? questionIndex : questionIndex + 1,
-      }),
+      JSON.stringify({ message: displayText, determination }),
       { headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' } }
     );
   } catch (err) {
