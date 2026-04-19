@@ -1,12 +1,11 @@
 import { useEffect, useRef, useCallback, useState } from 'react';
 
-// Map phase numbers to music file paths in /public/music/
-// Replace these with your actual MP3 files
+// Map phase numbers to music URLs
 const PHASE_MUSIC: Record<number, string> = {
-  1: '/music/phase1.mp3',
-  2: '/music/phase2.mp3',
-  3: '/music/phase3.mp3',
-  4: '/music/phase4.mp3',
+  1: 'https://grazia-prod.oss-ap-southeast-1.aliyuncs.com/resources/uid_100035289/4a9a.mp3',
+  2: 'https://grazia-prod.oss-ap-southeast-1.aliyuncs.com/resources/uid_100035289/58ce.mp3',
+  3: 'https://grazia-prod.oss-ap-southeast-1.aliyuncs.com/resources/uid_100035289/8756.mp3',
+  4: 'https://grazia-prod.oss-ap-southeast-1.aliyuncs.com/resources/uid_100035289/227c.mp3',
 };
 
 const CROSSFADE_MS = 2000;
