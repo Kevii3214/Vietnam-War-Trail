@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { Volume2, VolumeX, Mic, MicOff } from 'lucide-react';
 import {
   MUSIC_VOLUME_KEY,
@@ -15,8 +15,8 @@ function clamp(v: number) {
 
 /**
  * Shared options panel used by both TitleScreen and in-game OPTS modal.
- * Reads/writes all settings to localStorage and calls an optional onChange
- * so the caller can apply changes in real-time (e.g. adjust an Audio element).
+ * Reads/writes all settings to localStorage and calls onChange
+ * so the caller can apply changes in real-time.
  */
 export function OptionsPanel({ onChange }: { onChange?: (vals: OptionValues) => void }) {
   const [musicVolume, setMusicVolumeRaw] = useState(() => readOptions().musicVolume);
@@ -24,55 +24,39 @@ export function OptionsPanel({ onChange }: { onChange?: (vals: OptionValues) => 
   const [narrationEnabled, setNarrationEnabledRaw] = useState(() => readOptions().narrationEnabled);
   const [narrationVolume, setNarrationVolumeRaw] = useState(() => readOptions().narrationVolume);
 
-  // Notify parent whenever anything changes
-  const notify = useCallback(
-    (patch: Partial<OptionValues>) => {
-      onChange?.({
-        musicVolume,
-        musicMuted,
-        narrationEnabled,
-        narrationVolume,
-        ...patch,
-      });
-    },
-    [musicVolume, musicMuted, narrationEnabled, narrationVolume, onChange],
-  );
+  // Use a ref for the callback so we always call the latest version
+  const onChangeRef = useRef(onChange);
+  onChangeRef.current = onChange;
 
-  /* ---------- Music volume ---------- */
-  const handleMusicVolume = (v: number) => {
-    const clamped = clamp(v);
-    setMusicVolumeRaw(clamped);
-    localStorage.setItem(MUSIC_VOLUME_KEY, String(clamped));
-    notify({ musicVolume: clamped });
-  };
+  // Whenever ANY state changes, persist to localStorage and notify parent
+  useEffect(() => {
+    localStorage.setItem(MUSIC_VOLUME_KEY, String(musicVolume));
+    localStorage.setItem(MUSIC_MUTED_KEY, String(musicMuted));
+    localStorage.setItem(NARRATION_ENABLED_KEY, String(narrationEnabled));
+    localStorage.setItem(NARRATION_VOLUME_KEY, String(narrationVolume));
 
-  const handleMusicMute = () => {
-    setMusicMutedRaw(prev => {
-      const next = !prev;
-      localStorage.setItem(MUSIC_MUTED_KEY, String(next));
-      notify({ musicMuted: next });
-      return next;
-    });
-  };
+    onChangeRef.current?.({ musicVolume, musicMuted, narrationEnabled, narrationVolume });
+  }, [musicVolume, musicMuted, narrationEnabled, narrationVolume]);
+
+  /* ---------- Music ---------- */
+  const handleMusicVolume = useCallback((v: number) => {
+    setMusicVolumeRaw(clamp(v));
+  }, []);
+
+  const handleMusicMute = useCallback(() => {
+    setMusicMutedRaw(prev => !prev);
+  }, []);
 
   /* ---------- Narration ---------- */
-  const handleNarrationToggle = () => {
-    setNarrationEnabledRaw(prev => {
-      const next = !prev;
-      localStorage.setItem(NARRATION_ENABLED_KEY, String(next));
-      notify({ narrationEnabled: next });
-      return next;
-    });
-  };
+  const handleNarrationToggle = useCallback(() => {
+    setNarrationEnabledRaw(prev => !prev);
+  }, []);
 
-  const handleNarrationVolume = (v: number) => {
-    const clamped = clamp(v);
-    setNarrationVolumeRaw(clamped);
-    localStorage.setItem(NARRATION_VOLUME_KEY, String(clamped));
-    notify({ narrationVolume: clamped });
-  };
+  const handleNarrationVolume = useCallback((v: number) => {
+    setNarrationVolumeRaw(clamp(v));
+  }, []);
 
-  // If localStorage is mutated elsewhere (e.g. different tab) pick it up
+  // Sync if localStorage changes from another tab
   useEffect(() => {
     const onStorage = () => {
       const vals = readOptions();
