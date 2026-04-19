@@ -1,155 +1,277 @@
-import React from 'react';
+import { PixelPerson } from './PixelPeople';
+import type { CharacterPalette } from './characterPalettes';
+import { PROTAGONIST, FELLOW_PASSENGERS } from './characterPalettes';
 
-export const DiscriminationScene: React.FC = () => (
-  <div className="absolute inset-0 overflow-hidden">
-    <svg viewBox="0 0 500 280" className="w-full h-full" preserveAspectRatio="xMidYMid slice" style={{ imageRendering: 'pixelated' }}>
-      {/* Supermarket interior */}
-      <rect width="500" height="280" fill="#f0ead8" />
-      <rect x="0" y="0" width="500" height="25" fill="#e0d8c8" />
-      {/* Lights */}
-      {[100, 250, 400].map((x, i) => (
-        <rect key={i} x={x - 25} y="22" width="50" height="3" fill="#fff" opacity="0.8" />
-      ))}
+/**
+ * The hostile American — larger, red-faced, aggressive posture.
+ * Distinct palette (ruddy skin, red plaid shirt, jeans, sandy hair)
+ * so he reads unmistakably as a local antagonist, not a refugee.
+ */
+const ANGRY_AMERICAN: CharacterPalette = {
+  color: '#f0b090',
+  shirtColor: '#b83030',
+  pantsColor: '#2a3a5a',
+  hairColor: '#6a4a28',
+  accentColor: '#f8e4a0',
+};
 
-      {/* Shelves in background */}
-      <rect x="0" y="30" width="60" height="170" fill="#8B6914" />
-      {[0, 1, 2, 3, 4, 5].map((_, i) => (
-        <g key={i}>
-          <rect x="2" y={33 + i * 28} width="56" height="24" fill="#9B7924" />
-          {Array.from({ length: 7 }).map((_, j) => (
-            <rect key={j} x={4 + j * 8} y={35 + i * 28} width="6" height="20"
-              fill={['#cc3333', '#3366cc', '#33aa33', '#ffaa00', '#cc33aa', '#33cccc', '#ff6633'][j]} rx="1" />
+/**
+ * A couple of neutral passers-by — different palettes, so the
+ * bystanders don't read as part of the refugee cast.
+ */
+const BYSTANDERS: CharacterPalette[] = [
+  { color: '#f4d6b0', shirtColor: '#3a5a8a', pantsColor: '#2a2a3a', hairColor: '#8a6a3a', accentColor: '#d0d8e8' },
+  { color: '#e8c090', shirtColor: '#6a4a8a', pantsColor: '#2a2030', hairColor: '#1a0a08', accentColor: '#f8e8d8' },
+];
+
+/**
+ * Discrimination — outside a storefront, the player is cornered by
+ * a hostile local shouting slurs. Matches the Phase 3 visual grammar:
+ * PixelPerson chibis with canonical palettes, scene-prefixed
+ * keyframes, and the shared 500×280 viewBox.
+ */
+export function DiscriminationScene() {
+  return (
+    <div className="absolute inset-0 overflow-hidden bg-gradient-to-b from-[#e8d8b8] via-[#d8c4a0] to-[#a88860]">
+      <style>{`
+        @keyframes disc-chibi-idle {
+          0%, 100% { transform: translateY(0) rotate(-0.8deg); }
+          50%      { transform: translateY(-1px) rotate(0.8deg); }
+        }
+        @keyframes disc-chibi-scared {
+          0%, 100% { transform: translateX(0); }
+          25%      { transform: translateX(-0.9px) rotate(-1.4deg); }
+          75%      { transform: translateX(0.9px) rotate(1.4deg); }
+        }
+        @keyframes disc-chibi-angry {
+          0%, 100% { transform: translateX(-1px) rotate(-1.5deg); }
+          50%      { transform: translateX(1px) rotate(1.5deg); }
+        }
+        .chibi-sway-idle   { animation: disc-chibi-idle 2.6s ease-in-out infinite; transform-box: fill-box; transform-origin: center bottom; }
+        .chibi-sway-scared { animation: disc-chibi-scared 0.32s ease-in-out infinite; transform-box: fill-box; transform-origin: center bottom; }
+        .chibi-sway-fast   { animation: disc-chibi-angry 0.28s ease-in-out infinite; transform-box: fill-box; transform-origin: center bottom; }
+
+        @keyframes disc-anger-flash {
+          0%, 100% { opacity: 1;   transform: scale(1); }
+          50%      { opacity: 0.4; transform: scale(1.15); }
+        }
+        .disc-anger {
+          animation: disc-anger-flash 0.55s ease-in-out infinite;
+          transform-box: fill-box;
+          transform-origin: center center;
+        }
+
+        @keyframes disc-symbol {
+          0%, 100% { opacity: 1; }
+          50%      { opacity: 0; }
+        }
+        .disc-symbol { animation: disc-symbol 0.9s ease-in-out infinite; }
+
+        @keyframes disc-shout-drift {
+          0%   { opacity: 1; transform: translateY(0) scale(1); }
+          100% { opacity: 0; transform: translateY(-6px) scale(1.4); }
+        }
+        .disc-shout {
+          animation: disc-shout-drift 1.1s ease-out infinite;
+          transform-box: fill-box;
+          transform-origin: center bottom;
+        }
+
+        @keyframes disc-cloud-drift {
+          0%   { transform: translateX(0); }
+          100% { transform: translateX(-32px); }
+        }
+        .disc-cloud-drift { animation: disc-cloud-drift 30s linear infinite; }
+      `}</style>
+
+      <svg className="absolute inset-0 w-full h-full" viewBox="0 0 500 280"
+        preserveAspectRatio="xMidYMax slice" style={{ imageRendering: 'pixelated' }} shapeRendering="crispEdges">
+
+        {/* === Hazy sky over a suburban street === */}
+        <rect x="0" y="0" width="500" height="90" fill="#eadcb8" />
+        <rect x="0" y="0" width="500" height="38" fill="#f2e4c0" />
+        <g className="disc-cloud-drift">
+          {[
+            { cx: 60, cy: 26, rx: 30, ry: 5 },
+            { cx: 200, cy: 20, rx: 36, ry: 6 },
+            { cx: 330, cy: 30, rx: 28, ry: 5 },
+            { cx: 460, cy: 22, rx: 34, ry: 5 },
+            { cx: 560, cy: 28, rx: 30, ry: 5 },
+          ].map((c, i) => (
+            <ellipse key={i} cx={c.cx} cy={c.cy} rx={c.rx} ry={c.ry} fill="#fff4d8" opacity="0.75" />
           ))}
         </g>
-      ))}
 
-      <rect x="440" y="30" width="60" height="170" fill="#8B6914" />
-      {[0, 1, 2, 3, 4, 5].map((_, i) => (
-        <g key={i}>
-          <rect x="442" y={33 + i * 28} width="56" height="24" fill="#9B7924" />
-          {Array.from({ length: 7 }).map((_, j) => (
-            <rect key={j} x={444 + j * 8} y={35 + i * 28} width="6" height="20"
-              fill={['#aa8833', '#3388aa', '#aa3388', '#88aa33', '#8833aa', '#33aa88', '#aa3333'][j]} rx="1" />
-          ))}
-        </g>
-      ))}
-
-      {/* Floor */}
-      <rect x="0" y="220" width="500" height="60" fill="#d5ccb8" />
-      {Array.from({ length: 17 }).map((_, i) => (
-        <rect key={i} x={i * 30} y="220" width="1" height="60" fill="#c8c0ac" />
-      ))}
-
-      {/* You - standing small, holding groceries, looking down */}
-      <g className="victim-you">
-        <circle cx="280" cy="172" r="6" fill="#d4a574" />
-        {/* Downcast eyes */}
-        <rect x="277" y="173" width="2" height="1" fill="#333" />
-        <rect x="282" y="173" width="2" height="1" fill="#333" />
-        <rect x="275" y="178" width="10" height="14" fill="#4a7a5a" rx="1" />
-        {/* Grocery bag held */}
-        <rect x="268" y="182" width="8" height="10" fill="#8B6914" />
-        <rect x="269" y="180" width="6" height="3" fill="#8B6914" />
-        <rect x="273" y="192" width="5" height="7" fill="#2a2a3a" />
-        <rect x="282" y="192" width="5" height="7" fill="#2a2a3a" />
-      </g>
-
-      {/* Angry person - red faced, leaning forward, mouth open */}
-      <g className="angry-person">
-        {/* Body - large, imposing */}
-        <circle cx="180" cy="158" r="9" fill="#f0c8a8" />
-        {/* Angry eyebrows */}
-        <line x1="174" y1="155" x2="178" y2="157" stroke="#333" strokeWidth="1.5" />
-        <line x1="186" y1="155" x2="182" y2="157" stroke="#333" strokeWidth="1.5" />
-        {/* Angry eyes */}
-        <rect x="176" y="158" width="3" height="2" fill="#333" />
-        <rect x="182" y="158" width="3" height="2" fill="#333" />
-        {/* Open yelling mouth */}
-        <ellipse cx="180" cy="164" rx="4" ry="3" fill="#8B0000" />
-        <rect x="177" y="162" width="6" height="2" fill="#fff" />
-        {/* Red angry face tint */}
-        <circle cx="173" cy="161" r="3" fill="#ff4444" opacity="0.3" />
-        <circle cx="187" cy="161" r="3" fill="#ff4444" opacity="0.3" />
-
-        {/* Body */}
-        <rect x="170" y="167" width="20" height="22" fill="#cc4444" rx="1" />
-        {/* Pointing arm */}
-        <rect x="188" y="170" width="20" height="4" fill="#f0c8a8" />
-        <rect x="206" y="169" width="4" height="5" fill="#f0c8a8" />
-        {/* Other arm */}
-        <rect x="162" y="172" width="10" height="4" fill="#f0c8a8" />
-        {/* Legs */}
-        <rect x="173" y="189" width="7" height="10" fill="#3366aa" />
-        <rect x="183" y="189" width="7" height="10" fill="#3366aa" />
-        {/* Hair */}
-        <rect x="172" y="148" width="16" height="5" fill="#886633" />
-      </g>
-
-      {/* Yelling lines / anger marks */}
-      <g className="anger-marks">
-        {/* Speech burst lines */}
-        {[0, 1, 2, 3, 4].map((_, i) => {
-          const angle = -0.4 + i * 0.2;
-          const x1 = 195 + Math.cos(angle) * 15;
-          const y1 = 160 + Math.sin(angle) * 15;
-          const x2 = 195 + Math.cos(angle) * 25;
-          const y2 = 160 + Math.sin(angle) * 25;
-          return <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} stroke="#cc3333" strokeWidth="2" strokeLinecap="round" />;
+        {/* === Storefront facade — brick + awning === */}
+        {/* Brick wall */}
+        <rect x="0" y="50" width="500" height="100" fill="#a04828" />
+        <rect x="0" y="50" width="500" height="2" fill="#702810" />
+        {/* Brick courses */}
+        {Array.from({ length: 14 }).map((_, r) => {
+          const y = 52 + r * 7;
+          const offset = r % 2 === 0 ? 0 : 12;
+          return (
+            <g key={`brick-${r}`}>
+              {Array.from({ length: 22 }).map((_, c) => (
+                <rect key={`b-${r}-${c}`} x={offset + c * 24} y={y} width="23" height="6"
+                  fill="#b85838" />
+              ))}
+              <rect x="0" y={y + 6} width="500" height="1" fill="#781a08" opacity="0.5" />
+            </g>
+          );
         })}
-      </g>
 
-      {/* Anger symbol above head */}
-      <g className="anger-symbol">
-        <path d="M170,142 L175,147 L170,147 L175,142" fill="none" stroke="#cc0000" strokeWidth="2" />
-      </g>
+        {/* Striped awning over the shop */}
+        <g>
+          <rect x="150" y="92" width="220" height="4" fill="#6a3818" />
+          {Array.from({ length: 11 }).map((_, i) => (
+            <rect key={`stripe-${i}`} x={150 + i * 20} y="96"
+              width="20" height="14"
+              fill={i % 2 === 0 ? '#b83030' : '#f0e4c8'} />
+          ))}
+          <rect x="150" y="110" width="220" height="2" fill="#4a1a08" />
+          {/* Scalloped hem */}
+          {Array.from({ length: 22 }).map((_, i) => (
+            <polygon key={`hem-${i}`}
+              points={`${150 + i * 10},112 ${155 + i * 10},118 ${160 + i * 10},112`}
+              fill={i % 2 === 0 ? '#b83030' : '#f0e4c8'} />
+          ))}
+        </g>
 
-      {/* Bystanders watching uncomfortably */}
-      <g opacity="0.5">
-        {/* Person 1 looking away */}
-        <circle cx="380" cy="170" r="5" fill="#c49a6c" />
-        <rect x="376" y="175" width="8" height="12" fill="#6666aa" rx="1" />
-        {/* Person 2 */}
-        <circle cx="110" cy="175" r="5" fill="#e8c8a8" />
-        <rect x="106" y="180" width="8" height="12" fill="#aa6644" rx="1" />
-        {/* Person 3 with child */}
-        <circle cx="400" cy="180" r="4" fill="#b88a5a" />
-        <rect x="397" y="184" width="6" height="10" fill="#5a8855" rx="1" />
-      </g>
+        {/* Shop window with painted sign */}
+        <g>
+          <rect x="180" y="120" width="160" height="74" fill="#1a1e2a" />
+          <rect x="180" y="120" width="160" height="3" fill="#4a3818" />
+          <rect x="180" y="191" width="160" height="3" fill="#4a3818" />
+          <rect x="180" y="120" width="3" height="74" fill="#4a3818" />
+          <rect x="337" y="120" width="3" height="74" fill="#4a3818" />
+          {/* Painted "OPEN" sign */}
+          <rect x="198" y="130" width="50" height="16" fill="#2a2a32" />
+          <rect x="198" y="130" width="50" height="2" fill="#d8a028" />
+          <text x="223" y="142" textAnchor="middle" fontFamily="ui-monospace, Menlo, monospace"
+            fontWeight="700" fontSize="8" fill="#fff4c8">OPEN</text>
+          {/* Faint window reflections */}
+          <polygon points="190,128 220,128 198,175 186,175" fill="#ffffff" opacity="0.06" />
+          <polygon points="310,128 330,128 320,165 300,165" fill="#ffffff" opacity="0.05" />
+          {/* Hanging sale poster */}
+          <rect x="275" y="128" width="52" height="28" fill="#f4ecd0" />
+          <rect x="275" y="128" width="52" height="4" fill="#b83030" />
+          <text x="301" y="141" textAnchor="middle" fontFamily="ui-monospace, Menlo, monospace"
+            fontWeight="700" fontSize="6" fill="#2a1a04">TODAY</text>
+          <text x="301" y="150" textAnchor="middle" fontFamily="ui-monospace, Menlo, monospace"
+            fontWeight="700" fontSize="6" fill="#b83030">ONLY</text>
+        </g>
 
-      {/* Dropped items on floor for tension */}
-      <rect x="260" y="210" width="8" height="5" fill="#cc3333" rx="1" style={{ transform: 'rotate(15deg)' }} />
-      <circle cx="275" cy="213" r="4" fill="#ff9933" opacity="0.7" />
-    </svg>
+        {/* Shop door to the right of the window */}
+        <g>
+          <rect x="352" y="120" width="36" height="90" fill="#4a2818" />
+          <rect x="352" y="120" width="36" height="3" fill="#2a1408" />
+          <rect x="356" y="126" width="28" height="30" fill="#1a1e2a" />
+          <rect x="356" y="126" width="28" height="2" fill="#2a1408" />
+          <rect x="384" y="165" width="2" height="3" fill="#d8a028" />
+        </g>
 
-    <style>{`
-      .angry-person {
-        animation: angry-shake 0.3s ease-in-out infinite alternate;
-      }
-      @keyframes angry-shake {
-        0% { transform: translateX(-1px); }
-        100% { transform: translateX(1px); }
-      }
-      .victim-you {
-        animation: victim-cower 2s ease-in-out infinite;
-      }
-      @keyframes victim-cower {
-        0%, 100% { transform: translateX(0) translateY(0); }
-        50% { transform: translateX(2px) translateY(1px); }
-      }
-      .anger-marks {
-        animation: marks-flash 0.6s ease-in-out infinite;
-      }
-      @keyframes marks-flash {
-        0%, 100% { opacity: 1; transform: scale(1); }
-        50% { opacity: 0.4; transform: scale(1.1); }
-      }
-      .anger-symbol {
-        animation: symbol-pulse 0.8s ease-in-out infinite;
-      }
-      @keyframes symbol-pulse {
-        0%, 100% { opacity: 1; }
-        50% { opacity: 0; }
-      }
-    `}</style>
-  </div>
-);
+        {/* === Sidewalk === */}
+        <rect x="0" y="210" width="500" height="70" fill="#c8b896" />
+        <rect x="0" y="210" width="500" height="2" fill="#8a7c58" />
+        {/* Sidewalk panel cracks */}
+        {[130, 260, 390].map((x) => (
+          <rect key={`crack-${x}`} x={x} y="212" width="1.5" height="68" fill="#a89868" opacity="0.8" />
+        ))}
+        {/* Curb */}
+        <rect x="0" y="262" width="500" height="4" fill="#6a5838" />
+        <rect x="0" y="266" width="500" height="14" fill="#2a2428" />
+        {/* Dropped grocery bag near the protagonist's feet — a spilled apple */}
+        <g>
+          <rect x="268" y="214" width="12" height="10" fill="#8a6a3a" />
+          <rect x="268" y="214" width="12" height="2" fill="#6a4a28" />
+          <rect x="269" y="212" width="3" height="3" fill="#6a4a28" />
+          <rect x="276" y="212" width="3" height="3" fill="#6a4a28" />
+          <circle cx="256" cy="222" r="3" fill="#c83030" />
+          <rect x="255.3" y="218.5" width="1.2" height="1.5" fill="#3a6828" />
+        </g>
+
+        {/* === Distant bystanders — half-opacity, looking away === */}
+        <g opacity="0.5">
+          <g transform="translate(60, 190)">
+            <PixelPerson x={0} y={0} scale={0.8} variant="civilian" {...BYSTANDERS[0]}
+              mood="sad" sway="idle" swayDelay={0.4} mirror />
+          </g>
+          <g transform="translate(432, 192)">
+            <PixelPerson x={0} y={0} scale={0.8} variant="civilian" {...BYSTANDERS[1]}
+              mood="sad" sway="idle" swayDelay={0.7} />
+          </g>
+          <g transform="translate(90, 196)">
+            <PixelPerson x={0} y={0} scale={0.7} variant="civilian" {...FELLOW_PASSENGERS[2]}
+              mood="scared" sway="idle" swayDelay={0.9} />
+          </g>
+        </g>
+
+        {/* === YOU — cowering, head slightly down === */}
+        <g transform="translate(288, 184)">
+          <PixelPerson x={0} y={0} scale={1.05} variant="civilian" {...PROTAGONIST}
+            mood="scared" sway="scared" swayDelay={0.1} />
+          {/* You're clutching a small paper bag to your chest */}
+          <rect x={-2} y={13} width={8}   height={8}   fill="#c4a068" />
+          <rect x={-2} y={13} width={8}   height={1}   fill="#8a6a38" />
+          <rect x={-1} y={11} width={2.5} height={2}   fill="#8a6a38" />
+          <rect x={2.5} y={11} width={2.5} height={2}   fill="#8a6a38" />
+        </g>
+
+        {/* === THE AGGRESSOR — bigger, angrier, leaning in === */}
+        <g transform="translate(150, 178)">
+          <PixelPerson x={0} y={0} scale={1.25} variant="civilian" {...ANGRY_AMERICAN}
+            mood="angry" sway="fast" swayDelay={0.05} />
+          {/* Red anger flush on the cheeks */}
+          <rect x={2.5}  y={10} width={2.5} height={1.5} fill="#c83030" opacity="0.55" />
+          <rect x={17.5} y={10} width={2.5} height={1.5} fill="#c83030" opacity="0.55" />
+          {/* Pointing arm jabbing toward the protagonist */}
+          <rect x={22} y={16} width={11} height={3.2} fill={ANGRY_AMERICAN.color} />
+          <rect x={32} y={15.2} width={3.2} height={4.5} fill={ANGRY_AMERICAN.color} />
+        </g>
+
+        {/* === Anger burst lines radiating out from the yeller === */}
+        <g className="disc-anger">
+          {[0, 1, 2, 3, 4, 5].map((i) => {
+            const angle = -0.55 + i * 0.22;
+            const cx = 198, cy = 192;
+            const r0 = 18, r1 = 30;
+            const x1 = cx + Math.cos(angle) * r0;
+            const y1 = cy + Math.sin(angle) * r0;
+            const x2 = cx + Math.cos(angle) * r1;
+            const y2 = cy + Math.sin(angle) * r1;
+            return (
+              <line key={i} x1={x1} y1={y1} x2={x2} y2={y2}
+                stroke="#c83030" strokeWidth="2.2" strokeLinecap="round" />
+            );
+          })}
+        </g>
+
+        {/* Anger symbol floating above the yeller's head */}
+        <g className="disc-symbol">
+          <rect x="172" y="152" width="3" height="3" fill="#c83030" />
+          <rect x="178" y="148" width="3" height="3" fill="#c83030" />
+          <rect x="184" y="152" width="3" height="3" fill="#c83030" />
+          <rect x="178" y="156" width="3" height="3" fill="#c83030" />
+        </g>
+
+        {/* Shouted speech blobs near the yeller's mouth */}
+        <g className="disc-shout">
+          <ellipse cx="210" cy="190" rx="6" ry="3" fill="#fff4d8" opacity="0.9" />
+          <rect x="207" y="188.5" width="6" height="1" fill="#2a1a04" />
+          <rect x="207" y="191"    width="4" height="1" fill="#2a1a04" />
+        </g>
+        <g className="disc-shout" style={{ animationDelay: '0.35s' }}>
+          <ellipse cx="224" cy="195" rx="5" ry="2.5" fill="#fff4d8" opacity="0.85" />
+          <rect x="221" y="194" width="6" height="1" fill="#2a1a04" />
+        </g>
+
+        {/* Sweat drop beside your head to sell the fear */}
+        <g>
+          <ellipse cx="302" cy="188" rx="1.6" ry="2.4" fill="#6ecff0" opacity="0.9" />
+          <rect x="301.5" y="185" width="1" height="1.3" fill="#aae0f8" />
+        </g>
+      </svg>
+    </div>
+  );
+}
