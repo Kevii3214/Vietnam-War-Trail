@@ -4,12 +4,14 @@ import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { LogOut, History, Settings, Play, Plus } from 'lucide-react';
+import { useMenuMusic } from '@/hooks/useMenuMusic';
 
 export default function TitleScreen() {
   const navigate = useNavigate();
   const { user, profile, loading, signOut, isAdmin } = useAuth();
   const [hasSave, setHasSave] = useState(false);
   const [checkingSave, setCheckingSave] = useState(true);
+  useMenuMusic();
 
   useEffect(() => {
     const checkSave = async () => {

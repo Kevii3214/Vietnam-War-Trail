@@ -3,10 +3,12 @@ import { AuthForm } from '@/components/auth/AuthForm';
 import { useAuth } from '@/hooks/useAuth';
 import { useEffect } from 'react';
 import { CinematicBackground } from '@/components/auth/CinematicBackground';
+import { useMenuMusic } from '@/hooks/useMenuMusic';
 
 export default function AuthPage() {
   const navigate = useNavigate();
   const { user, loading } = useAuth();
+  useMenuMusic();
 
   useEffect(() => {
     if (!loading && user) {
