@@ -31,6 +31,8 @@ Deno.serve(async (req) => {
 
     const voice = voiceId || ELEVENLABS_VOICE_ID;
 
+    console.log('TTS request: voice=' + voice + ' text=' + text.substring(0, 50) + '...');
+
     const response = await fetch(
       `https://api.elevenlabs.io/v1/text-to-speech/${voice}`,
       {
@@ -42,12 +44,10 @@ Deno.serve(async (req) => {
         },
         body: JSON.stringify({
           text,
-          model_id: 'eleven_multilingual_v2',
+          model_id: 'eleven_monolingual_v1',
           voice_settings: {
             stability: 0.5,
             similarity_boost: 0.75,
-            style: 0.3,
-            use_speaker_boost: true,
           },
         }),
       }
@@ -63,6 +63,7 @@ Deno.serve(async (req) => {
     }
 
     const audioBuffer = await response.arrayBuffer();
+    console.log('TTS success: ' + audioBuffer.byteLength + ' bytes');
     return new Response(audioBuffer, {
       status: 200,
       headers: {
