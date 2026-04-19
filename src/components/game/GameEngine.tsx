@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { ChevronRight } from 'lucide-react';
 import { StatsBar } from './StatsBar';
 import { PhaseIntro } from './PhaseIntro';
@@ -73,6 +73,8 @@ const PHASE_MESSAGES: Record<number, string[]> = {
 
 function Typewriter({ text, onComplete }: { text: string; onComplete?: () => void }) {
   const [displayed, setDisplayed] = useState('');
+  const onCompleteRef = useRef(onComplete);
+  onCompleteRef.current = onComplete;
   useEffect(() => {
     setDisplayed('');
     let i = 0;
@@ -82,11 +84,11 @@ function Typewriter({ text, onComplete }: { text: string; onComplete?: () => voi
         i++;
       } else {
         clearInterval(interval);
-        onComplete?.();
+        onCompleteRef.current?.();
       }
     }, 25);
     return () => clearInterval(interval);
-  }, [text, onComplete]);
+  }, [text]);
   return <span>{displayed}</span>;
 }
 
