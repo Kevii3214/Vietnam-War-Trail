@@ -23,6 +23,9 @@ import { InterviewDayScene } from './scenes/InterviewDayScene';
 import { LanguageClassScene } from './scenes/LanguageClassScene';
 import { TheLetterScene } from './scenes/TheLetterScene';
 import { WaitingScene } from './scenes/WaitingScene';
+import { FirstDayWorkScene } from './scenes/FirstDayWorkScene';
+import { FamiliarFaceScene } from './scenes/FamiliarFaceScene';
+import { DiscriminationScene } from './scenes/DiscriminationScene';
 import { EVENT_SCENE_MAP } from './scenes/eventSceneMap';
 import { useGameState } from '@/hooks/useGameState';
 import { useGameEvents, type EventChoice, type EventOutcome, pickRandomOutcome } from '@/hooks/useGameEvents';
@@ -304,6 +307,9 @@ export function GameEngine({ userId, onMainMenu, loadExistingSave }: GameEngineP
       case 'language-classes': return <LanguageClassScene />;
       case 'the-letter': return <TheLetterScene />;
       case 'waiting': return <WaitingScene />;
+      case 'first-day-work': return <FirstDayWorkScene />;
+      case 'familiar-face': return <FamiliarFaceScene />;
+      case 'discrimination': return <DiscriminationScene />;
       default: return null;
     }
   };
