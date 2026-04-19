@@ -130,39 +130,29 @@ export function GameMenuBar({ onSaveAndExit, volume = 0.3, muted = false, onVolu
               <div className="flex items-center justify-between">
                 <span className="font-pixel text-[9px] text-foreground/60 tracking-wide">MUSIC</span>
                 <button
-                  onClick={() => onToggleMute?.()}
+                  type="button"
+                  onPointerDown={(e) => {
+                    e.stopPropagation();
+                    onToggleMute?.();
+                  }}
                   className="flex items-center gap-1.5 px-2 py-1 rounded font-pixel text-[8px] text-primary/60 hover:text-primary hover:bg-primary/8 transition-all cursor-pointer"
                 >
                   {muted ? <VolumeX className="w-3 h-3" /> : <Volume2 className="w-3 h-3" />}
                   {muted ? 'MUTED' : 'ON'}
                 </button>
               </div>
-              <div className="relative h-6 flex items-center">
-                {/* Visual track */}
-                <div className="absolute left-0 right-0 h-2 rounded-full border border-primary/20 overflow-hidden pointer-events-none" style={{ background: 'hsl(var(--primary)/0.05)' }}>
-                  <div
-                    className="h-full rounded-full transition-all duration-150"
-                    style={{
-                      width: `${(muted ? 0 : volume) * 100}%`,
-                      background: 'linear-gradient(90deg, hsl(var(--primary)/0.4), hsl(var(--primary)))',
-                      boxShadow: '0 0 6px hsl(var(--primary)/0.4)',
-                    }}
-                  />
-                </div>
-                {/* Actual range input on top */}
-                <input
-                  type="range"
-                  min={0}
-                  max={100}
-                  value={muted ? 0 : Math.round(volume * 100)}
-                  onChange={e => {
-                    const val = Number(e.target.value) / 100;
-                    onVolumeChange?.(val);
-                  }}
-                  className="relative z-10 w-full h-6 opacity-0 cursor-pointer"
-                  style={{ margin: 0 }}
-                />
-              </div>
+              <input
+                type="range"
+                min={0}
+                max={100}
+                value={muted ? 0 : Math.round(volume * 100)}
+                onChange={e => {
+                  const val = Number(e.target.value) / 100;
+                  onVolumeChange?.(val);
+                }}
+                className="volume-slider w-full h-2 cursor-pointer"
+                style={{ accentColor: 'hsl(var(--primary))' }}
+              />
               <div className="text-right font-pixel text-[7px] text-muted-foreground/30">
                 {muted ? '0' : Math.round(volume * 100)}%
               </div>
