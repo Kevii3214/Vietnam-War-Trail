@@ -641,16 +641,26 @@ const SCENES_TEMPLATE = [
   },
   {
     label: 'THE SHORE',
-    badge: '__COUNTRY__ COASTLINE · PRE-DAWN',
+    badge: '__COUNTRY__',
     text: 'The sand comes up under your hands before you expected it. You stand. You walk the last few meters. You turn around and count the people behind you. You count again. Your family is all accounted for. However, standing in front of you were two men. They pulled you along to follow them.',
     Component: Scene3,
   },
 ];
 
 export function RefugeeCampCinematic({ onComplete, landingCountry }: CinematicProps) {
+  const countryBadge: Record<string, string> = {
+    'Malaysia': 'MALAYSIAN COAST · PRE-DAWN',
+    'Philippines': 'PHILIPPINE SHORE · PRE-DAWN',
+    'Indonesia': 'INDONESIAN COAST · PRE-DAWN',
+    'Thailand': 'THAI COAST · PRE-DAWN',
+    'Hong Kong': 'HONG KONG HARBOUR · PRE-DAWN',
+  };
+
   const scenes = SCENES_TEMPLATE.map(s => ({
     ...s,
-    badge: s.badge.replace('__COUNTRY__', landingCountry.toUpperCase()),
+    badge: s.badge === '__COUNTRY__'
+      ? (countryBadge[landingCountry] || `${landingCountry.toUpperCase()} · PRE-DAWN`)
+      : s.badge,
   }));
   const [sceneIndex, setSceneIndex] = useState(0);
   const [, setTextDone] = useState(false);
