@@ -7,6 +7,7 @@ import { GameHUD } from './GameHUD';
 import { GameMenuBar } from './GameMenuBar';
 import { EscapingVietnamCinematic } from './scenes/EscapingVietnamCinematic';
 import { TravelingByBoatCinematic } from './scenes/TravelingByBoatCinematic';
+import { RefugeeCampCinematic } from './scenes/RefugeeCampCinematic';
 import { CityFallsScene } from './scenes/CityFallsScene';
 import { ReeducationCampScene } from './scenes/ReeducationCampScene';
 import { AcquiringBoatScene } from './scenes/AcquiringBoatScene';
@@ -142,8 +143,8 @@ export function GameEngine({ userId, onMainMenu, loadExistingSave }: GameEngineP
       const newPhase = gameState.currentPhaseOrder;
       setLastPhase(newPhase);
       // Show cinematic for phases that have one, otherwise show phase intro
-      if (newPhase === 2) {
-        setShowCinematic(2);
+      if (newPhase === 2 || newPhase === 3) {
+        setShowCinematic(newPhase);
       } else {
         triggerPhaseIntro();
       }
@@ -253,6 +254,10 @@ export function GameEngine({ userId, onMainMenu, loadExistingSave }: GameEngineP
 
   if (showCinematic === 2) {
     return <TravelingByBoatCinematic onComplete={() => setShowCinematic(false)} />;
+  }
+
+  if (showCinematic === 3) {
+    return <RefugeeCampCinematic onComplete={() => setShowCinematic(false)} />;
   }
 
   if (gameState.isGameOver) {
