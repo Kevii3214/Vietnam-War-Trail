@@ -221,6 +221,9 @@ export function useGameState() {
       currentPhaseOrder: phaseOrder,
       dayInPhase: 1,
       eventsSeen: [],
+      landingCountry: phaseOrder === 3 && !prev.landingCountry
+        ? LANDING_COUNTRIES[Math.floor(Math.random() * LANDING_COUNTRIES.length)]
+        : prev.landingCountry,
     }));
   }, []);
 
