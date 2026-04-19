@@ -1892,18 +1892,6 @@ const SCENES: SceneEntry[] = [
     text: 'A draft notice for the bloody Cambodian front sits on the table next to a relocation order for a "New Economic Zone," leaving you with no future and nothing left to lose.',
     Component: Scene4,
   },
-  {
-    label: 'THE GOLD LEAF',
-    badge: 'A HIDDEN ROOM · NIGHT',
-    text: 'In the flickering light of a kerosene lamp, your mother sews a thin, leaf-like sheet of gold into the lining of your jacket — the secret price of a passage to the unknown.',
-    Component: Scene5,
-  },
-  {
-    label: 'THE VANISHING SHORE',
-    badge: 'SOUTH CHINA SEA',
-    text: 'The mechanical thrum of a failing engine drowns out the waves as the coastline of Vietnam becomes a jagged black line that finally disappears into the dark of the sea.',
-    Component: Scene6,
-  },
 ];
 
 export function EscapingVietnamCinematic({ onComplete, onNarrate }: CinematicProps) {
