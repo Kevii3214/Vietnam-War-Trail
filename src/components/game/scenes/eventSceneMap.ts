@@ -22,4 +22,9 @@ export const EVENT_SCENE_MAP: Record<string, string> = {
   'Language Classes': 'language-classes',
   'The Letter': 'the-letter',
   'Waiting': 'waiting',
+
+  // Phase 4 events
+  'First Day of Work': 'first-day-work',
+  'A Familiar Face': 'familiar-face',
+  'Discrimination': 'discrimination',
 };

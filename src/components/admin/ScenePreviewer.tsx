@@ -19,6 +19,7 @@ import { WaitingScene } from '@/components/game/scenes/WaitingScene';
 import { EscapingVietnamCinematic } from '@/components/game/scenes/EscapingVietnamCinematic';
 import { TravelingByBoatCinematic } from '@/components/game/scenes/TravelingByBoatCinematic';
 import { RefugeeCampCinematic } from '@/components/game/scenes/RefugeeCampCinematic';
+import { MakingItToAmericaCinematic } from '@/components/game/scenes/MakingItToAmericaCinematic';
 
 type SceneEntry = {
   key: string;
@@ -57,9 +58,12 @@ const SCENES: SceneEntry[] = [
   { key: 'language-classes', label: 'Language Classes', phase: 'Phase 3', type: 'event', render: () => <LanguageClassScene /> },
   { key: 'the-letter', label: 'The Letter', phase: 'Phase 3', type: 'event', render: () => <TheLetterScene /> },
   { key: 'waiting', label: 'Waiting', phase: 'Phase 3', type: 'event', render: () => <WaitingScene /> },
+
+  // Phase 4 cinematics
+  { key: 'cin-america', label: 'Making it to America', phase: 'Phase 4', type: 'cinematic', render: (onComplete) => <MakingItToAmericaCinematic onComplete={onComplete || (() => {})} /> },
 ];
 
-const PHASES = ['Phase 1', 'Phase 2', 'Phase 3'];
+const PHASES = ['Phase 1', 'Phase 2', 'Phase 3', 'Phase 4'];
 
 export function ScenePreviewer() {
   const [activeScene, setActiveScene] = useState<string | null>(null);
