@@ -441,13 +441,27 @@ export function GameEngine({ userId, onMainMenu, loadExistingSave }: GameEngineP
       );
     }
 
-    // Event result
+    // Event result — show choice made, result text, stat deltas
     if (dayState === 'event_result' && resolvedOutcome) {
       return (
         <div className="animate-fade-in-up">
+          {/* Show which choice was picked */}
+          {selectedChoice && (
+            <div className="flex items-center gap-2 mb-2">
+              <span className="font-pixel text-[10px] text-primary crt-glow">{currentEvent?.title}</span>
+              <div className="flex-1 border-t-2 border-primary/20" />
+            </div>
+          )}
+          {selectedChoice && (
+            <p className="font-retro text-xs text-muted-foreground italic mb-2">
+              &gt; {selectedChoice.text}
+            </p>
+          )}
+          {/* Result text with typewriter */}
           <p className="font-retro text-base md:text-lg text-foreground leading-relaxed mb-2">
             <Typewriter key={resolvedOutcome.result_text} text={resolvedOutcome.result_text} onComplete={() => setTypingDone(true)} />
           </p>
+          {/* Stat changes + continue button appear after typewriter finishes */}
           {typingDone && (
             <div className="animate-fade-in-up">
               <div className="flex flex-wrap gap-3 mb-2 font-pixel text-[9px]">
