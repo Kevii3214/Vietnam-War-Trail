@@ -71,12 +71,11 @@ export function useBackgroundMusic(currentPhase: number, isPlaying: boolean) {
       const progress = step / steps;
 
       // Fade in new
-      newAudio.volume = Math.min(targetVol * progress, 1);
+      newAudio.volume = Math.max(0, Math.min(1, targetVol * progress));
 
       // Fade out old
       if (fadingAudioRef.current) {
-        const oldVol = targetVol * (1 - progress);
-        fadingAudioRef.current.volume = Math.max(oldVol, 0);
+        fadingAudioRef.current.volume = Math.max(0, Math.min(1, targetVol * (1 - progress)));
       }
 
       if (step >= steps) {

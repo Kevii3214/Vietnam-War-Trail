@@ -4,12 +4,16 @@ import { supabase } from '@/integrations/supabase/client';
 const NARRATION_ENABLED_KEY = 'saigone-narration-enabled';
 const NARRATION_VOLUME_KEY = 'saigone-narration-volume';
 
+// Match the URL from client.ts — edge functions are at /functions/v1/
+const SUPABASE_URL = 'https://spb-t4n35y82y7lcggk6.supabase.opentrust.net';
+
 export function useNarration() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const abortRef = useRef<AbortController | null>(null);
+  const currentRequestRef = useRef(0);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [narrationEnabled, setNarrationEnabled] = useState(() => {
-    return localStorage.getItem(NARRATION_ENABLED_KEY) !== 'false';
+    // Default OFF to save credits
+    return localStorage.getItem(NARRATION_ENABLED_KEY) === 'true';
   });
   const [narrationVolume, setNarrationVolumeState] = useState(() => {
     const saved = localStorage.getItem(NARRATION_VOLUME_KEY);
@@ -27,15 +31,13 @@ export function useNarration() {
     narrationVolumeRef.current = narrationVolume;
     localStorage.setItem(NARRATION_VOLUME_KEY, String(narrationVolume));
     if (audioRef.current) {
-      audioRef.current.volume = narrationVolume;
+      audioRef.current.volume = Math.max(0, Math.min(1, narrationVolume));
     }
   }, [narrationVolume]);
 
   const stop = useCallback(() => {
-    if (abortRef.current) {
-      abortRef.current.abort();
-      abortRef.current = null;
-    }
+    // Increment request id to invalidate in-flight requests
+    currentRequestRef.current++;
     if (audioRef.current) {
       audioRef.current.pause();
       audioRef.current.src = '';
@@ -45,45 +47,45 @@ export function useNarration() {
   }, []);
 
   const speak = useCallback(async (text: string) => {
-    // Stop any currently playing narration
     stop();
-
     if (!text.trim()) return;
 
-    const controller = new AbortController();
-    abortRef.current = controller;
+    const requestId = ++currentRequestRef.current;
 
     try {
       setIsSpeaking(true);
 
-      const { data, error } = await supabase.functions.invoke('text-to-speech', {
-        body: { text },
+      // Get auth token
+      const { data: { session } } = await supabase.auth.getSession();
+      const token = session?.access_token || '';
+
+      // Fetch audio as blob directly (supabase.functions.invoke can't handle binary)
+      const res = await fetch(`${SUPABASE_URL}/functions/v1/text-to-speech`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+          'apikey': token,
+        },
+        body: JSON.stringify({ text }),
       });
 
-      // Check if aborted during fetch
-      if (controller.signal.aborted) return;
+      // Check if this request was superseded
+      if (currentRequestRef.current !== requestId) return;
 
-      if (error) {
-        console.error('Narration error:', error);
+      if (!res.ok) {
+        const errText = await res.text();
+        console.error('Narration error:', res.status, errText);
         setIsSpeaking(false);
         return;
       }
 
-      // data comes back as a Blob from the edge function
-      let blob: Blob;
-      if (data instanceof Blob) {
-        blob = data;
-      } else if (data instanceof ArrayBuffer) {
-        blob = new Blob([data], { type: 'audio/mpeg' });
-      } else {
-        console.error('Unexpected response type from TTS');
-        setIsSpeaking(false);
-        return;
-      }
+      const blob = await res.blob();
+      if (currentRequestRef.current !== requestId) return;
 
       const url = URL.createObjectURL(blob);
       const audio = new Audio(url);
-      audio.volume = narrationVolumeRef.current;
+      audio.volume = Math.max(0, Math.min(1, narrationVolumeRef.current));
       audioRef.current = audio;
 
       audio.onended = () => {
@@ -100,10 +102,10 @@ export function useNarration() {
 
       await audio.play();
     } catch (err) {
-      if (!(err instanceof DOMException && err.name === 'AbortError')) {
+      if (currentRequestRef.current === requestId) {
         console.error('Narration error:', err);
+        setIsSpeaking(false);
       }
-      setIsSpeaking(false);
     }
   }, [stop]);
 
@@ -119,7 +121,6 @@ export function useNarration() {
     });
   }, [stop]);
 
-  // Cleanup on unmount
   useEffect(() => {
     return () => stop();
   }, [stop]);
