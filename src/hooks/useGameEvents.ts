@@ -81,6 +81,9 @@ export function pickRandomOutcome(outcomes: EventOutcome[]): EventOutcome | null
   return pickWeightedRandom(outcomes, o => o.probability);
 }
 
+// Phases where each event can only be played once (no repeats)
+const NO_REPEAT_PHASES = [1, 2, 4];
+
 export function useGameEvents() {
   const [phases, setPhases] = useState<GamePhase[]>([]);
   const [events, setEvents] = useState<GameEvent[]>([]);
@@ -117,6 +120,16 @@ export function useGameEvents() {
     const phase = phases.find(p => p.phase_order === phaseOrder);
     if (!phase) return null;
 
+    const phaseEvents = events.filter(e => e.phase_id === phase.id);
+
+    // Phase 1, Day 1: always force "The City Falls" first
+    if (phaseOrder === 1 && dayInPhase === 1) {
+      const cityFalls = phaseEvents.find(e => e.title === 'The City Falls');
+      if (cityFalls && !seenEventIds.includes(cityFalls.id)) {
+        return cityFalls;
+      }
+    }
+
     const getEffectiveProbability = (event: GameEvent): number => {
       if (event.day_weights && String(dayInPhase) in event.day_weights) {
         return event.day_weights[String(dayInPhase)];
@@ -124,16 +137,22 @@ export function useGameEvents() {
       return event.probability_weight;
     };
 
-    const unseen = events.filter(
-      e => e.phase_id === phase.id && !seenEventIds.includes(e.id) && getEffectiveProbability(e) > 0
+    const unseen = phaseEvents.filter(
+      e => !seenEventIds.includes(e.id) && getEffectiveProbability(e) > 0
     );
 
     if (unseen.length > 0) {
       return pickWeightedRandom(unseen, getEffectiveProbability);
     }
 
-    const all = events.filter(
-      e => e.phase_id === phase.id && getEffectiveProbability(e) > 0
+    // For phases with no-repeat rule, return null when all events are seen
+    if (NO_REPEAT_PHASES.includes(phaseOrder)) {
+      return null;
+    }
+
+    // Phase 3 (and any others) can repeat events
+    const all = phaseEvents.filter(
+      e => getEffectiveProbability(e) > 0
     );
     return all.length > 0 ? pickWeightedRandom(all, getEffectiveProbability) : null;
   }, [phases, events]);

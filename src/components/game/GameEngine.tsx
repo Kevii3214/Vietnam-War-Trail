@@ -177,8 +177,12 @@ export function GameEngine({ userId, onMainMenu, loadExistingSave }: GameEngineP
 
   const handleNextDay = useCallback(() => {
     setTypingDone(false);
+
+    // Phase 1 Day 1 always forces an event (The City Falls)
+    const forceEvent = gameState.currentPhaseOrder === 1 && gameState.dayInPhase === 1;
+
     const roll = Math.random();
-    if (roll < eventChancePct / 100) {
+    if (forceEvent || roll < eventChancePct / 100) {
       const event = getRandomEvent(gameState.currentPhaseOrder, gameState.eventsSeen, gameState.dayInPhase);
       if (event) {
         setCurrentEvent(event);
