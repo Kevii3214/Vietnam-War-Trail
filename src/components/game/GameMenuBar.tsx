@@ -92,7 +92,8 @@ function VolumeControl({
         <span className="font-pixel text-[9px] text-foreground/60 tracking-wide">{label}</span>
         <button
           type="button"
-          onPointerDown={(e) => {
+          onClick={(e) => {
+            e.preventDefault();
             e.stopPropagation();
             onToggle();
           }}
@@ -107,6 +108,7 @@ function VolumeControl({
         min={0}
         max={100}
         value={isOff ? 0 : Math.round(value * 100)}
+        onInput={e => onChange(Number((e.target as HTMLInputElement).value) / 100)}
         onChange={e => onChange(Number(e.target.value) / 100)}
         className="volume-slider w-full h-2 cursor-pointer"
         style={{ accentColor: 'hsl(var(--primary))' }}

@@ -81,6 +81,7 @@ function OptionsModal({ onClose }: { onClose: () => void }) {
               min={0}
               max={100}
               value={Math.round(musicVolume * 100)}
+              onInput={e => saveMusicVolume(Number((e.target as HTMLInputElement).value) / 100)}
               onChange={e => saveMusicVolume(Number(e.target.value) / 100)}
               className="volume-slider w-full h-2 cursor-pointer"
               style={{ accentColor: 'hsl(var(--primary))' }}
@@ -93,7 +94,8 @@ function OptionsModal({ onClose }: { onClose: () => void }) {
               <span className="font-pixel text-[9px] text-foreground/60 tracking-wide">NARRATION</span>
               <button
                 type="button"
-                onPointerDown={(e) => {
+                onClick={(e) => {
+                  e.preventDefault();
                   e.stopPropagation();
                   saveNarrationEnabled();
                 }}
@@ -108,6 +110,7 @@ function OptionsModal({ onClose }: { onClose: () => void }) {
               min={0}
               max={100}
               value={narrationEnabled ? Math.round(narrationVolume * 100) : 0}
+              onInput={e => saveNarrationVolume(Number((e.target as HTMLInputElement).value) / 100)}
               onChange={e => saveNarrationVolume(Number(e.target.value) / 100)}
               className="volume-slider w-full h-2 cursor-pointer"
               style={{ accentColor: 'hsl(var(--primary))' }}
