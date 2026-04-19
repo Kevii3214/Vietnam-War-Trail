@@ -306,7 +306,7 @@ export function GameEngine({ userId, onMainMenu, loadExistingSave }: GameEngineP
   }
 
   if (showCinematic === 3) {
-    return <RefugeeCampCinematic onComplete={() => setShowCinematic(false)} />;
+    return <RefugeeCampCinematic onComplete={() => setShowCinematic(false)} landingCountry={gameState.landingCountry || 'Malaysia'} />;
   }
 
   if (showCinematic === 4) {
@@ -519,7 +519,7 @@ export function GameEngine({ userId, onMainMenu, loadExistingSave }: GameEngineP
 
       {/* Stats bar at top */}
       <div className="p-3 relative z-10">
-        <StatsBar stats={gameState.stats} phase={gameState.currentPhaseOrder} day={gameState.dayInPhase} />
+        <StatsBar stats={gameState.stats} phase={gameState.currentPhaseOrder} day={gameState.dayInPhase} landingCountry={gameState.landingCountry} />
       </div>
 
       {/* Main area fills remaining space and pushes HUD to bottom */}

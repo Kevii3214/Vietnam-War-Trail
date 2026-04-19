@@ -8,6 +8,16 @@ export interface GameStats {
   money: number;
 }
 
+export const LANDING_COUNTRIES = [
+  'Malaysia',
+  'Philippines',
+  'Indonesia',
+  'Thailand',
+  'Hong Kong',
+] as const;
+
+export type LandingCountry = (typeof LANDING_COUNTRIES)[number];
+
 export interface GameState {
   currentPhaseOrder: number;
   dayInPhase: number;
@@ -16,6 +26,7 @@ export interface GameState {
   isGameOver: boolean;
   gameOverReason: string | null;
   isVictory: boolean;
+  landingCountry: LandingCountry | null;
 }
 
 const DEFAULT_STATS: GameStats = {
@@ -80,6 +91,7 @@ export function useGameState() {
       isGameOver: false,
       gameOverReason: null,
       isVictory: false,
+      landingCountry: null,
     });
     setShowPhaseIntro(true);
   }, [getStartingStats]);
@@ -106,6 +118,7 @@ export function useGameState() {
       isGameOver: false,
       gameOverReason: null,
       isVictory: false,
+      landingCountry: null,
     });
     setShowPhaseIntro(true);
   }, []);
@@ -178,6 +191,9 @@ export function useGameState() {
           stats: { ...prev.stats, food: newFood, health: newHealth },
           isGameOver,
           gameOverReason,
+          landingCountry: prev.currentPhaseOrder + 1 === 3
+            ? LANDING_COUNTRIES[Math.floor(Math.random() * LANDING_COUNTRIES.length)]
+            : prev.landingCountry,
         };
       }
 

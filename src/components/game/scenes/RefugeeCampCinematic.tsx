@@ -5,6 +5,7 @@ import { PixelPerson } from './PixelPeople';
 
 interface CinematicProps {
   onComplete: () => void;
+  landingCountry: string;
 }
 
 interface TypewriterProps {
@@ -625,7 +626,7 @@ function Scene3() {
 // ===========================================================================
 // SCENES ARRAY & MAIN EXPORT
 // ===========================================================================
-const SCENES = [
+const SCENES_TEMPLATE = [
   {
     label: 'THE SPOTTING',
     badge: 'THE SOUTH CHINA SEA · NIGHT',
@@ -640,13 +641,17 @@ const SCENES = [
   },
   {
     label: 'THE SHORE',
-    badge: 'UNKNOWN COASTLINE · PRE-DAWN',
+    badge: '__COUNTRY__ COASTLINE · PRE-DAWN',
     text: 'The sand comes up under your hands before you expected it. You stand. You walk the last few meters. You turn around and count the people behind you. You count again. Your family is all accounted for. However, standing in front of you were two men. They pulled you along to follow them.',
     Component: Scene3,
   },
 ];
 
-export function RefugeeCampCinematic({ onComplete }: CinematicProps) {
+export function RefugeeCampCinematic({ onComplete, landingCountry }: CinematicProps) {
+  const scenes = SCENES_TEMPLATE.map(s => ({
+    ...s,
+    badge: s.badge.replace('__COUNTRY__', landingCountry.toUpperCase()),
+  }));
   const [sceneIndex, setSceneIndex] = useState(0);
   const [, setTextDone] = useState(false);
   const [arrowVisible, setArrowVisible] = useState(false);
@@ -659,16 +664,16 @@ export function RefugeeCampCinematic({ onComplete }: CinematicProps) {
   const handleNext = useCallback(() => {
     if (!arrowVisible) return;
 
-    if (sceneIndex < SCENES.length - 1) {
+    if (sceneIndex < scenes.length - 1) {
       setSceneIndex(s => s + 1);
       setTextDone(false);
       setArrowVisible(false);
     } else {
       onComplete();
     }
-  }, [sceneIndex, arrowVisible, onComplete]);
+  }, [sceneIndex, arrowVisible, onComplete, scenes.length]);
 
-  const scene = SCENES[sceneIndex];
+  const scene = scenes[sceneIndex];
 
   return (
     <div className="fixed inset-0 z-50 bg-background flex flex-col">
@@ -680,7 +685,7 @@ export function RefugeeCampCinematic({ onComplete }: CinematicProps) {
 
         {/* Progress dots */}
         <div className="absolute top-3 left-3 md:top-4 md:left-4 z-20 flex gap-1">
-          {SCENES.map((_, i) => (
+          {scenes.map((_, i) => (
             <div
               key={i}
               className={`w-2 h-2 transition-colors duration-300 ${
