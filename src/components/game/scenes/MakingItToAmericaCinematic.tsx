@@ -322,13 +322,19 @@ const SCENES: Scene[] = [
 
 interface Props {
   onComplete: () => void;
+  onNarrate?: (text: string) => void;
 }
 
-export function MakingItToAmericaCinematic({ onComplete }: Props) {
+export function MakingItToAmericaCinematic({ onComplete, onNarrate }: Props) {
   const [sceneIdx, setSceneIdx] = useState(0);
   const [textDone, setTextDone] = useState(false);
 
   const scene = SCENES[sceneIdx];
+
+  // Narrate when scene changes
+  useEffect(() => {
+    onNarrate?.(scene.text);
+  }, [sceneIdx, onNarrate, scene.text]);
 
   const handleTextDone = useCallback(() => setTextDone(true), []);
 

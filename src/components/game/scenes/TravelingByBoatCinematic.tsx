@@ -5,6 +5,7 @@ import { PixelPerson } from './PixelPeople';
 
 interface CinematicProps {
   onComplete: () => void;
+  onNarrate?: (text: string) => void;
 }
 
 interface TypewriterProps {
@@ -531,10 +532,15 @@ const SCENES = [
   },
 ];
 
-export function TravelingByBoatCinematic({ onComplete }: CinematicProps) {
+export function TravelingByBoatCinematic({ onComplete, onNarrate }: CinematicProps) {
   const [sceneIndex, setSceneIndex] = useState(0);
   const [, setTextDone] = useState(false);
   const [arrowVisible, setArrowVisible] = useState(false);
+
+  // Narrate when scene changes
+  useEffect(() => {
+    onNarrate?.(SCENES[sceneIndex].text);
+  }, [sceneIndex, onNarrate]);
 
   const handleTextDone = useCallback(() => {
     setTextDone(true);

@@ -6,6 +6,7 @@ import { GameOver } from './GameOver';
 import { GameHUD } from './GameHUD';
 import { GameMenuBar } from './GameMenuBar';
 import { useBackgroundMusic } from '../../hooks/useBackgroundMusic';
+import { useNarration } from '../../hooks/useNarration';
 import { EscapingVietnamCinematic } from './scenes/EscapingVietnamCinematic';
 import { TravelingByBoatCinematic } from './scenes/TravelingByBoatCinematic';
 import { RefugeeCampCinematic } from './scenes/RefugeeCampCinematic';
@@ -113,6 +114,12 @@ export function GameEngine({ userId, onMainMenu, loadExistingSave }: GameEngineP
   // Background music
   const isMusicPlaying = !gameState.isGameOver && !gameState.isVictory;
   const { volume, muted, setVolume, toggleMute } = useBackgroundMusic(gameState.currentPhaseOrder, isMusicPlaying);
+
+  // Narration (ElevenLabs TTS)
+  const {
+    speak, stop: stopNarration, isSpeaking,
+    narrationEnabled, narrationVolume, setNarrationVolume, toggleNarration,
+  } = useNarration();
   const { saveGame, loadGame, saveRun } = useGameSave(userId);
 
   const [dayState, setDayState] = useState<DayState>('idle');
@@ -184,6 +191,16 @@ export function GameEngine({ userId, onMainMenu, loadExistingSave }: GameEngineP
     }
   }, [gameState.isGameOver, gameState.isVictory, initialized, saveRun, gameState.currentPhaseOrder, gameState.dayInPhase, gameState.stats]);
 
+  // Helper: narrate text if enabled
+  const narrate = useCallback((text: string) => {
+    if (narrationEnabled && text) speak(text);
+  }, [narrationEnabled, speak]);
+
+  // Stop narration when leaving event or on user action
+  const stopAndProceed = useCallback(() => {
+    stopNarration();
+  }, [stopNarration]);
+
   const handleNextDay = useCallback(() => {
     setTypingDone(false);
 
@@ -199,6 +216,8 @@ export function GameEngine({ userId, onMainMenu, loadExistingSave }: GameEngineP
         // Check if this is the AI interview event
         if (event.title === 'Interview Day') {
           setInterviewMode(true);
+        } else {
+          narrate(event.description);
         }
         setDayState('event');
         markEventSeen(event.id);
@@ -207,11 +226,14 @@ export function GameEngine({ userId, onMainMenu, loadExistingSave }: GameEngineP
     }
     // Travel day
     const msgs = PHASE_MESSAGES[gameState.currentPhaseOrder] || PHASE_MESSAGES[1];
-    setTravelText(msgs[Math.floor(Math.random() * msgs.length)]);
+    const msg = msgs[Math.floor(Math.random() * msgs.length)];
+    setTravelText(msg);
+    narrate(msg);
     setDayState('traveling');
-  }, [gameState.currentPhaseOrder, gameState.dayInPhase, gameState.eventsSeen, getRandomEvent, markEventSeen, eventChancePct]);
+  }, [gameState.currentPhaseOrder, gameState.dayInPhase, gameState.eventsSeen, getRandomEvent, markEventSeen, eventChancePct, narrate]);
 
   const handleChoiceMade = useCallback((choice: EventChoice) => {
+    stopAndProceed();
     const outcome = pickRandomOutcome(choice.outcomes);
     if (!outcome) {
       setDayState('traveling');
@@ -220,10 +242,12 @@ export function GameEngine({ userId, onMainMenu, loadExistingSave }: GameEngineP
     setSelectedChoice(choice);
     setResolvedOutcome(outcome);
     setTypingDone(false);
+    narrate(outcome.result_text);
     setDayState('event_result');
-  }, []);
+  }, [stopAndProceed, narrate]);
 
   const handleContinueAfterResult = useCallback(() => {
+    stopAndProceed();
     if (resolvedOutcome) {
       applyStatChanges({
         health: resolvedOutcome.health_delta,
@@ -246,7 +270,7 @@ export function GameEngine({ userId, onMainMenu, loadExistingSave }: GameEngineP
     setDayState('idle');
     const phase = getPhaseByOrder(gameState.currentPhaseOrder);
     if (phase) advanceDay(phase.days_in_phase);
-  }, [resolvedOutcome, applyStatChanges, jumpToPhase, advanceDay, getPhaseByOrder, gameState.currentPhaseOrder]);
+  }, [resolvedOutcome, applyStatChanges, jumpToPhase, advanceDay, getPhaseByOrder, gameState.currentPhaseOrder, stopAndProceed]);
 
   const handleTravelContinue = useCallback(() => {
     setDayState('idle');
@@ -303,19 +327,19 @@ export function GameEngine({ userId, onMainMenu, loadExistingSave }: GameEngineP
   }
 
   if (showCinematic === 1) {
-    return <EscapingVietnamCinematic onComplete={() => setShowCinematic(false)} />;
+    return <EscapingVietnamCinematic onComplete={() => setShowCinematic(false)} onNarrate={narrate} />;
   }
 
   if (showCinematic === 2) {
-    return <TravelingByBoatCinematic onComplete={() => setShowCinematic(false)} />;
+    return <TravelingByBoatCinematic onComplete={() => setShowCinematic(false)} onNarrate={narrate} />;
   }
 
   if (showCinematic === 3) {
-    return <RefugeeCampCinematic onComplete={() => setShowCinematic(false)} landingCountry={gameState.landingCountry ?? ''} />;
+    return <RefugeeCampCinematic onComplete={() => setShowCinematic(false)} landingCountry={gameState.landingCountry ?? ''} onNarrate={narrate} />;
   }
 
   if (showCinematic === 4) {
-    return <MakingItToAmericaCinematic onComplete={() => setShowCinematic(false)} />;
+    return <MakingItToAmericaCinematic onComplete={() => setShowCinematic(false)} onNarrate={narrate} />;
   }
 
   if (gameState.isGameOver) {
@@ -539,7 +563,7 @@ export function GameEngine({ userId, onMainMenu, loadExistingSave }: GameEngineP
         )}
 
         {/* Game HUD with content + menu */}
-        <GameHUD menuBar={<GameMenuBar onSaveAndExit={onMainMenu} volume={volume} muted={muted} onVolumeChange={setVolume} onToggleMute={toggleMute} />}>
+        <GameHUD menuBar={<GameMenuBar onSaveAndExit={onMainMenu} volume={volume} muted={muted} onVolumeChange={setVolume} onToggleMute={toggleMute} narrationEnabled={narrationEnabled} narrationVolume={narrationVolume} onNarrationVolumeChange={setNarrationVolume} onToggleNarration={toggleNarration} isSpeaking={isSpeaking} />}>
           {renderHUDContent()}
         </GameHUD>
       </div>

@@ -18,6 +18,7 @@ function starPath(cx: number, cy: number, outer: number, inner: number): string 
 
 interface CinematicProps {
   onComplete: () => void;
+  onNarrate?: (text: string) => void;
 }
 
 interface TypewriterProps {
@@ -1938,10 +1939,15 @@ const SCENES: SceneEntry[] = [
   },
 ];
 
-export function EscapingVietnamCinematic({ onComplete }: CinematicProps) {
+export function EscapingVietnamCinematic({ onComplete, onNarrate }: CinematicProps) {
   const [sceneIndex, setSceneIndex] = useState(0);
   const [, setTextDone] = useState(false);
   const [arrowVisible, setArrowVisible] = useState(false);
+
+  // Narrate when scene changes
+  useEffect(() => {
+    onNarrate?.(SCENES[sceneIndex].text);
+  }, [sceneIndex, onNarrate]);
 
   const handleTextDone = useCallback(() => {
     setTextDone(true);

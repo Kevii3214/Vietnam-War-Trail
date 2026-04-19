@@ -6,6 +6,7 @@ import { PixelPerson } from './PixelPeople';
 interface CinematicProps {
   onComplete: () => void;
   landingCountry: string;
+  onNarrate?: (text: string) => void;
 }
 
 interface TypewriterProps {
@@ -647,7 +648,7 @@ const SCENES_TEMPLATE = [
   },
 ];
 
-export function RefugeeCampCinematic({ onComplete, landingCountry }: CinematicProps) {
+export function RefugeeCampCinematic({ onComplete, landingCountry, onNarrate }: CinematicProps) {
   // Use a ref so the country is locked on mount — never changes mid-cinematic
   const [country] = useState(() => landingCountry || 'Malaysia');
 
@@ -669,6 +670,12 @@ export function RefugeeCampCinematic({ onComplete, landingCountry }: CinematicPr
   const [sceneIndex, setSceneIndex] = useState(0);
   const [, setTextDone] = useState(false);
   const [arrowVisible, setArrowVisible] = useState(false);
+
+  // Narrate when scene changes
+  useEffect(() => {
+    onNarrate?.(scenes[sceneIndex].text);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sceneIndex, onNarrate]);
 
   const handleTextDone = useCallback(() => {
     setTextDone(true);
