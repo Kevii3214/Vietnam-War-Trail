@@ -123,18 +123,25 @@ export function AcquiringBoatScene() {
           </linearGradient>
         </defs>
 
-        {/* Sun reflection trail on water */}
-        {[0, 1, 2, 3, 4, 5, 6].map(i => (
+        {/* Sun reflection on water — scattered flecks clustered under
+            the sun rather than a ladder of evenly-spaced horizontal
+            stripes. */}
+        {[
+          { x: 372, y: 166, w: 3 }, { x: 384, y: 167, w: 2 }, { x: 392, y: 168, w: 4 },
+          { x: 368, y: 172, w: 2 }, { x: 380, y: 173, w: 5 }, { x: 398, y: 174, w: 2 },
+          { x: 360, y: 178, w: 3 }, { x: 376, y: 180, w: 2 }, { x: 390, y: 181, w: 3 },
+          { x: 366, y: 186, w: 2 }, { x: 382, y: 187, w: 3 },
+          { x: 372, y: 193, w: 2 }, { x: 388, y: 195, w: 2 },
+          { x: 376, y: 201, w: 2 },
+        ].map((s, si) => (
           <rect
-            key={`sunref-${i}`}
-            x={380 - i * 2}
-            y={166 + i * 6}
-            width={40 - i * 4}
-            height={1.5}
+            key={`sunref-${si}`}
+            x={s.x} y={s.y}
+            width={s.w} height={1.2}
             fill="#ffc878"
-            opacity={0.7 - i * 0.09}
+            opacity={0.55 - (si % 5) * 0.07}
             className="abs-flicker"
-            style={{ animationDelay: `${i * 0.2}s` }}
+            style={{ animationDelay: `${(si * 0.19) % 2.2}s` }}
           />
         ))}
 
@@ -180,9 +187,10 @@ export function AcquiringBoatScene() {
           <polygon points="2,0 -4,-14 4,-12" fill="#2a3a1a" />
         </g>
 
-        {/* Shore ground / wet sand */}
-        <polygon points="0,200 0,280 120,280 100,200" fill="#3a2418" />
-        <polygon points="0,200 100,200 90,205 0,210" fill="#5a3a20" />
+        {/* Shore ground / wet sand — widened slightly so the waiting
+            mother's footprint stays fully on the sand at her feet height. */}
+        <polygon points="0,200 0,280 140,280 115,200" fill="#3a2418" />
+        <polygon points="0,200 115,200 105,205 0,210" fill="#5a3a20" />
         {/* Pebbles */}
         {[10, 36, 62, 84].map((rx, ri) => (
           <rect key={`pebble-${ri}`} x={rx} y={214 + (ri % 2) * 6} width={3} height={1.5} fill="#7a5a3a" opacity="0.8" />
@@ -295,6 +303,26 @@ export function AcquiringBoatScene() {
               <line key={`net-${i}`} x1={-6 + i * 4} y1={-0.6} x2={-4 + i * 4} y2={1.4} stroke="#6a7a5a" strokeWidth="0.4" />
             ))}
           </g>
+
+          {/*
+            === Boat owner (seller) standing ON the boat deck ===
+            Scale 1.2 → sprite height 31.2, so translate-y = 222 - 31.2 ≈ 191
+            places the feet exactly on the deck top (y=222). Rendered inside
+            the `abs-boat-bob` group so the seller rises/falls with the boat.
+            Uses variant="civilian" with determined mood.
+          */}
+          <g transform="translate(360 191)">
+            <PixelPerson
+              x={0} y={0} scale={1.2} variant="civilian"
+              color="#c4956a" shirtColor="#4a6a4a" pantsColor="#2a2218"
+              hairColor="#1a0a04" accentColor="#c0b070"
+              mood="determined" sway="idle" swayDelay={0.2}
+            />
+            {/* NOTE: the previous outstretched-arm overlay (two skin-colored
+                rects offset from the body) floated in mid-air because the
+                rect didn't meet the sprite's shoulder cleanly. Removed; the
+                seller now uses the default PixelPerson arm pose. */}
+          </g>
         </g>
 
         {/* Mooring rope from dock to boat bow */}
@@ -306,31 +334,13 @@ export function AcquiringBoatScene() {
         />
 
         {/*
-          === Boat owner (seller) on boat deck, arm outstretched ===
-          Uses variant="soldier" so the built-in helmet stands in as
-          a nón-style wide brim — consistent with PixelPerson's design
-          (no custom hat polygons on civilian heads). Mood: determined.
+          === Protagonist ("you") standing ON the dock, offering a gold leaf ===
+          Dock plank top = y=190. Scale 1.3 → sprite height 33.8, so
+          translate-y = 190 - 33.8 ≈ 156 puts the feet exactly on the
+          plank. Palette matches Scene 4 "THE BREAKING POINT" protagonist
+          so the player character looks like the same person across scenes.
         */}
-        <g transform="translate(360 188)">
-          <PixelPerson
-            x={0} y={0} scale={1.2} variant="civilian"
-            color="#c4956a" shirtColor="#4a6a4a" pantsColor="#2a2218"
-            hairColor="#1a0a04" accentColor="#c0b070"
-            mood="determined" sway="idle" swayDelay={0.2}
-          />
-          {/* Outstretched arm pointing at boat (same skin color as PixelPerson body) */}
-          <g className="abs-paint-arm" style={{ transformOrigin: '0% 50%' }}>
-            <rect x={16} y={12} width={12} height={2.5} fill="#c4956a" />
-            <rect x={26} y={11} width={3} height={3} fill="#c4956a" />
-          </g>
-        </g>
-
-        {/*
-          === Protagonist ("you") on the dock, offering a gold leaf ===
-          Palette matches Scene 4 "THE BREAKING POINT" protagonist so
-          the player character looks like the same person across scenes.
-        */}
-        <g transform="translate(252 190)">
+        <g transform="translate(252 156)">
           <PixelPerson
             x={0} y={0} scale={1.3} variant="civilian"
             color="#e8b896" shirtColor="#6a4a38" pantsColor="#2a2018"
@@ -375,8 +385,13 @@ export function AcquiringBoatScene() {
           <rect x={-12} y={14} width={10} height={2} fill="#8a6a40" />
           <rect x={-8} y={10} width={1} height={6} fill="#3a2a18" />
         </g>
-        {/* Child standing next to the mother (no double-scale) */}
-        <g transform="translate(118 208)">
+        {/*
+          Child holding the mother's hand at the landward end of the dock.
+          Scale 0.9 → height 23.4, so translate-y = 190 - 23.4 ≈ 167 places
+          the feet on the dock top. Positioned just right of the mother so
+          the family reads as a single group stepping onto the planks.
+        */}
+        <g transform="translate(118 167)">
           <PixelPerson
             x={0} y={0} scale={0.9} variant="civilian"
             color="#d8a880" shirtColor="#4a6a8a" pantsColor="#2a2a3a"
@@ -385,8 +400,12 @@ export function AcquiringBoatScene() {
           />
         </g>
 
-        {/* Second refugee on the dock shoulder, mirrored so the gaze faces the boat */}
-        <g transform="translate(200 188)">
+        {/*
+          Second refugee on the dock, mirrored so the gaze faces the boat.
+          Scale 1.0 → height 26, translate-y = 190 - 26 = 164 puts feet on
+          the dock plank top.
+        */}
+        <g transform="translate(200 164)">
           <PixelPerson
             x={0} y={0} scale={1.0} variant="civilian"
             color="#d8a880" shirtColor="#4a3a24" pantsColor="#2a1a10"
@@ -394,9 +413,10 @@ export function AcquiringBoatScene() {
             mood="weary" sway="idle" swayDelay={0.5}
             mirror
           />
-          {/* Their bundle on the planks */}
-          <rect x={-6} y={16} width={7} height={7} fill="#5a3a20" />
-          <rect x={-6} y={16} width={7} height={1.5} fill="#7a5230" />
+          {/* Their bundle sitting on the dock planks beside them. y=26
+              (local) lands on plank top (y=164+26=190). */}
+          <rect x={-6} y={26} width={7} height={7} fill="#5a3a20" />
+          <rect x={-6} y={26} width={7} height={1.5} fill="#7a5230" />
         </g>
 
         {/* Distant smaller boats moored in the bay */}
@@ -408,14 +428,26 @@ export function AcquiringBoatScene() {
           </g>
         ))}
 
-        {/* Water waves / shimmer lines */}
-        {[172, 182, 196, 208, 220, 232, 248, 258].map((y, i) => (
+        {/* Water shimmer — scattered pinpoint glints instead of any
+            horizontally-aligned stripes, so nothing reads as a line
+            across the scene. Each glint is a 1–2px dot at a unique
+            (x, y) in the water region, with varied animation delays. */}
+        {[
+          { x: 46,  y: 172 }, { x: 312, y: 175 }, { x: 198, y: 178 }, { x: 448, y: 180 },
+          { x: 84,  y: 184 }, { x: 262, y: 186 }, { x: 156, y: 188 }, { x: 396, y: 191 },
+          { x: 62,  y: 194 }, { x: 222, y: 197 }, { x: 352, y: 199 }, { x: 126, y: 202 },
+          { x: 274, y: 205 }, { x: 422, y: 207 }, { x: 94,  y: 211 }, { x: 192, y: 214 },
+          { x: 338, y: 217 }, { x: 468, y: 219 }, { x: 42,  y: 224 }, { x: 236, y: 227 },
+          { x: 128, y: 232 }, { x: 368, y: 235 }, { x: 278, y: 240 }, { x: 72,  y: 244 },
+          { x: 432, y: 248 }, { x: 172, y: 252 }, { x: 306, y: 256 },
+        ].map((g, gi) => (
           <rect
-            key={`wave-${i}`}
-            x={0} y={y}
-            width={500} height={0.8}
-            fill="#ffb050" opacity={0.12 + (i % 3) * 0.05}
-            className="cinematic-wave" style={{ animationDelay: `${i * 0.22}s` }}
+            key={`glint-${gi}`}
+            x={g.x} y={g.y}
+            width={gi % 3 === 0 ? 2 : 1.2} height={1}
+            fill="#ffb050" opacity={0.35 + (gi % 4) * 0.1}
+            className="cinematic-wave"
+            style={{ animationDelay: `${(gi * 0.17) % 2.4}s` }}
           />
         ))}
 
