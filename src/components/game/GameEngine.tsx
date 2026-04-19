@@ -17,6 +17,11 @@ import { CoastGuardScene } from './scenes/CoastGuardScene';
 import { EngineFailureScene } from './scenes/EngineFailureScene';
 import { SickPassengerScene } from './scenes/SickPassengerScene';
 import { AnotherBoatScene } from './scenes/AnotherBoatScene';
+import { RationDayScene } from './scenes/RationDayScene';
+import { InterviewDayScene } from './scenes/InterviewDayScene';
+import { LanguageClassScene } from './scenes/LanguageClassScene';
+import { TheLetterScene } from './scenes/TheLetterScene';
+import { WaitingScene } from './scenes/WaitingScene';
 import { EVENT_SCENE_MAP } from './scenes/eventSceneMap';
 import { useGameState } from '@/hooks/useGameState';
 import { useGameEvents, type EventChoice, type EventOutcome, pickRandomOutcome } from '@/hooks/useGameEvents';
@@ -289,6 +294,11 @@ export function GameEngine({ userId, onMainMenu, loadExistingSave }: GameEngineP
       case 'engine-failure': return <EngineFailureScene />;
       case 'sick-passenger': return <SickPassengerScene />;
       case 'another-boat': return <AnotherBoatScene />;
+      case 'ration-day': return <RationDayScene />;
+      case 'interview-day': return <InterviewDayScene />;
+      case 'language-classes': return <LanguageClassScene />;
+      case 'the-letter': return <TheLetterScene />;
+      case 'waiting': return <WaitingScene />;
       default: return null;
     }
   };
