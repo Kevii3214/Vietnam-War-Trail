@@ -7,7 +7,7 @@ const CORS_HEADERS = {
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
 };
 
-const SYSTEM_PROMPT = `You are a United Nations High Commissioner for Refugees (UNHCR) interviewer at a Southeast Asian refugee processing center in the early 1980s. You are conducting a refugee status determination interview with a Vietnamese person who has fled Vietnam by boat.
+const SYSTEM_PROMPT = `You are a United Nations High Commissioner for Refugees (UNHCR) interviewer at a Southeast Asian refugee processing center in the early 1980s. You are conducting a refugee status determination interview with a Vietnamese boat person.
 
 Your job is to assess whether this person qualifies as a genuine refugee under the 1951 Refugee Convention — specifically whether they face a well-founded fear of persecution on account of race, religion, nationality, membership in a particular social group, or political opinion.
 
@@ -21,14 +21,12 @@ CRITICAL RULES FOR DETERMINATION:
 YOUR PERSONALITY:
 - Professional, measured, somewhat bureaucratic
 - Not unkind, but not warm either — you process hundreds of cases
-- You take thorough notes
-- You ask follow-up probes when answers are vague
-- You speak in short, clear sentences appropriate for someone who may not speak English well
+- You speak in short, clear sentences
 
 INTERVIEW FLOW:
-You will ask these 6 questions in order, one at a time. After each answer, respond briefly (1-2 sentences acknowledging their answer, sometimes with a short follow-up comment), then ask the next question. Do NOT ask multiple questions at once.
+You ask 6 questions in order, ONE at a time. After each answer, respond with 1-2 brief sentences acknowledging their answer, then ask the NEXT question. Never repeat a question. Never ask multiple questions at once.
 
-Questions:
+The 6 questions in order:
 1. Do you have family in a resettlement country?
 2. What was your occupation in Vietnam?
 3. What are your language skills?
@@ -36,19 +34,30 @@ Questions:
 5. When did you decide to leave?
 6. What do you fear if you return?
 
-After all 6 questions are answered, provide your DETERMINATION in this exact JSON format at the END of your response:
+IMPORTANT: When all 6 questions are answered and I tell you to make your determination, provide a thoughtful 2-3 sentence summary of your assessment, then include this EXACT format at the END:
 
 ###DETERMINATION###
-{"result": "pass" | "fail" | "forcible_return", "reasoning": "your reasoning here"}
+{"result":"pass","reasoning":"your reasoning"}
 ###END###
 
-- "pass" = Genuine refugee, approved for resettlement
-- "fail" = Insufficient evidence, case needs more review (morale penalty but not death)  
-- "forcible_return" = Classified as economic migrant, to be returned to Vietnam (death in game)
+or
 
-Be historically accurate. This is a serious educational game about the Vietnamese diaspora.`;
+###DETERMINATION###
+{"result":"fail","reasoning":"your reasoning"}
+###END###
 
-interface Message {
+or
+
+###DETERMINATION###
+{"result":"forcible_return","reasoning":"your reasoning"}
+###END###
+
+Where:
+- "pass" = Genuine refugee, approved for resettlement to the United States
+- "fail" = Insufficient evidence, case needs further review
+- "forcible_return" = Classified as economic migrant, to be returned to Vietnam`;
+
+interface GeminiMessage {
   role: 'user' | 'model';
   parts: { text: string }[];
 }
@@ -60,55 +69,46 @@ Deno.serve(async (req: Request) => {
 
   try {
     if (!GEMINI_API_KEY) {
-      console.error('GEMINI_API_KEY not found');
       return new Response(
         JSON.stringify({ error: 'API key not configured' }),
         { status: 500, headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' } }
       );
     }
 
-    const { history, userMessage, questionIndex } = await req.json();
+    const { history, questionIndex } = await req.json();
+    const questionsAnswered = questionIndex ?? 0;
 
-    // Build conversation history for Gemini
-    const contents: Message[] = [];
+    const contents: GeminiMessage[] = [];
 
-    // Add conversation history
-    if (history && Array.isArray(history)) {
+    if (history && Array.isArray(history) && history.length > 0) {
       for (const msg of history) {
         contents.push({
           role: msg.role === 'assistant' ? 'model' : 'user',
           parts: [{ text: msg.content }],
         });
       }
-    }
-
-    // Add new user message
-    if (userMessage) {
+    } else {
       contents.push({
         role: 'user',
-        parts: [{ text: userMessage }],
+        parts: [{ text: 'I am here for my refugee status interview.' }],
       });
     }
 
-    // If this is the start (no history), add a prompt to begin the interview
-    if (contents.length === 0) {
-      contents.push({
-        role: 'user',
-        parts: [{ text: 'I am ready for my interview. Please begin.' }],
-      });
-    }
+    const contextNote = questionsAnswered >= 6
+      ? 'All 6 questions have been answered. You MUST now give your final determination. Summarize your assessment in 2-3 sentences then include the ###DETERMINATION### block. Do NOT ask any more questions.'
+      : `${questionsAnswered} of 6 questions answered. Ask question ${questionsAnswered + 1} next.`;
 
-    console.log(`Interview AI called - question index: ${questionIndex}, history length: ${contents.length}`);
+    console.log(`Interview: qAnswered=${questionsAnswered}, msgs=${contents.length}`);
 
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemma-3-27b-it:generateContent?key=${GEMINI_API_KEY}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           contents,
           systemInstruction: {
-            parts: [{ text: SYSTEM_PROMPT + `\n\nThe interviewee has answered ${questionIndex} out of 6 questions so far. ${questionIndex >= 6 ? 'All questions have been asked. Provide your DETERMINATION now.' : `Ask question ${questionIndex + 1} next.`}` }],
+            parts: [{ text: SYSTEM_PROMPT + '\n\nCURRENT STATUS: ' + contextNote }],
           },
           generationConfig: {
             temperature: 0.7,
@@ -122,7 +122,7 @@ Deno.serve(async (req: Request) => {
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('Gemini API error:', response.status, errorText);
+      console.error('Gemini error:', response.status, errorText);
       return new Response(
         JSON.stringify({ error: 'AI service error', detail: errorText }),
         { status: 502, headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' } }
@@ -132,32 +132,24 @@ Deno.serve(async (req: Request) => {
     const data = await response.json();
     const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
 
-    console.log('Gemini response:', text.substring(0, 200));
-
-    // Check if there's a determination
     let determination = null;
     const detMatch = text.match(/###DETERMINATION###\s*([\s\S]*?)\s*###END###/);
     if (detMatch) {
       try {
         determination = JSON.parse(detMatch[1].trim());
       } catch (e) {
-        console.error('Failed to parse determination:', e);
+        console.error('Parse determination failed:', e);
       }
     }
 
-    // Clean the response text (remove determination block from display text)
     const displayText = text.replace(/###DETERMINATION###[\s\S]*?###END###/, '').trim();
 
     return new Response(
-      JSON.stringify({
-        message: displayText,
-        determination,
-        questionIndex: determination ? questionIndex : questionIndex + 1,
-      }),
+      JSON.stringify({ message: displayText, determination }),
       { headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' } }
     );
   } catch (err) {
-    console.error('Interview AI error:', err);
+    console.error('Interview error:', err);
     return new Response(
       JSON.stringify({ error: 'Internal error', detail: String(err) }),
       { status: 500, headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' } }

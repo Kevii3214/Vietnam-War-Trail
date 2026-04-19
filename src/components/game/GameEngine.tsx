@@ -1,10 +1,11 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { ChevronRight } from 'lucide-react';
 import { StatsBar } from './StatsBar';
 import { PhaseIntro } from './PhaseIntro';
 import { GameOver } from './GameOver';
 import { GameHUD } from './GameHUD';
 import { GameMenuBar } from './GameMenuBar';
+import { useBackgroundMusic } from '../../hooks/useBackgroundMusic';
 import { EscapingVietnamCinematic } from './scenes/EscapingVietnamCinematic';
 import { TravelingByBoatCinematic } from './scenes/TravelingByBoatCinematic';
 import { RefugeeCampCinematic } from './scenes/RefugeeCampCinematic';
@@ -73,6 +74,8 @@ const PHASE_MESSAGES: Record<number, string[]> = {
 
 function Typewriter({ text, onComplete }: { text: string; onComplete?: () => void }) {
   const [displayed, setDisplayed] = useState('');
+  const onCompleteRef = useRef(onComplete);
+  onCompleteRef.current = onComplete;
   useEffect(() => {
     setDisplayed('');
     let i = 0;
@@ -82,11 +85,11 @@ function Typewriter({ text, onComplete }: { text: string; onComplete?: () => voi
         i++;
       } else {
         clearInterval(interval);
-        onComplete?.();
+        onCompleteRef.current?.();
       }
     }, 25);
     return () => clearInterval(interval);
-  }, [text, onComplete]);
+  }, [text]);
   return <span>{displayed}</span>;
 }
 
@@ -106,6 +109,10 @@ export function GameEngine({ userId, onMainMenu, loadExistingSave }: GameEngineP
   } = useGameState();
 
   const { phases, loading, getPhaseByOrder, getRandomEvent } = useGameEvents();
+
+  // Background music
+  const isMusicPlaying = !gameState.isGameOver && !gameState.isVictory;
+  const { volume, muted, setVolume, toggleMute } = useBackgroundMusic(gameState.currentPhaseOrder, isMusicPlaying);
   const { saveGame, loadGame, saveRun } = useGameSave(userId);
 
   const [dayState, setDayState] = useState<DayState>('idle');
@@ -304,7 +311,7 @@ export function GameEngine({ userId, onMainMenu, loadExistingSave }: GameEngineP
   }
 
   if (showCinematic === 3) {
-    return <RefugeeCampCinematic onComplete={() => setShowCinematic(false)} />;
+    return <RefugeeCampCinematic onComplete={() => setShowCinematic(false)} landingCountry={gameState.landingCountry ?? ''} />;
   }
 
   if (showCinematic === 4) {
@@ -441,13 +448,27 @@ export function GameEngine({ userId, onMainMenu, loadExistingSave }: GameEngineP
       );
     }
 
-    // Event result
+    // Event result — show choice made, result text, stat deltas
     if (dayState === 'event_result' && resolvedOutcome) {
       return (
         <div className="animate-fade-in-up">
+          {/* Show which choice was picked */}
+          {selectedChoice && (
+            <div className="flex items-center gap-2 mb-2">
+              <span className="font-pixel text-[10px] text-primary crt-glow">{currentEvent?.title}</span>
+              <div className="flex-1 border-t-2 border-primary/20" />
+            </div>
+          )}
+          {selectedChoice && (
+            <p className="font-retro text-xs text-muted-foreground italic mb-2">
+              &gt; {selectedChoice.text}
+            </p>
+          )}
+          {/* Result text with typewriter */}
           <p className="font-retro text-base md:text-lg text-foreground leading-relaxed mb-2">
             <Typewriter key={resolvedOutcome.result_text} text={resolvedOutcome.result_text} onComplete={() => setTypingDone(true)} />
           </p>
+          {/* Stat changes + continue button appear after typewriter finishes */}
           {typingDone && (
             <div className="animate-fade-in-up">
               <div className="flex flex-wrap gap-3 mb-2 font-pixel text-[9px]">
@@ -503,7 +524,7 @@ export function GameEngine({ userId, onMainMenu, loadExistingSave }: GameEngineP
 
       {/* Stats bar at top */}
       <div className="p-3 relative z-10">
-        <StatsBar stats={gameState.stats} phase={gameState.currentPhaseOrder} day={gameState.dayInPhase} />
+        <StatsBar stats={gameState.stats} phase={gameState.currentPhaseOrder} day={gameState.dayInPhase} landingCountry={gameState.landingCountry} />
       </div>
 
       {/* Main area fills remaining space and pushes HUD to bottom */}
@@ -518,7 +539,7 @@ export function GameEngine({ userId, onMainMenu, loadExistingSave }: GameEngineP
         )}
 
         {/* Game HUD with content + menu */}
-        <GameHUD menuBar={<GameMenuBar onSaveAndExit={onMainMenu} />}>
+        <GameHUD menuBar={<GameMenuBar onSaveAndExit={onMainMenu} volume={volume} muted={muted} onVolumeChange={setVolume} onToggleMute={toggleMute} />}>
           {renderHUDContent()}
         </GameHUD>
       </div>

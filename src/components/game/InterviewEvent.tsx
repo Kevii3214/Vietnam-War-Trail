@@ -12,6 +12,15 @@ interface Determination {
   reasoning: string;
 }
 
+const QUESTIONS = [
+  'Do you have family in a resettlement country?',
+  'What was your occupation in Vietnam?',
+  'What are your language skills?',
+  'Why did you leave Vietnam?',
+  'When did you decide to leave?',
+  'What do you fear if you return?',
+];
+
 const SUGGESTED_ANSWERS: Record<number, string[]> = {
   0: [
     'I have an uncle in California, USA.',
@@ -49,6 +58,14 @@ const SUGGESTED_ANSWERS: Record<number, string[]> = {
   ],
 };
 
+// Keywords that indicate political persecution for fallback determination
+const PERSECUTION_KEYWORDS = [
+  'reeducation', 're-education', 'camp', 'arvn', 'army', 'military', 'soldier',
+  'embassy', 'american', 'catholic', 'church', 'priest', 'persecution',
+  'arrest', 'prison', 'execute', 'traitor', 'political', 'police', 'list',
+  'communist', 'viet cong', 'fear', 'kill', 'punish',
+];
+
 interface InterviewEventProps {
   onPass: () => void;
   onFail: () => void;
@@ -56,19 +73,23 @@ interface InterviewEventProps {
 }
 
 export function InterviewEvent({ onPass, onFail, onForcibleReturn }: InterviewEventProps) {
-  const [messages, setMessages] = useState<InterviewMessage[]>([]);
+  // Full history sent to AI (invisible to user after each exchange)
+  const historyRef = useRef<InterviewMessage[]>([]);
+  const answersRef = useRef<string[]>([]);
+
   const [questionIndex, setQuestionIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [customInput, setCustomInput] = useState('');
   const [determination, setDetermination] = useState<Determination | null>(null);
   const [started, setStarted] = useState(false);
+
+  // Current visible exchange — only the latest interviewer message
+  const [currentResponse, setCurrentResponse] = useState('');
   const [displayedText, setDisplayedText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const typingRef = useRef<NodeJS.Timeout | null>(null);
+  const typingRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  // Typewriter effect for latest assistant message
-  const typewriteText = useCallback((text: string, onDone?: () => void) => {
+  const typewriteText = useCallback((text: string) => {
     setIsTyping(true);
     setDisplayedText('');
     let i = 0;
@@ -78,88 +99,139 @@ export function InterviewEvent({ onPass, onFail, onForcibleReturn }: InterviewEv
         setDisplayedText(text.slice(0, i + 1));
         i++;
       } else {
-        clearInterval(typingRef.current!);
+        if (typingRef.current) clearInterval(typingRef.current);
         typingRef.current = null;
         setIsTyping(false);
-        onDone?.();
       }
-    }, 20);
+    }, 25);
+  }, []);
+
+  useEffect(() => {
     return () => {
       if (typingRef.current) clearInterval(typingRef.current);
     };
   }, []);
 
-  // Auto-scroll
-  useEffect(() => {
-    scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: 'smooth' });
-  }, [messages, displayedText]);
+  // Fallback determination based on player answers
+  const getFallbackDetermination = useCallback((): Determination => {
+    const allAnswers = answersRef.current.join(' ').toLowerCase();
+    const persecutionScore = PERSECUTION_KEYWORDS.filter((kw) => allAnswers.includes(kw)).length;
 
-  // Start the interview
+    if (persecutionScore >= 4) {
+      return {
+        result: 'pass',
+        reasoning: 'Based on your testimony regarding political persecution and ties to the former South Vietnamese government, you qualify as a refugee under the 1951 Convention.',
+      };
+    } else if (persecutionScore >= 2) {
+      return {
+        result: 'fail',
+        reasoning: 'Your case contains some elements of persecution but insufficient evidence for immediate approval. Your case will be reviewed further.',
+      };
+    } else {
+      return {
+        result: 'forcible_return',
+        reasoning: 'Your testimony indicates economic motivations rather than political persecution. Under UNHCR guidelines, you have been classified as an economic migrant.',
+      };
+    }
+  }, []);
+
+  const callAI = useCallback(async (history: InterviewMessage[], qIndex: number): Promise<{message: string; determination: Determination | null}> => {
+    try {
+      const { data, error } = await supabase.functions.invoke('interview-ai', {
+        body: {
+          history: history.map((m) => ({ role: m.role, content: m.content })),
+          questionIndex: qIndex,
+        },
+      });
+      if (error) throw error;
+      if (!data?.message) throw new Error('Empty response');
+      return { message: data.message, determination: data.determination || null };
+    } catch (err) {
+      console.error('Interview AI error:', err);
+      return null as never;
+    }
+  }, []);
+
+  // Start interview
   const startInterview = useCallback(async () => {
     setStarted(true);
     setIsLoading(true);
     try {
-      const { data, error } = await supabase.functions.invoke('interview-ai', {
-        body: { history: [], userMessage: null, questionIndex: 0 },
-      });
-      if (error) throw error;
-      const assistantMsg: InterviewMessage = { role: 'assistant', content: data.message };
-      setMessages([assistantMsg]);
-      setQuestionIndex(data.questionIndex ?? 1);
-      typewriteText(data.message);
-    } catch (err) {
-      console.error('Interview start error:', err);
-      const fallback: InterviewMessage = {
-        role: 'assistant',
-        content: 'Please, sit down. I am the UNHCR case officer assigned to your file. I will ask you six questions to determine your refugee status. Let us begin. Do you have family in a resettlement country?',
-      };
-      setMessages([fallback]);
-      setQuestionIndex(1);
-      typewriteText(fallback.content);
+      const result = await callAI([], 0);
+      const greeting = result.message;
+      const assistantMsg: InterviewMessage = { role: 'assistant', content: greeting };
+      historyRef.current = [
+        { role: 'user', content: 'I am here for my refugee status interview.' },
+        assistantMsg,
+      ];
+      setCurrentResponse(greeting);
+      typewriteText(greeting);
+    } catch {
+      // Fallback greeting
+      const greeting = 'Good morning. Please sit down. I am the UNHCR case officer assigned to your file. I have some questions for you. Let us begin. Do you have family in a resettlement country?';
+      const assistantMsg: InterviewMessage = { role: 'assistant', content: greeting };
+      historyRef.current = [
+        { role: 'user', content: 'I am here for my refugee status interview.' },
+        assistantMsg,
+      ];
+      setCurrentResponse(greeting);
+      typewriteText(greeting);
     } finally {
       setIsLoading(false);
     }
-  }, [typewriteText]);
+  }, [callAI, typewriteText]);
 
+  // Send answer
   const sendAnswer = useCallback(async (answer: string) => {
     if (isLoading || isTyping) return;
 
-    const userMsg: InterviewMessage = { role: 'user', content: answer };
-    const newMessages = [...messages, userMsg];
-    setMessages(newMessages);
     setCustomInput('');
     setIsLoading(true);
 
+    // Store the answer
+    answersRef.current.push(answer);
+    const newQIndex = questionIndex + 1;
+    setQuestionIndex(newQIndex);
+
+    // Add user message to history
+    const userMsg: InterviewMessage = { role: 'user', content: answer };
+    const updatedHistory = [...historyRef.current, userMsg];
+
     try {
-      const { data, error } = await supabase.functions.invoke('interview-ai', {
-        body: {
-          history: newMessages.map((m) => ({ role: m.role, content: m.content })),
-          userMessage: answer,
-          questionIndex,
-        },
-      });
-      if (error) throw error;
+      const result = await callAI(updatedHistory, newQIndex);
+      const assistantMsg: InterviewMessage = { role: 'assistant', content: result.message };
+      historyRef.current = [...updatedHistory, assistantMsg];
+      setCurrentResponse(result.message);
+      typewriteText(result.message);
 
-      const assistantMsg: InterviewMessage = { role: 'assistant', content: data.message };
-      setMessages([...newMessages, assistantMsg]);
-      setQuestionIndex(data.questionIndex ?? questionIndex + 1);
-      typewriteText(data.message);
-
-      if (data.determination) {
-        setDetermination(data.determination);
+      if (result.determination) {
+        setDetermination(result.determination);
+      } else if (newQIndex >= 6) {
+        // AI didn't give determination after Q6 — use fallback
+        setDetermination(getFallbackDetermination());
       }
-    } catch (err) {
-      console.error('Interview error:', err);
-      const fallback: InterviewMessage = {
-        role: 'assistant',
-        content: 'I see. Let me note that down. Please continue...',
-      };
-      setMessages([...newMessages, fallback]);
-      typewriteText(fallback.content);
+    } catch {
+      // Fallback response
+      if (newQIndex < 6) {
+        const fallbackText = `Noted. ${QUESTIONS[newQIndex]}`;
+        const assistantMsg: InterviewMessage = { role: 'assistant', content: fallbackText };
+        historyRef.current = [...updatedHistory, assistantMsg];
+        setCurrentResponse(fallbackText);
+        typewriteText(fallbackText);
+      } else {
+        // Q6 answered — determine from answers
+        const det = getFallbackDetermination();
+        const fallbackText = 'Thank you. I have reviewed your testimony. I have reached my determination.';
+        const assistantMsg: InterviewMessage = { role: 'assistant', content: fallbackText };
+        historyRef.current = [...updatedHistory, assistantMsg];
+        setCurrentResponse(fallbackText);
+        typewriteText(fallbackText);
+        setDetermination(det);
+      }
     } finally {
       setIsLoading(false);
     }
-  }, [messages, questionIndex, isLoading, isTyping, typewriteText]);
+  }, [questionIndex, isLoading, isTyping, callAI, typewriteText, getFallbackDetermination]);
 
   const handleSubmit = useCallback(() => {
     if (customInput.trim()) {
@@ -177,7 +249,9 @@ export function InterviewEvent({ onPass, onFail, onForcibleReturn }: InterviewEv
     [handleSubmit],
   );
 
-  // Not started yet — show intro
+  // ---- RENDERS ----
+
+  // Not started
   if (!started) {
     return (
       <div className="animate-fade-in-up">
@@ -200,37 +274,18 @@ export function InterviewEvent({ onPass, onFail, onForcibleReturn }: InterviewEv
   }
 
   // Determination reached
-  if (determination) {
-    const resultConfig = {
-      pass: {
-        title: 'STATUS: APPROVED',
-        color: 'text-game-food',
-        border: 'border-game-food/40',
-        bg: 'bg-game-food/5',
-      },
-      fail: {
-        title: 'STATUS: INSUFFICIENT EVIDENCE',
-        color: 'text-yellow-400',
-        border: 'border-yellow-400/40',
-        bg: 'bg-yellow-400/5',
-      },
-      forcible_return: {
-        title: 'STATUS: DENIED — CLASSIFIED AS ECONOMIC MIGRANT',
-        color: 'text-game-health',
-        border: 'border-game-health/40',
-        bg: 'bg-game-health/5',
-      },
-    };
-
-    const cfg = resultConfig[determination.result];
+  if (determination && !isTyping) {
+    const cfg = {
+      pass: { title: 'STATUS: APPROVED', color: 'text-game-food', border: 'border-game-food/40', bg: 'bg-game-food/5' },
+      fail: { title: 'STATUS: INSUFFICIENT EVIDENCE', color: 'text-yellow-400', border: 'border-yellow-400/40', bg: 'bg-yellow-400/5' },
+      forcible_return: { title: 'STATUS: DENIED — ECONOMIC MIGRANT', color: 'text-game-health', border: 'border-game-health/40', bg: 'bg-game-health/5' },
+    }[determination.result];
 
     return (
       <div className="animate-fade-in-up">
         <div className={`border ${cfg.border} ${cfg.bg} p-3 mb-3`}>
           <p className={`font-pixel text-[10px] ${cfg.color} mb-2`}>{cfg.title}</p>
-          <p className="font-retro text-sm text-foreground/80 leading-relaxed">
-            {determination.reasoning}
-          </p>
+          <p className="font-retro text-sm text-foreground/80 leading-relaxed">{determination.reasoning}</p>
         </div>
         {determination.result === 'forcible_return' && (
           <p className="font-retro text-sm text-game-health/80 italic mb-3">
@@ -264,56 +319,40 @@ export function InterviewEvent({ onPass, onFail, onForcibleReturn }: InterviewEv
     );
   }
 
-  // Active interview
-  const suggestedForCurrent = SUGGESTED_ANSWERS[questionIndex - 1] || SUGGESTED_ANSWERS[0];
-  const lastAssistantIndex = [...messages].reverse().findIndex((m) => m.role === 'assistant');
-  const lastAssistantI = lastAssistantIndex >= 0 ? messages.length - 1 - lastAssistantIndex : -1;
+  // Active interview — show ONLY the current interviewer response
+  const suggestedForCurrent = SUGGESTED_ANSWERS[questionIndex] || [];
 
   return (
-    <div className="animate-fade-in-up max-h-[45vh] flex flex-col">
+    <div className="animate-fade-in-up flex flex-col">
       <div className="flex items-center gap-2 mb-2">
         <span className="font-pixel text-[10px] text-primary crt-glow">UNHCR Interview</span>
         <div className="flex-1 border-t-2 border-primary/20" />
-        <span className="font-pixel text-[8px] text-muted-foreground">Q{Math.min(questionIndex, 6)}/6</span>
+        <span className="font-pixel text-[8px] text-muted-foreground">Q{Math.min(questionIndex + 1, 6)}/6</span>
       </div>
 
-      {/* Chat log */}
-      <div ref={scrollRef} className="flex-1 overflow-y-auto space-y-2 mb-3 max-h-[20vh] pr-1 scrollbar-thin">
-        {messages.map((msg, i) => (
-          <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-            <div
-              className={`max-w-[85%] px-3 py-1.5 ${
-                msg.role === 'user'
-                  ? 'bg-primary/15 border border-primary/30'
-                  : 'bg-muted/50 border border-border/50'
-              }`}
-              style={{ borderRadius: '2px' }}
-            >
-              {msg.role === 'assistant' && i === lastAssistantI ? (
-                <p className="font-retro text-sm text-foreground/90 leading-relaxed">{displayedText}<span className="inline-block w-1.5 h-3 bg-primary/60 ml-0.5 animate-pulse" /></p>
-              ) : (
-                <p className={`font-retro text-sm leading-relaxed ${msg.role === 'user' ? 'text-primary' : 'text-foreground/90'}`}>
-                  {msg.content}
-                </p>
-              )}
-            </div>
+      {/* Current interviewer message only */}
+      <div className="mb-3">
+        {isLoading ? (
+          <div className="flex items-center gap-2 py-2">
+            <Loader2 className="w-4 h-4 animate-spin text-muted-foreground" />
+            <span className="font-retro text-xs text-muted-foreground">The officer is reviewing your response...</span>
           </div>
-        ))}
-        {isLoading && (
-          <div className="flex justify-start">
-            <div className="px-3 py-1.5 bg-muted/50 border border-border/50" style={{ borderRadius: '2px' }}>
-              <Loader2 className="w-4 h-4 animate-spin text-muted-foreground" />
-            </div>
+        ) : currentResponse && (
+          <div className="px-3 py-2 bg-muted/30 border border-border/40" style={{ borderRadius: '2px' }}>
+            <p className="font-retro text-sm text-foreground/90 leading-relaxed">
+              {displayedText}
+              {isTyping && <span className="inline-block w-1.5 h-3 bg-primary/60 ml-0.5 animate-pulse" />}
+            </p>
           </div>
         )}
       </div>
 
       {/* Suggested answers */}
-      {!isLoading && !isTyping && (
+      {!isLoading && !isTyping && questionIndex < 6 && suggestedForCurrent.length > 0 && (
         <div className="space-y-1 mb-2">
           {suggestedForCurrent.map((answer, i) => (
             <button
-              key={i}
+              key={`${questionIndex}-${i}`}
               onClick={() => sendAnswer(answer)}
               className="w-full text-left flex items-start gap-2 px-2.5 py-1.5 border border-primary/15 hover:border-primary/50 hover:bg-primary/5 active:scale-[0.99] transition-all cursor-pointer group"
               style={{ borderRadius: '2px' }}
@@ -326,7 +365,7 @@ export function InterviewEvent({ onPass, onFail, onForcibleReturn }: InterviewEv
       )}
 
       {/* Custom input */}
-      {!isLoading && !isTyping && (
+      {!isLoading && !isTyping && questionIndex < 6 && (
         <div className="flex gap-2">
           <input
             type="text"

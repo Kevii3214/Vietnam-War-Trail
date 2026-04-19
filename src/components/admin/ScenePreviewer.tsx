@@ -20,6 +20,9 @@ import { EscapingVietnamCinematic } from '@/components/game/scenes/EscapingVietn
 import { TravelingByBoatCinematic } from '@/components/game/scenes/TravelingByBoatCinematic';
 import { RefugeeCampCinematic } from '@/components/game/scenes/RefugeeCampCinematic';
 import { MakingItToAmericaCinematic } from '@/components/game/scenes/MakingItToAmericaCinematic';
+import { FirstDayWorkScene } from '@/components/game/scenes/FirstDayWorkScene';
+import { FamiliarFaceScene } from '@/components/game/scenes/FamiliarFaceScene';
+import { DiscriminationScene } from '@/components/game/scenes/DiscriminationScene';
 
 type SceneEntry = {
   key: string;
@@ -61,6 +64,11 @@ const SCENES: SceneEntry[] = [
 
   // Phase 4 cinematics
   { key: 'cin-america', label: 'Making it to America', phase: 'Phase 4', type: 'cinematic', render: (onComplete) => <MakingItToAmericaCinematic onComplete={onComplete || (() => {})} /> },
+
+  // Phase 4 events
+  { key: 'first-day-work', label: 'First Day of Work', phase: 'Phase 4', type: 'event', render: () => <FirstDayWorkScene /> },
+  { key: 'familiar-face', label: 'A Familiar Face', phase: 'Phase 4', type: 'event', render: () => <FamiliarFaceScene /> },
+  { key: 'discrimination', label: 'Discrimination', phase: 'Phase 4', type: 'event', render: () => <DiscriminationScene /> },
 ];
 
 const PHASES = ['Phase 1', 'Phase 2', 'Phase 3', 'Phase 4'];

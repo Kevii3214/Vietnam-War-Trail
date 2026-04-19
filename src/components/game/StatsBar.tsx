@@ -5,6 +5,7 @@ interface StatsBarProps {
   stats: GameStats;
   phase: number;
   day: number;
+  landingCountry?: string | null;
 }
 
 function StatItem({ icon: Icon, label, value, max, colorClass }: {
@@ -41,14 +42,14 @@ function StatItem({ icon: Icon, label, value, max, colorClass }: {
   );
 }
 
-export function StatsBar({ stats, phase, day }: StatsBarProps) {
-  const phaseNames = ['', 'Escape', 'At Sea', 'Camp', 'America'];
+export function StatsBar({ stats, phase, day, landingCountry }: StatsBarProps) {
+  const phaseNames = ['', 'Escape', 'At Sea', landingCountry || 'Camp', 'America'];
 
   return (
     <div className="border border-border bg-card/80 p-3 rounded-sm">
       <div className="flex items-center justify-between mb-3">
         <span className="font-pixel text-[9px] text-primary crt-glow">
-          Phase {phase}: {phaseNames[phase] || '???'}
+          {phaseNames[phase] || '???'}
         </span>
         <span className="font-pixel text-[9px] text-muted-foreground">
           Day {day}
