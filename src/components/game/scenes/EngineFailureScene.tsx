@@ -29,10 +29,29 @@ export function EngineFailureScene() {
           0%, 100% { transform: translate(0, 0) rotate(-0.3deg); }
           50%      { transform: translate(3px, -1px) rotate(0.3deg); }
         }
-        @keyframes ef-smoke-die {
-          0%   { opacity: 0.55; transform: translate(0, 0) scale(0.6); }
-          40%  { opacity: 0.35; transform: translate(-2px, -10px) scale(1.1); }
-          100% { opacity: 0;    transform: translate(-6px, -28px) scale(1.6); }
+        /* Dramatic broken-engine smoke — rises higher, wider, and
+           drifts further with the wind. Loops seamlessly so the
+           column of smoke is always visible. Keyframes also cover
+           more vertical distance (up to -62px) and scale larger
+           (up to 2.8×) compared with the old gentle wisps. */
+        @keyframes ef-smoke-broken {
+          0%   { opacity: 0;    transform: translate(0, 8px)    scale(0.5); }
+          10%  { opacity: 0.95; transform: translate(-1px, 2px)  scale(0.95); }
+          40%  { opacity: 0.8;  transform: translate(-6px, -20px) scale(1.6); }
+          75%  { opacity: 0.5;  transform: translate(-12px, -42px) scale(2.2); }
+          100% { opacity: 0;    transform: translate(-20px, -64px) scale(2.9); }
+        }
+        /* Rising embers — smaller, faster than smoke puffs, no scale. */
+        @keyframes ef-ember-rise {
+          0%   { opacity: 0;    transform: translate(0, 2px); }
+          10%  { opacity: 0.95; transform: translate(-1px, 0); }
+          70%  { opacity: 0.75; transform: translate(-7px, -28px); }
+          100% { opacity: 0;    transform: translate(-14px, -46px); }
+        }
+        /* Heat-glow pulse for cracked engine casing. */
+        @keyframes ef-heat-pulse {
+          0%, 100% { opacity: 0.25; }
+          50%      { opacity: 0.7; }
         }
         @keyframes ef-wave {
           0%, 100% { transform: translateX(0); opacity: 0.22; }
@@ -63,7 +82,9 @@ export function EngineFailureScene() {
         }
 
         .ef-drift        { animation: ef-drift 6s ease-in-out infinite; transform-origin: center; }
-        .ef-smoke-die    { animation: ef-smoke-die 4s ease-out infinite; transform-box: fill-box; transform-origin: center bottom; }
+        .ef-smoke-broken { animation: ef-smoke-broken 3.6s linear infinite; transform-box: fill-box; transform-origin: center bottom; }
+        .ef-ember-rise   { animation: ef-ember-rise 2.4s linear infinite; transform-box: fill-box; transform-origin: center bottom; }
+        .ef-heat-pulse   { animation: ef-heat-pulse 1.4s ease-in-out infinite; }
         .ef-wave         { animation: ef-wave 3.5s ease-in-out infinite; }
         .ef-twinkle      { animation: ef-twinkle 2.2s ease-in-out infinite; }
         .ef-ripple       { animation: ef-ripple 5s ease-out infinite; transform-box: fill-box; transform-origin: center center; }
@@ -120,19 +141,33 @@ export function EngineFailureScene() {
           />
         ))}
 
-        {/* Ripples spreading out from the dead boat */}
+        {/* Ripples spreading out from the dead boat (tracked to the
+            boat's new raised y-position so they radiate from the
+            hull shadow, not from open water below). */}
         {[0, 1.6, 3.2].map((delay, i) => (
           <ellipse
             key={`ripple-${i}`}
-            cx="250" cy="180" rx="32" ry="4"
+            cx="250" cy="160" rx="32" ry="4"
             fill="none" stroke="#3a5a7a" strokeWidth="0.8" opacity="0.8"
             className="ef-ripple"
             style={{ animationDelay: `${delay}s` }}
           />
         ))}
 
-        {/* === The boat — drifting, no power === */}
-        <g transform="translate(250, 155)" className="ef-drift">
+        {/* === The boat — CENTERED, drifting without power ===
+            Moved from translate(250, 155) to (250, 135) so the whole
+            hull and mast sit clearly in the middle of the scene
+            above any bottom text box.
+
+            IMPORTANT: use a nested group — the OUTER <g> carries the
+            static SVG `transform="translate(...)"` that places the
+            boat, while the INNER <g> carries the CSS
+            `className="ef-drift"` animation. Without this split, the
+            CSS animation's `transform: translate(3px,-1px)...` on
+            the same element overrides the SVG transform attribute
+            and the whole boat snaps back near (0,0). */}
+        <g transform="translate(250, 135)">
+        <g className="ef-drift">
           <ellipse cx="0" cy="30" rx="52" ry="4" fill="#020510" opacity="0.6" />
           {/* Hull */}
           <polygon points="-42,14 -32,28 42,28 50,14" fill="#3a2214" />
@@ -151,22 +186,123 @@ export function EngineFailureScene() {
           <rect x="10" y="-22" width="10" height="5" fill="#a09878" />
           <rect x="11" y="-17" width="8" height="2" fill="#80785a" />
 
-          {/* Engine — silent, cold, wisps of dying smoke */}
+          {/* === Engine — catastrophically broken, smoldering ===
+              Visible damage: hairline cracks running down the
+              casing, a blown-out side panel exposing glowing red-
+              hot innards, a torn/jagged exhaust pipe, heavy soot
+              staining, a dripping oil leak, and a loose cable. A
+              thick column of dark smoke rolls off the pipe carrying
+              orange glow and rising embers — the engine reads as
+              "this machine is on fire and finished," not idle. */}
+
+          {/* Main engine casing */}
           <rect x="32" y="2" width="16" height="10" fill="#14181e" />
           <rect x="32" y="2" width="16" height="1" fill="#1e242e" />
-          <rect x="35" y="-2" width="4" height="6" fill="#0a0c10" />
-          {/* Last wisps of smoke fading away */}
-          <g className="ef-smoke-die">
-            <ellipse cx="37" cy="-6" rx="3" ry="2.5" fill="#4a4a5a" opacity="0.55" />
+          <rect x="32" y="11" width="16" height="1" fill="#05060a" />
+
+          {/* Hairline cracks running down the casing */}
+          <path d="M 38 3 L 37 6 L 38.5 8 L 37 11" fill="none"
+            stroke="#3a0a04" strokeWidth="0.5" opacity="0.85" />
+          <path d="M 40 4 L 41 7 L 40 10" fill="none"
+            stroke="#2a0604" strokeWidth="0.4" opacity="0.7" />
+          <path d="M 34 5 L 35 8 L 34 11" fill="none"
+            stroke="#2a0604" strokeWidth="0.4" opacity="0.6" />
+
+          {/* Blown-out side panel exposing glowing innards */}
+          <rect x="44" y="5" width="4" height="4" fill="#2a0a04" />
+          <rect x="45" y="6" width="2" height="2" fill="#8a2a0a" />
+          <rect x="44" y="5" width="4" height="4" fill="#ff5522" opacity="0.5"
+            className="ef-heat-pulse" />
+          {/* Secondary heat glow leaking through a crack */}
+          <rect x="37" y="6" width="2" height="3" fill="#ff3308" opacity="0.4"
+            className="ef-heat-pulse" style={{ animationDelay: '0.7s' }} />
+
+          {/* Torn/jagged exhaust pipe — wider opening suggesting
+              damage from an overheating blowout */}
+          <rect x="34" y="-3" width="6" height="7" fill="#0a0c10" />
+          <rect x="35" y="-4" width="4" height="2" fill="#1a1a1a" />
+          {/* Jagged broken rim at the top of the pipe */}
+          <polygon points="34,-3 34.5,-5 35.5,-3.5 36.2,-5 37,-3 38,-4.5 39,-3 39.6,-4 40,-3"
+            fill="#1a1a1a" />
+          <polygon points="34.4,-3.5 35.2,-4.2 36,-3.8" fill="#3a3a3a" />
+          {/* Dark inside of the pipe */}
+          <rect x="35.5" y="-2.5" width="3" height="2" fill="#000" />
+
+          {/* Heavy layered soot staining around the pipe */}
+          <ellipse cx="37" cy="-3" rx="10" ry="2.5" fill="#0a0a0a" opacity="0.75" />
+          <ellipse cx="36" cy="-4" rx="8" ry="1.3" fill="#1a1a1a" opacity="0.6" />
+          <ellipse cx="38" cy="-2.5" rx="6" ry="1" fill="#2a2a2a" opacity="0.5" />
+
+          {/* Oil leak dripping from the engine underside */}
+          <rect x="42" y="11" width="2" height="4" fill="#05060a" />
+          <ellipse cx="43" cy="15.5" rx="3.2" ry="1" fill="#05060a" opacity="0.75" />
+          <ellipse cx="43" cy="16.3" rx="2.2" ry="0.6" fill="#1a1a2a" opacity="0.55" />
+
+          {/* Loose dangling cable / torn fuel line */}
+          <path d="M 31 4 Q 28 8, 30 13" fill="none"
+            stroke="#1a1a1a" strokeWidth="0.9" />
+          <rect x="29.5" y="12.5" width="1.6" height="1.6" fill="#8a4408" />
+          {/* Tiny spark at the end of the frayed cable */}
+          <rect x="29.5" y="12.5" width="1.6" height="1.6" fill="#ffaa44"
+            opacity="0.9" className="ef-engine-spark"
+            style={{ animationDelay: '4s' }} />
+
+          {/* === Thick, continuous smoke column ===
+              Seven staggered puffs (mix of cool greys and warmer
+              ashes) so the column never clears. The staggered
+              animation delays are small (0.45s apart) to keep the
+              column dense. */}
+          <g className="ef-smoke-broken">
+            <ellipse cx="37" cy="-6" rx="4.6" ry="4"   fill="#3a3a4a" opacity="0.92" />
           </g>
-          <g className="ef-smoke-die" style={{ animationDelay: '1.5s' }}>
-            <ellipse cx="39" cy="-8" rx="2.5" ry="2" fill="#3a3a4a" opacity="0.5" />
+          <g className="ef-smoke-broken" style={{ animationDelay: '0.45s' }}>
+            <ellipse cx="38" cy="-6" rx="4.2" ry="3.7" fill="#2a2a38" opacity="0.9" />
           </g>
-          <g className="ef-smoke-die" style={{ animationDelay: '3s' }}>
-            <ellipse cx="35" cy="-10" rx="2" ry="1.8" fill="#2a2a3a" opacity="0.4" />
+          <g className="ef-smoke-broken" style={{ animationDelay: '0.9s' }}>
+            <ellipse cx="36" cy="-6" rx="4.3" ry="3.8" fill="#4a4a5a" opacity="0.88" />
           </g>
-          {/* Rare engine spark — the last gasp */}
-          <rect x="37" y="-2" width="2" height="2" fill="#ff9944"
+          <g className="ef-smoke-broken" style={{ animationDelay: '1.35s' }}>
+            <ellipse cx="39" cy="-6" rx="3.9" ry="3.5" fill="#3a3a4a" opacity="0.85" />
+          </g>
+          <g className="ef-smoke-broken" style={{ animationDelay: '1.8s' }}>
+            <ellipse cx="35" cy="-6" rx="4"   ry="3.6" fill="#2a2a3a" opacity="0.82" />
+          </g>
+          <g className="ef-smoke-broken" style={{ animationDelay: '2.25s' }}>
+            <ellipse cx="38" cy="-6" rx="3.8" ry="3.4" fill="#5a5a6a" opacity="0.8" />
+          </g>
+          <g className="ef-smoke-broken" style={{ animationDelay: '2.7s' }}>
+            <ellipse cx="37" cy="-6" rx="4.1" ry="3.5" fill="#1a1a28" opacity="0.75" />
+          </g>
+
+          {/* Orange/red hot-ash glow mixed into the base of the
+              smoke column (fades before the smoke reaches the top) */}
+          <g className="ef-smoke-broken" style={{ animationDelay: '0.3s' }}>
+            <ellipse cx="37" cy="-5" rx="2.8" ry="2" fill="#ff5522" opacity="0.55" />
+          </g>
+          <g className="ef-smoke-broken" style={{ animationDelay: '1.1s' }}>
+            <ellipse cx="37" cy="-5" rx="2.2" ry="1.6" fill="#ff3308" opacity="0.45" />
+          </g>
+          <g className="ef-smoke-broken" style={{ animationDelay: '2.1s' }}>
+            <ellipse cx="37" cy="-5" rx="1.8" ry="1.4" fill="#ff7733" opacity="0.4" />
+          </g>
+
+          {/* Bright rising embers — small glowing pixels */}
+          <g className="ef-ember-rise">
+            <rect x="36.5" y="-6" width="1" height="1" fill="#ffcc66" />
+          </g>
+          <g className="ef-ember-rise" style={{ animationDelay: '0.6s' }}>
+            <rect x="38" y="-6" width="1" height="1" fill="#ffaa44" />
+          </g>
+          <g className="ef-ember-rise" style={{ animationDelay: '1.2s' }}>
+            <rect x="36" y="-6" width="1" height="1" fill="#ff8822" />
+          </g>
+          <g className="ef-ember-rise" style={{ animationDelay: '1.8s' }}>
+            <rect x="37.5" y="-6" width="1" height="1" fill="#ffdd88" />
+          </g>
+
+          {/* Occasional electrical spark flash at the top of the
+              engine — visible even when smoke thins momentarily */}
+          <rect x="37" y="-2" width="2" height="2" fill="#ffdd88"
             className="ef-engine-spark" />
 
           {/* === Canonical passengers in stunned silence === */}
@@ -190,9 +326,10 @@ export function EngineFailureScene() {
           <PixelPerson x={-28} y={-6} scale={0.85} variant="civilian" {...FELLOW_PASSENGERS[2]}
             mood="weary" sway="idle" swayDelay={0.7} mirror />
         </g>
+        </g>
 
-        {/* Reflection of boat on water */}
-        <g transform="translate(250, 194) scale(1, -0.35)" opacity="0.14">
+        {/* Reflection of boat on water (follows the raised boat) */}
+        <g transform="translate(250, 174) scale(1, -0.35)" opacity="0.14">
           <polygon points="-42,14 -32,28 42,28 50,14" fill="#3a2214" />
           <rect x="-28" y="-4" width="24" height="14" fill="#3a2214" />
         </g>

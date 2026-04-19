@@ -334,43 +334,11 @@ export function ReeducationCampScene() {
             fill="#ffcd00" stroke="#a86000" strokeWidth="0.3" />
         </g>
 
-        {/* === Camp-name banner strung across the compound ===
-            Hand-painted propaganda banner reading "TRẠI CẢI TẠO" with
-            the English gloss "(RE-EDUCATION CAMP)" underneath. Mounted
-            on stakes driven into the ground just in front of the gate,
-            so prisoners read it on approach. */}
-        <g>
-          {/* Left mounting stake */}
-          <rect x="179" y="82" width="2.5" height="48" fill="#3a2a18" />
-          <rect x="177.5" y="80" width="5.5" height="3" fill="#5a4a2a" />
-          {/* Right mounting stake */}
-          <rect x="317.5" y="82" width="2.5" height="48" fill="#3a2a18" />
-          <rect x="316" y="80" width="5.5" height="3" fill="#5a4a2a" />
-          {/* Banner fabric — dark oxblood red */}
-          <rect x="178" y="88" width="142" height="24" fill="#6a0a08" />
-          {/* Top / bottom stripe accents */}
-          <rect x="178" y="88" width="142" height="2.5" fill="#8a1414" />
-          <rect x="178" y="109.5" width="142" height="2.5" fill="#3a0404" />
-          {/* Small frayed fabric bulges on each end */}
-          <rect x="176" y="92" width="2" height="16" fill="#6a0a08" />
-          <rect x="320" y="92" width="2" height="16" fill="#6a0a08" />
-          {/* Primary Vietnamese text */}
-          <text x="249" y="101" textAnchor="middle" fill="#ffd23a"
-            fontSize="8" fontWeight="700"
-            fontFamily="ui-monospace, 'SFMono-Regular', Menlo, monospace"
-            style={{ letterSpacing: '0.4px' }}>
-            TRẠI CẢI TẠO
-          </text>
-          {/* English gloss underneath */}
-          <text x="249" y="109" textAnchor="middle" fill="#ffe8a0"
-            fontSize="3.6" opacity="0.95"
-            fontFamily="ui-monospace, 'SFMono-Regular', Menlo, monospace"
-            style={{ letterSpacing: '0.3px' }}>
-            (RE-EDUCATION CAMP)
-          </text>
-        </g>
-
-        {/* === Main gate === */}
+        {/* === Main gate ===
+            Drawn BEFORE the camp-name banner so that the banner (which
+            is mounted on stakes driven in *front* of the gate) sits
+            on top of the gate post caps — otherwise the caps clip the
+            "(RE-" and "MP)" ends of the English gloss. */}
         {/* Left post */}
         <rect x="228" y="110" width="7" height="58" fill="#4a4030" />
         <rect x="226" y="106" width="11" height="5" fill="#5a5040" />
@@ -388,6 +356,47 @@ export function ReeducationCampScene() {
         {/* Gate open — door leaning */}
         <rect x="236" y="130" width="2" height="30" fill="#3a2a18" opacity="0.7" />
         <rect x="260" y="130" width="2" height="30" fill="#3a2a18" opacity="0.7" />
+
+        {/* === Camp-name banner strung across the compound ===
+            Hand-painted propaganda banner reading "TRẠI CẢI TẠO" with
+            the English gloss "(RE-EDUCATION CAMP)" underneath. Mounted
+            on stakes driven into the ground just in front of the gate,
+            so prisoners read it on approach. Rendered AFTER the gate
+            so nothing clips the text at the banner's edges. */}
+        <g>
+          {/* Left mounting stake */}
+          <rect x="179" y="82" width="2.5" height="48" fill="#3a2a18" />
+          <rect x="177.5" y="80" width="5.5" height="3" fill="#5a4a2a" />
+          {/* Right mounting stake */}
+          <rect x="317.5" y="82" width="2.5" height="48" fill="#3a2a18" />
+          <rect x="316" y="80" width="5.5" height="3" fill="#5a4a2a" />
+          {/* Banner fabric — dark oxblood red, compact so it doesn't
+              loom too heavily over the gate. */}
+          <rect x="178" y="94" width="142" height="18" fill="#6a0a08" />
+          {/* Top / bottom stripe accents */}
+          <rect x="178" y="94"  width="142" height="2" fill="#8a1414" />
+          <rect x="178" y="110" width="142" height="2" fill="#3a0404" />
+          {/* Small frayed fabric bulges on each end */}
+          <rect x="176" y="97" width="2" height="12" fill="#6a0a08" />
+          <rect x="320" y="97" width="2" height="12" fill="#6a0a08" />
+          {/* Primary Vietnamese text — compact so the English gloss
+              has clear room underneath. */}
+          <text x="249" y="103" textAnchor="middle" fill="#ffd23a"
+            fontSize="6.5" fontWeight="700"
+            fontFamily="ui-monospace, 'SFMono-Regular', Menlo, monospace"
+            style={{ letterSpacing: '0.4px' }}>
+            TRẠI CẢI TẠO
+          </text>
+          {/* English gloss underneath — fully visible because the
+              banner now draws on top of the gate post caps that
+              previously clipped the "(RE-" and "MP)" characters. */}
+          <text x="249" y="109" textAnchor="middle" fill="#ffe8a0"
+            fontSize="3.6" opacity="0.95"
+            fontFamily="ui-monospace, 'SFMono-Regular', Menlo, monospace"
+            style={{ letterSpacing: '0.3px' }}>
+            (RE-EDUCATION CAMP)
+          </text>
+        </g>
 
         {/* === Registration table just past the gate === */}
         <g transform="translate(278, 166)">
@@ -447,8 +456,6 @@ export function ReeducationCampScene() {
           {/* Child pressed against mother */}
           <PixelPerson x={-12} y={10} scale={0.85} variant="civilian" {...CHILD}
             mood="sad" sway="scared" swayDelay={0.3} />
-          {/* Mother's outstretched hand reaching toward the line (arm strip) */}
-          <rect x={10} y={-4} width={12} height={2.5} fill={MOTHER.color} />
         </g>
 
         {/* === Armed guard pacing in front of the gate === */}

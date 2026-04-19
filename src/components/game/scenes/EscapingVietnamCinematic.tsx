@@ -2142,8 +2142,10 @@ export function EscapingVietnamCinematic({ onComplete }: CinematicProps) {
           </div>
         )}
 
-        {/* Scanlines only over the scene */}
-        <div className="absolute inset-0 pointer-events-none scanlines z-10" />
+        {/* NOTE: global GameEngine wrapper already applies the
+            .scanlines CRT overlay. A second local overlay here would
+            double-up the repeating-gradient and produce visible
+            bright horizontal bands, so it's intentionally removed. */}
       </div>
 
       {/* --- Text panel region (bottom) --- compact, white-bordered --- */}

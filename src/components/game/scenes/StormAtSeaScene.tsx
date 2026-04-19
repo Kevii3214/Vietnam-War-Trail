@@ -126,13 +126,13 @@ export function StormAtSeaScene() {
         .sas-boat-heave     { animation: sas-boat-heave 4.5s ease-in-out infinite; transform-box: fill-box; transform-origin: center bottom; }
         .sas-wave           { animation: sas-wave-slide 3s linear infinite; }
         .sas-swell          { animation-name: sas-swell; animation-timing-function: ease-in-out; animation-iteration-count: infinite; transform-box: view-box; transform-origin: 50% 280px; }
-        .sas-panic-bob      { animation: sas-panic-bob 0.5s ease-in-out infinite; transform-box: fill-box; transform-origin: center center; }
+        .sas-panic-bob      { animation: sas-panic-bob 1.4s ease-in-out infinite; transform-box: fill-box; transform-origin: center center; }
         .sas-raindrop       { animation: sas-raindrop 1s linear infinite; }
         .sas-lightning      { animation: sas-lightning 7s ease-in-out infinite; }
         .sas-lightning-2    { animation: sas-lightning 9s ease-in-out infinite; animation-delay: 3.7s; }
         .sas-cloud-drift    { animation: sas-cloud-drift 22s linear infinite; }
         .sas-spray          { animation: sas-spray 1.4s ease-out infinite; transform-box: fill-box; }
-        .sas-tiller-shake   { animation: sas-tiller-shake 0.45s ease-in-out infinite; transform-box: fill-box; transform-origin: 50% 100%; }
+        .sas-tiller-shake   { animation: sas-tiller-shake 1.3s ease-in-out infinite; transform-box: fill-box; transform-origin: 50% 100%; }
       `}</style>
 
       <svg
@@ -248,9 +248,11 @@ export function StormAtSeaScene() {
           {/* Tattered furled sail whipping */}
           <rect x="9" y="-22" width="12" height="5" fill="#a09878" />
           <rect x="10" y="-17" width="10" height="2" fill="#80785a" />
-          {/* Flag ragged in the storm */}
-          <rect x="16" y="-30" width="1.5" height="4" fill="#3a2a18" />
-          <polygon points="17.5,-30 28,-28 22,-23 17.5,-25" fill="#cc2222" opacity="0.85" />
+          {/* NOTE: the tattered red pennant that used to fly from the
+              mast top (a 1.5x4 dark-brown pole at x=16 plus a
+              #cc2222 polygon pennant) has been removed at the user's
+              request. The bare mast still pokes above the furled
+              sail so the silhouette reads correctly. */}
 
           {/* === Canonical passengers huddled on deck ===
               Everyone is now `scared` (or `sad` for the child so the

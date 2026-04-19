@@ -125,77 +125,72 @@ export function SickPassengerScene() {
             <circle cx="0" cy="28" r="140" fill="#ffaa44" opacity="0.02" />
           </g>
 
-          {/* === The sick grandfather — lying on deck, shivering ===
-              Proportioned to match the standing characters: ~54 SVG units
-              long total (head + body + legs), so he reads as a chibi
-              figure lying down rather than a 100px-long body. */}
-          <g transform="translate(185, 185)">
-            <g className="sp-shiver">
-              {/* Blanket — covers torso through knees with a breathing rise */}
-              <g className="sp-breath">
-                <rect x="-2" y="-6" width="40" height="14" fill="#3a4a5a" opacity="0.85" />
-                <rect x="-2" y="-6" width="40" height="2"  fill="#4a5a6a" opacity="0.6" />
-                <rect x="-2" y="6"  width="40" height="1"  fill="#2a3a4a" opacity="0.8" />
-                {/* Subtle fold line across the body (suggests legs beneath) */}
-                <rect x="18" y="0"  width="20" height="0.8" fill="#2a3a4a" opacity="0.5" />
-              </g>
-              {/* Legs poking past the blanket */}
-              <rect x="36" y="2" width="10" height="6" fill={GRANDFATHER.pantsColor} />
-              <rect x="36" y="2" width="10" height="1" fill="#3a2a18" opacity="0.6" />
-              {/* Shoes */}
-              <rect x="44" y="5" width="4" height="2.5" fill="#1a0a04" />
-              {/* Torso under blanket — short rise, tucked right behind the head */}
-              <rect x="4" y="-4" width="22" height="10" fill={GRANDFATHER.shirtColor} />
-              {/* Head — canonical grandfather palette */}
-              <rect x="-14" y="-6" width="16" height="16" fill={GRANDFATHER.color} />
-              {/* Gray hair */}
-              <rect x="-14" y="-8" width="16" height="3" fill={GRANDFATHER.hairColor} />
-              <rect x="-14" y="-5" width="3"  height="2" fill={GRANDFATHER.hairColor} />
-              <rect x="-1"  y="-5" width="3"  height="2" fill={GRANDFATHER.hairColor} />
-              {/* Closed eyes — two short horizontal lines (fever sleep) */}
-              <rect x="-11" y="-1" width="3" height="1" fill="#1a0a04" />
-              <rect x="-5"  y="-1" width="3" height="1" fill="#1a0a04" />
-              {/* Flushed cheeks */}
-              <rect x="-11" y="2" width="2" height="1.5" fill="#c06060" opacity="0.7" />
-              <rect x="-3"  y="2" width="2" height="1.5" fill="#c06060" opacity="0.7" />
-              {/* Mouth slightly open (moan) */}
-              <rect x="-9" y="5" width="6" height="1.2" fill="#5a2a20" />
-              {/* Wet cloth on forehead */}
-              <rect x="-13" y="-6" width="14" height="3" fill="#6a8a9a" />
-              <rect x="-13" y="-5" width="14" height="1" fill="#8aaac0" opacity="0.7" />
-              {/* Sweat drops */}
-              <rect x="-10" y="4" width="1.5" height="2" fill="#6aa0c0" opacity="0.8"
-                className="sp-sweat-drop" />
-              <rect x="-4"  y="3" width="1.5" height="2" fill="#6aa0c0" opacity="0.7"
-                className="sp-sweat-drop" style={{ animationDelay: '0.7s' }} />
-              <rect x="1"   y="4" width="1.2" height="1.8" fill="#6aa0c0" opacity="0.7"
-                className="sp-sweat-drop" style={{ animationDelay: '1.3s' }} />
+          {/* === The sick grandfather — CENTERED, lying down ===
+              No more shiver/shake animation (user request). Instead
+              of drawing him as an elongated manual figure, we use
+              the canonical PixelPerson sprite from the refugee
+              palette and rotate it -90 degrees so the character lies
+              on his back with his HEAD on the LEFT and FEET on the
+              RIGHT. The triple-nested transform reads right-to-left:
+                1. translate(-9, -13)   — shift sprite so its
+                   bounding-box center sits at local (0,0)
+                2. rotate(-90)          — spin 90 degrees to the
+                   left (counter-clockwise) so he's horizontal
+                3. translate(250, 180)  — place the center of the
+                   lying body at the middle of the scene.
+              Only the shallow sp-breath animation remains on the
+              blanket; the character himself uses sway="idle" so he
+              reads as motionless / unconscious. */}
+          <g transform="translate(250, 180)">
+            <g transform="rotate(-90) translate(-9, -13)">
+              <PixelPerson x={0} y={0} scale={1.15} variant="civilian" {...GRANDFATHER}
+                mood="weary" sway="idle" />
             </g>
+            {/* Blanket draped across his torso and legs — drawn in
+                world space (post-rotation) so it looks like a
+                horizontal blanket covering the lower body. The head
+                sticks out on the left. */}
+            <g className="sp-breath">
+              <rect x="-6" y="-7" width="24" height="14" fill="#3a4a5a" opacity="0.9" />
+              <rect x="-6" y="-7" width="24" height="2"  fill="#4a5a6a" opacity="0.6" />
+              <rect x="-6" y="5"  width="24" height="1"  fill="#2a3a4a" opacity="0.8" />
+              {/* Fold suggesting legs beneath */}
+              <rect x="6"  y="-1" width="12" height="0.8" fill="#2a3a4a" opacity="0.5" />
+            </g>
+            {/* Wet cloth on forehead (head is on the LEFT side) */}
+            <rect x="-20" y="-5" width="8" height="3" fill="#6a8a9a" />
+            <rect x="-20" y="-4" width="8" height="1" fill="#8aaac0" opacity="0.7" />
+            {/* Sweat beading on forehead */}
+            <rect x="-18" y="-1" width="1.5" height="2" fill="#6aa0c0" opacity="0.8"
+              className="sp-sweat-drop" />
+            <rect x="-14" y="-2" width="1.5" height="2" fill="#6aa0c0" opacity="0.7"
+              className="sp-sweat-drop" style={{ animationDelay: '0.7s' }} />
           </g>
 
-          {/* Water bucket — wooden with water visible, cloth draped */}
-          <g transform="translate(155, 198)">
-            <rect x="0" y="0" width="18" height="14" fill="#4a2e18" />
-            <rect x="0" y="0" width="18" height="2"  fill="#6a4428" />
-            <rect x="0" y="12" width="18" height="2" fill="#2a1808" />
-            {/* Water */}
-            <rect x="2" y="3" width="14" height="8" fill="#2a4a6a" />
-            <rect x="2" y="3" width="14" height="1" fill="#4a7090" opacity="0.8" />
-            {/* Rag hanging over edge */}
-            <rect x="14" y="-1" width="8" height="5" fill="#8aaac0" opacity="0.85" />
+          {/* Small water bucket between the protagonist and the
+              sick grandfather — wooden, for wetting the cloth on
+              his forehead. Shifted left with the protagonist so
+              it sits between them rather than on grandfather's face. */}
+          <g transform="translate(208, 184)">
+            <rect x="0" y="0" width="16" height="12" fill="#4a2e18" />
+            <rect x="0" y="0" width="16" height="2"  fill="#6a4428" />
+            <rect x="0" y="10" width="16" height="2" fill="#2a1808" />
+            <rect x="2" y="3" width="12" height="7" fill="#2a4a6a" />
+            <rect x="2" y="3" width="12" height="1" fill="#4a7090" opacity="0.8" />
+            <rect x="12" y="-1" width="7" height="4" fill="#8aaac0" opacity="0.85" />
           </g>
 
-          {/* === Protagonist — kneeling beside grandfather, offering a cool cloth === */}
-          <g transform="translate(148, 166)">
-            {/* Use PixelPerson but at lower scale and slight rotation to suggest kneel */}
+          {/* === Protagonist — kneeling a short distance from grandfather's head ===
+              The extended "dabbing arm" + blue cloth rectangle that
+              previously jutted out to the right has been removed
+              (user request — it read as a floating arm). The
+              protagonist now uses only the canonical PixelPerson
+              sprite, with the sad expression doing the work of
+              showing his worry. */}
+          <g transform="translate(188, 162)">
             <g transform="rotate(-6)">
               <PixelPerson x={0} y={0} scale={1.15} variant="civilian" {...PROTAGONIST}
                 mood="sad" sway="idle" />
-            </g>
-            {/* Extended arm + cloth reaching toward the sick man */}
-            <g className="sp-hand-dab" style={{ transformOrigin: '28px 18px' }}>
-              <rect x={20} y={18} width={14} height={3} fill={PROTAGONIST.color} />
-              <rect x={32} y={16} width={8} height={5} fill="#8aaac0" opacity="0.9" />
             </g>
           </g>
 
@@ -265,21 +260,10 @@ export function SickPassengerScene() {
             <line x1="-1" y1="8" x2="19" y2="8" stroke="#2a1810" strokeWidth="0.5" opacity="0.6" />
           </g>
 
-          {/* Conical straw hat hanging on the wall (nón lá) */}
-          <g transform="translate(96, 108)">
-            {/* Peg/nail */}
-            <rect x="14" y="-2" width="1.5" height="2" fill="#1a1008" />
-            {/* Hat brim (triangular profile) */}
-            <polygon points="0,14 15,0 30,14" fill="#c8a860" />
-            <polygon points="0,14 15,0 30,14" fill="none" stroke="#6a4a20" strokeWidth="0.6" />
-            {/* Weave lines */}
-            <line x1="4"  y1="12" x2="26" y2="12" stroke="#8a6a30" strokeWidth="0.4" opacity="0.7" />
-            <line x1="7"  y1="9"  x2="23" y2="9"  stroke="#8a6a30" strokeWidth="0.4" opacity="0.6" />
-            <line x1="10" y1="6"  x2="20" y2="6"  stroke="#8a6a30" strokeWidth="0.4" opacity="0.5" />
-            {/* Chin strap dangling */}
-            <line x1="8" y1="13" x2="6" y2="22" stroke="#2a1810" strokeWidth="0.5" />
-            <line x1="22" y1="13" x2="24" y2="22" stroke="#2a1810" strokeWidth="0.5" />
-          </g>
+          {/* NOTE: the conical straw hat (nón lá) that used to hang
+              on the wall at (96, 108) has been removed at the user's
+              request. That patch of wall is now left bare (with just
+              the plank texture) so the eye isn't drawn to a hat. */}
 
           {/* Rolled sleeping mat leaning in the mid-background */}
           <g transform="translate(122, 200)">
@@ -428,6 +412,159 @@ export function SickPassengerScene() {
             {/* Twine wrap */}
             <rect x="3" y="-0.5" width="1.2" height="8.5" fill="#4a3618" />
             <rect x="9" y="-0.5" width="1.2" height="8.5" fill="#4a3618" />
+          </g>
+
+          {/* ===================================================== */}
+          {/* === FOOD + WATER PROVISIONS (to last the trip)    === */}
+          {/* ===================================================== */}
+
+          {/* Wooden wall shelf — runs across the previously-empty
+              mid-upper wall area so several floor items can be
+              re-housed up there, filling the empty space above the
+              passengers and breaking up the bottom-heavy clutter. */}
+          <g>
+            {/* Shelf plank */}
+            <rect x="196" y="150" width="182" height="4" fill="#4a2e18" />
+            <rect x="196" y="150" width="182" height="1" fill="#6a4228" />
+            <rect x="196" y="153" width="182" height="1" fill="#1a0a04" />
+            {/* Shelf brackets (triangular supports under each end) */}
+            <polygon points="196,154 196,162 204,154" fill="#2a1808" />
+            <polygon points="378,154 378,162 370,154" fill="#2a1808" />
+            {/* Shadow cast by the shelf onto the wall below */}
+            <rect x="196" y="154" width="182" height="3" fill="#000" opacity="0.35" />
+          </g>
+
+          {/* NOTE: the large earthenware water basin that sat on the
+              wall shelf here has been removed at the user's
+              request. The shelf now carries only the rice pot. */}
+
+          {/* Earthenware rice pot with lid — hot food, steam rising.
+              Also relocated UP onto the wall shelf (was at y=214 on
+              the floor). Its body bottom (local y=16) lines up with
+              the shelf top surface at world y=150. */}
+          <g transform="translate(308, 134)">
+            {/* Shadow */}
+            <ellipse cx="10" cy="18" rx="12" ry="2.5" fill="#000" opacity="0.55" />
+            {/* Pot body (clay) */}
+            <path d="M -2 16 Q -2 6, 10 4 Q 22 6, 22 16 Z" fill="#5a2e1c" />
+            <path d="M -2 16 Q -2 6, 10 4 Q 22 6, 22 16" fill="none"
+              stroke="#2a1208" strokeWidth="0.6" />
+            {/* Clay gloss highlight */}
+            <path d="M 1 10 Q 1 6, 6 5" fill="none" stroke="#8a4828" strokeWidth="0.6" opacity="0.6" />
+            {/* Lid */}
+            <ellipse cx="10" cy="4" rx="11" ry="2" fill="#4a2614" />
+            <ellipse cx="10" cy="4" rx="11" ry="2" fill="none"
+              stroke="#2a1208" strokeWidth="0.6" />
+            <rect x="8" y="-1" width="4" height="3" fill="#6a4428" />
+            <rect x="8" y="-1" width="4" height="0.8" fill="#8a6440" />
+            {/* Steam wisps — curling up */}
+            <g className="sp-breath">
+              <ellipse cx="10" cy="-4"  rx="3"   ry="2"   fill="#d0dce4" opacity="0.45" />
+              <ellipse cx="11" cy="-8"  rx="2.5" ry="1.8" fill="#c0ccd8" opacity="0.3" />
+              <ellipse cx="9"  cy="-12" rx="2"   ry="1.4" fill="#b0bcc8" opacity="0.2" />
+            </g>
+          </g>
+
+          {/* Small rice bowl with chopsticks — someone's half-eaten meal */}
+          <g transform="translate(200, 232)">
+            <ellipse cx="8" cy="7" rx="9" ry="1.5" fill="#1a0a04" opacity="0.6" />
+            <path d="M 0 6 Q 0 2, 8 1 Q 16 2, 16 6 Z" fill="#6a4a28" />
+            <path d="M 0 6 Q 0 2, 8 1 Q 16 2, 16 6" fill="none"
+              stroke="#2a1808" strokeWidth="0.5" />
+            {/* Cooked rice mound */}
+            <ellipse cx="8" cy="2" rx="6.5" ry="1.2" fill="#f0e0b8" />
+            <ellipse cx="8" cy="1.8" rx="5" ry="0.7" fill="#fffad8" opacity="0.7" />
+            {/* Chopsticks leaning in */}
+            <rect x="9" y="-5" width="0.7" height="8" fill="#b0905a" transform="rotate(15, 9, 1)" />
+            <rect x="11" y="-5" width="0.7" height="8" fill="#b0905a" transform="rotate(18, 11, 1)" />
+          </g>
+
+          {/* Bamboo tray of dried fish — long-keeping protein for the journey */}
+          <g transform="translate(254, 192)">
+            {/* Tray */}
+            <rect x="0" y="2" width="32" height="8" fill="#8a6a30" />
+            <rect x="0" y="2" width="32" height="1.5" fill="#b08838" />
+            <rect x="0" y="9.5" width="32" height="1" fill="#4a3214" />
+            {/* Weave detail */}
+            {[4, 10, 16, 22, 28].map((wx, i) => (
+              <line key={`tray-w-${i}`} x1={wx} y1={2} x2={wx} y2={10}
+                stroke="#5a3e1a" strokeWidth="0.3" opacity="0.7" />
+            ))}
+            {/* Dried fish rows — silvery, shriveled */}
+            {[{x:2,y:-1},{x:10,y:-1.5},{x:18,y:-1},{x:26,y:-1.4}].map((f, i) => (
+              <g key={`fish-${i}`}>
+                <ellipse cx={f.x + 2.5} cy={f.y + 2} rx="3" ry="1.2" fill="#8a7860" />
+                <ellipse cx={f.x + 2.5} cy={f.y + 1.6} rx="2.6" ry="0.9" fill="#a89878" />
+                {/* Tail */}
+                <polygon points={`${f.x},${f.y + 2} ${f.x - 1.5},${f.y + 1} ${f.x - 1.5},${f.y + 3}`} fill="#6a5a3a" />
+                {/* Eye */}
+                <rect x={f.x + 4} y={f.y + 1.8} width="0.6" height="0.6" fill="#1a0a04" />
+              </g>
+            ))}
+          </g>
+
+          {/* Dried bananas / palm-leaf wrapped food bundles hanging on wall
+              (replaces the empty patch where the conical hat used to be) */}
+          <g transform="translate(92, 98)">
+            {/* Nail/peg */}
+            <rect x="14" y="0" width="1.5" height="2" fill="#1a1008" />
+            {/* Hanging cord */}
+            <line x1="14.75" y1="2" x2="8" y2="10" stroke="#3a2a14" strokeWidth="0.5" />
+            <line x1="14.75" y1="2" x2="22" y2="11" stroke="#3a2a14" strokeWidth="0.5" />
+            {/* Leaf-wrapped food bundle (bánh tét style, cylindrical) */}
+            <ellipse cx="8" cy="18" rx="5" ry="2" fill="#3a5228" />
+            <rect x="3" y="10" width="10" height="16" fill="#4a6a30" />
+            <rect x="3" y="10" width="10" height="2" fill="#6a8a40" />
+            <rect x="3" y="24" width="10" height="2" fill="#2a3a18" />
+            {/* Twine tying top and bottom */}
+            <rect x="2" y="13" width="12" height="0.8" fill="#2a1808" />
+            <rect x="2" y="20" width="12" height="0.8" fill="#2a1808" />
+            {/* Second hanging bundle (smaller, shifted) */}
+            <rect x="18" y="11" width="8" height="12" fill="#4a6a30" />
+            <rect x="18" y="11" width="8" height="1.5" fill="#6a8a40" />
+            <rect x="18" y="21.5" width="8" height="1.5" fill="#2a3a18" />
+            <rect x="17" y="14" width="10" height="0.7" fill="#2a1808" />
+            <rect x="17" y="19" width="10" height="0.7" fill="#2a1808" />
+          </g>
+
+          {/* Clustered bundle + gourd in the mid-left empty area */}
+          <g transform="translate(40, 166)">
+            {/* Striped cloth bundle */}
+            <ellipse cx="10" cy="10" rx="12" ry="7" fill="#6a3a28" />
+            <ellipse cx="10" cy="7" rx="11" ry="6" fill="#8a5238" />
+            <rect x="7" y="0" width="6" height="4" fill="#4a2818" />
+            <line x1="-2" y1="9" x2="22" y2="9" stroke="#3a1808" strokeWidth="0.6" opacity="0.7" />
+            <line x1="0"  y1="12" x2="20" y2="12" stroke="#3a1808" strokeWidth="0.6" opacity="0.6" />
+          </g>
+          {/* Dried gourd canteen (water) resting on the bundle above */}
+          <g transform="translate(68, 158)">
+            <ellipse cx="6" cy="8" rx="6" ry="7" fill="#a0783a" />
+            <ellipse cx="6" cy="5" rx="5" ry="5" fill="#b88a48" />
+            <rect x="5" y="-2" width="2" height="3" fill="#3a2410" />
+            <rect x="4" y="-2" width="4" height="1" fill="#2a1808" />
+            {/* Strap */}
+            <path d="M 0 5 Q -2 10 -3 16" fill="none" stroke="#3a2410" strokeWidth="0.6" />
+          </g>
+
+          {/* Small oil lamp sitting on the folded-clothes box — extra
+              clutter and a warm point of light */}
+          <g transform="translate(268, 198)">
+            <rect x="2" y="6" width="10" height="4" fill="#2a1a0a" />
+            <rect x="2" y="6" width="10" height="1" fill="#4a2e14" />
+            <rect x="5" y="2" width="4" height="4" fill="#ffcc66" opacity="0.85"
+              className="sp-lamp-flicker" />
+            <rect x="6" y="0" width="2" height="3" fill="#ff9944" opacity="0.7"
+              className="sp-lamp-flicker" />
+            <circle cx="7" cy="4" r="8" fill="#ffaa44" opacity="0.1" />
+          </g>
+
+          {/* Tangle of discarded shoes in the foreground (clutter cue) */}
+          <g transform="translate(102, 236)">
+            <ellipse cx="4" cy="2" rx="5" ry="1.6" fill="#3a2818" />
+            <rect x="3" y="0.5" width="1" height="2" fill="#1a0a04" />
+            <ellipse cx="14" cy="1.5" rx="5.5" ry="1.8" fill="#2a1810" />
+            <rect x="13" y="0" width="1" height="2" fill="#0a0a04" />
+            <ellipse cx="22" cy="3" rx="4.5" ry="1.4" fill="#3a2a18" />
           </g>
 
           {/* Floor boards */}
