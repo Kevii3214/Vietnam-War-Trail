@@ -26,6 +26,7 @@ import { WaitingScene } from './scenes/WaitingScene';
 import { FirstDayWorkScene } from './scenes/FirstDayWorkScene';
 import { FamiliarFaceScene } from './scenes/FamiliarFaceScene';
 import { DiscriminationScene } from './scenes/DiscriminationScene';
+import { InterviewEvent } from './InterviewEvent';
 import { EVENT_SCENE_MAP } from './scenes/eventSceneMap';
 import { useGameState } from '@/hooks/useGameState';
 import { useGameEvents, type EventChoice, type EventOutcome, pickRandomOutcome } from '@/hooks/useGameEvents';
@@ -116,6 +117,7 @@ export function GameEngine({ userId, onMainMenu, loadExistingSave }: GameEngineP
   const [showCinematic, setShowCinematic] = useState<number | false>(false);
   const [typingDone, setTypingDone] = useState(false);
   const [travelText, setTravelText] = useState('');
+  const [interviewMode, setInterviewMode] = useState(false);
 
   // Initialize game
   useEffect(() => {
@@ -187,6 +189,10 @@ export function GameEngine({ userId, onMainMenu, loadExistingSave }: GameEngineP
       if (event) {
         setCurrentEvent(event);
         setSelectedChoice(null);
+        // Check if this is the AI interview event
+        if (event.title === 'Interview Day') {
+          setInterviewMode(true);
+        }
         setDayState('event');
         markEventSeen(event.id);
         return;
@@ -249,7 +255,35 @@ export function GameEngine({ userId, onMainMenu, loadExistingSave }: GameEngineP
     setResolvedOutcome(null);
     setInitialized(true);
     setShowCinematic(1);
+    setInterviewMode(false);
   }, [startNewGame]);
+
+  // Interview handlers
+  const handleInterviewPass = useCallback(() => {
+    setInterviewMode(false);
+    setCurrentEvent(null);
+    setDayState('idle');
+    // Advance to phase 4
+    jumpToPhase(4);
+  }, [jumpToPhase]);
+
+  const handleInterviewFail = useCallback(() => {
+    setInterviewMode(false);
+    setCurrentEvent(null);
+    setDayState('idle');
+    // Morale penalty
+    applyStatChanges({ health: 0, food: 0, morale: -25, money: 0 });
+    const phase = getPhaseByOrder(gameState.currentPhaseOrder);
+    if (phase) advanceDay(phase.days_in_phase);
+  }, [applyStatChanges, advanceDay, getPhaseByOrder, gameState.currentPhaseOrder]);
+
+  const handleInterviewForcibleReturn = useCallback(() => {
+    setInterviewMode(false);
+    setCurrentEvent(null);
+    setDayState('idle');
+    // Kill the player — set health to 0
+    applyStatChanges({ health: -100, food: 0, morale: 0, money: 0 });
+  }, [applyStatChanges]);
 
   if (loading || !initialized) {
     return (
@@ -366,6 +400,16 @@ export function GameEngine({ userId, onMainMenu, loadExistingSave }: GameEngineP
 
     // Event - show title, description, choices
     if (dayState === 'event' && currentEvent) {
+      // AI Interview replaces normal dialog
+      if (interviewMode) {
+        return (
+          <InterviewEvent
+            onPass={handleInterviewPass}
+            onFail={handleInterviewFail}
+            onForcibleReturn={handleInterviewForcibleReturn}
+          />
+        );
+      }
       return (
         <div className="animate-fade-in-up">
           <div className="flex items-center gap-2 mb-2">
