@@ -3,6 +3,19 @@ import { ChevronDown } from 'lucide-react';
 import { GameMenuBar } from '../GameMenuBar';
 import { PixelPerson } from './PixelPeople';
 
+// 10-vertex point string for a 5-pointed star centered at (cx, cy), starting
+// at the top and sweeping clockwise — the standard orientation for the gold
+// star on the Vietnamese flag.
+function starPath(cx: number, cy: number, outer: number, inner: number): string {
+  const pts: string[] = [];
+  for (let i = 0; i < 10; i++) {
+    const angle = -Math.PI / 2 + (i * Math.PI) / 5;
+    const r = i % 2 === 0 ? outer : inner;
+    pts.push(`${(cx + r * Math.cos(angle)).toFixed(2)},${(cy + r * Math.sin(angle)).toFixed(2)}`);
+  }
+  return pts.join(' ');
+}
+
 interface CinematicProps {
   onComplete: () => void;
 }
@@ -103,15 +116,15 @@ function Scene1() {
           <rect x="207" y="85" width="24" height="2" fill="#cc2222" />
           <rect x="207" y="90" width="24" height="2" fill="#cc2222" />
         </g>
-        {/* North flag (rising) - red w/ yellow star */}
+        {/* North flag (rising) — red field with a proper 5-pointed gold star */}
         <rect x="293" y="60" width="2" height="35" fill="#888" />
         <g className="cinematic-flag-up" style={{ transformOrigin: '294px 60px' }}>
           <rect x="295" y="64" width="26" height="18" fill="#cc1a1a" />
-          <rect x="305" y="69" width="6" height="6" fill="#ffdd44" />
-          <rect x="303" y="71" width="2" height="2" fill="#ffdd44" />
-          <rect x="311" y="71" width="2" height="2" fill="#ffdd44" />
-          <rect x="305" y="77" width="2" height="2" fill="#ffdd44" />
-          <rect x="309" y="77" width="2" height="2" fill="#ffdd44" />
+          {/* Darker gold outline keeps the star edges crisp over the red */}
+          <polygon points={starPath(308, 73, 6.5, 2.6)} fill="#a07020" />
+          <polygon points={starPath(308, 73, 6, 2.4)}   fill="#ffdd44" />
+          {/* Small highlight on the top point */}
+          <polygon points={starPath(308, 72.4, 2.2, 0.9)} fill="#fff2a0" opacity="0.85" />
         </g>
 
         {/* Tank - rolling into scene (with soldier crew & cheering crowd) */}
@@ -142,10 +155,13 @@ function Scene1() {
             hairColor="#1a1008" accentColor="#ffcf5c"
             mood="determined" sway="idle"
           />
-          {/* Waving flag on tank */}
+          {/* Waving flag on tank — red field with matching gold star */}
           <rect x="14" y="178" width="1.5" height="18" fill="#4a3018" />
-          <rect x="15.5" y="180" width="14" height="10" fill="#cc1a1a" className="cinematic-flicker" />
-          <rect x="20" y="183" width="4" height="4" fill="#ffdd44" />
+          <g className="cinematic-flicker">
+            <rect x="15.5" y="180" width="14" height="10" fill="#cc1a1a" />
+            <polygon points={starPath(22.5, 185, 3.2, 1.3)}  fill="#a07020" />
+            <polygon points={starPath(22.5, 185, 2.8, 1.15)} fill="#ffdd44" />
+          </g>
         </g>
 
         {/* Scared civilians watching from far right */}
@@ -1765,12 +1781,50 @@ function Scene6() {
           </g>
         ))}
 
-        {/* Distant lightning flash behind the coast (subtle, infrequent) */}
-        <g className="cinematic-flicker" style={{ animationDuration: '7s', animationDelay: '2s' }}>
-          <rect x="0" y="0" width="500" height="100" fill="#8090a0" opacity="0.08" />
+        {/*
+          Distant lightning — dark most of the time, then a brief double-flash.
+          The sky-wash and the bolt animate on the SAME keyframe so they strike
+          in sync (previously they pulsed on different clocks, which is why it
+          looked static and wrong).
+        */}
+        {/* First strike */}
+        <g className="cinematic-lightning">
+          {/* Sky wash behind the clouds */}
+          <rect x="0" y="0" width="500" height="140" fill="#c8d4e8" />
+          {/* Bright halo around the strike point */}
+          <circle cx="335" cy="40" r="60" fill="#e8eaff" opacity="0.55" />
+          {/* Main jagged bolt */}
+          <polyline
+            points="332,10 336,28 328,42 340,58 330,74 342,92 334,108 346,124"
+            stroke="#ffffff" strokeWidth="1.4" fill="none"
+          />
+          {/* Soft outer glow on the bolt */}
+          <polyline
+            points="332,10 336,28 328,42 340,58 330,74 342,92 334,108 346,124"
+            stroke="#e8eaff" strokeWidth="3" fill="none" opacity="0.35"
+          />
+          {/* Small fork */}
+          <polyline
+            points="340,58 350,64 354,76"
+            stroke="#ffffff" strokeWidth="1" fill="none" opacity="0.9"
+          />
         </g>
-        <g className="cinematic-flicker" style={{ animationDuration: '11s', animationDelay: '5s' }}>
-          <polyline points="330,30 336,55 328,70 340,95" stroke="#e8eaff" strokeWidth="1" fill="none" opacity="0.5" />
+
+        {/* Second strike, offset so flashes don't always land together */}
+        <g className="cinematic-lightning" style={{ animationDelay: '4.2s', animationDuration: '9s' }}>
+          <rect x="0" y="0" width="500" height="120" fill="#b8c4dc" opacity="0.85" />
+          <polyline
+            points="160,12 166,32 158,50 172,68 164,86"
+            stroke="#ffffff" strokeWidth="1.2" fill="none"
+          />
+          <polyline
+            points="160,12 166,32 158,50 172,68 164,86"
+            stroke="#e8eaff" strokeWidth="3" fill="none" opacity="0.3"
+          />
+          <polyline
+            points="158,50 148,58 150,70"
+            stroke="#ffffff" strokeWidth="0.9" fill="none" opacity="0.85"
+          />
         </g>
 
         {/* Extra drifting spray specks */}
@@ -2036,6 +2090,22 @@ export function EscapingVietnamCinematic({ onComplete }: CinematicProps) {
         .cinematic-splash      { animation: cin-splash 1.1s ease-in-out infinite; transform-box: fill-box; transform-origin: center bottom; }
         .cinematic-clock-tick  { animation: cin-clock-tick 1s steps(1) infinite; transform-box: fill-box; transform-origin: center center; }
         .cinematic-pen-shake   { animation: cin-pen-shake 0.35s ease-in-out infinite; transform-box: fill-box; }
+
+        /* --- Lightning: dark most of the time, brief double-flash, long pause --- */
+        @keyframes cin-lightning {
+          0%, 100%    { opacity: 0; }
+          /* long dark lead-up */
+          78%         { opacity: 0; }
+          /* first strike */
+          79%         { opacity: 1; }
+          80.5%       { opacity: 0.15; }
+          /* quick second flicker, as real lightning often does */
+          81.5%       { opacity: 0.9; }
+          82.5%       { opacity: 0.4; }
+          /* fade to black before cycling */
+          84%         { opacity: 0; }
+        }
+        .cinematic-lightning { animation: cin-lightning 7s ease-out infinite; }
       `}</style>
 
       {/* --- Scene region (top) --- takes the majority of the screen --- */}
