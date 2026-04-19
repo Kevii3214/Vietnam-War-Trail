@@ -1,5 +1,5 @@
 
-const ELEVENLABS_VOICE_ID = 'n5UxjYFlD5aLGVRI2HXk';
+const ELEVENLABS_VOICE_ID = '21m00Tcm4TlvDq8ikWAM';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
